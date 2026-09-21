@@ -37,7 +37,7 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          pip3 install cryptography
+          pip3 install --break-system-packages cryptography
           chmod +x ./tools/generate-appcast.py
           TAG="${GITHUB_REF_NAME:-v1.1.0}"
           ./tools/generate-appcast.py "$TAG"
