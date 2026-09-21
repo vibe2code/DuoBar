@@ -7,7 +7,7 @@
     <language>en</language>
     <item>
       <title>DuoBar 1.1.0</title>
-      <pubDate>Mon, 21 Sep 2026 20:00:00 +0000</pubDate>
+      <pubDate>Mon, 21 Sep 2026 20:02:26 +0000</pubDate>
       <sparkle:version>1.1.0</sparkle:version>
       <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
@@ -24,8 +24,8 @@
       ]]></description>
       <enclosure
         url="https://github.com/vibe2code/DuoBar/releases/download/v1.1.0/DuoBar.zip"
-        sparkle:edSignature="UC2+AUNHabDnnSRNviBShOm34rcjyXE1RNDC8IqrIwdtJS/Mx9BK16LI6rJYOCqzl3KLmYVxk6ICI4q192faCQ=="
-        length="2957131"
+        sparkle:edSignature="zAGF+hx1kjI+wOgq1zsVS8uDn2S0zIBCP+YG4spo0mNhCuW7rAhhy3eOvmOa6rKVkS395k+JNOfrbEXdacyECQ=="
+        length="2941307"
         type="application/octet-stream"
       />
     </item>
