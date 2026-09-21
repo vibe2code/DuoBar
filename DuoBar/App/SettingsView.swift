@@ -67,6 +67,11 @@ struct SettingsView: View {
             #endif
         }
         .frame(width: 480, height: tabHeight)
+        .background(WindowConfigurator())
+        .background(
+            VisualEffectView(material: .sidebar, blendingMode: .behindWindow, state: .active)
+                .ignoresSafeArea()
+        )
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             launchAtLogin.refresh()
@@ -86,10 +91,10 @@ struct SettingsView: View {
         if selectedTab == .debug { return 700 }
         #endif
         switch selectedTab {
-        case .general: return 320
-        case .menuBar: return 420
-        case .battery: return 340
-        case .about: return 330
+        case .general: return 270
+        case .menuBar: return 430
+        case .battery: return 310
+        case .about: return 320
         #if DEBUG
         case .debug: return 700
         #endif
@@ -99,215 +104,207 @@ struct SettingsView: View {
     // MARK: - General Tab
 
     private var generalTab: some View {
-        Form {
-            Section {
-                SettingsCardRow(
-                    icon: "arrow.right.circle.fill",
-                    iconColor: .blue,
-                    title: localized("Launch DuoBar at login"),
-                    subtitle: localized("Automatically launch DuoBar when you log into your Mac.")
-                ) {
-                    Toggle("", isOn: Binding(
-                        get: { launchAtLogin.isEnabled },
-                        set: launchAtLogin.setEnabled
-                    ))
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                }
+        ScrollView {
+            VStack(spacing: 14) {
+                SettingsSectionCard(title: localized("Startup")) {
+                    SettingsCardRow(
+                        icon: "arrow.right.circle.fill",
+                        iconColor: .blue,
+                        title: localized("Launch DuoBar at login"),
+                        subtitle: localized("Automatically launch DuoBar when you log into your Mac.")
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { launchAtLogin.isEnabled },
+                            set: launchAtLogin.setEnabled
+                        ))
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                    }
 
-                if launchAtLogin.requiresApproval {
-                    HStack(spacing: 8) {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.yellow)
-                        Text(localized("Approval is required in System Settings → General → Login Items."))
+                    if launchAtLogin.requiresApproval {
+                        HStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.yellow)
+                            Text(localized("Approval is required in System Settings → General → Login Items."))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.top, 4)
+                    }
+
+                    if let errorMessage = launchAtLogin.errorMessage {
+                        Text(errorMessage)
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.red)
+                            .textSelection(.enabled)
                     }
-                    .padding(.top, 4)
                 }
 
-                if let errorMessage = launchAtLogin.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .textSelection(.enabled)
-                }
-            } header: {
-                Text(localized("Startup"))
-            }
-
-            Section {
-                SettingsCardRow(
-                    icon: "arrow.triangle.2.circlepath.circle.fill",
-                    iconColor: .teal,
-                    title: localized("Check for Updates"),
-                    subtitle: localized("Keep DuoBar up to date with latest improvements.")
-                ) {
-                    Button(localized("Check Now…")) {
-                        PreferenceKeys.updaterService?.checkForUpdates()
+                SettingsSectionCard(title: localized("Software Updates")) {
+                    SettingsCardRow(
+                        icon: "arrow.triangle.2.circlepath.circle.fill",
+                        iconColor: .teal,
+                        title: localized("Check for Updates"),
+                        subtitle: localized("Keep DuoBar up to date with latest improvements.")
+                    ) {
+                        Button(localized("Check Now…")) {
+                            PreferenceKeys.updaterService?.checkForUpdates()
+                        }
+                        .controlSize(.small)
+                        .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
                     }
-                    .controlSize(.small)
-                    .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
                 }
-            } header: {
-                Text(localized("Software Updates"))
             }
+            .padding(16)
         }
-        .formStyle(.grouped)
-        .padding(.horizontal, 12)
-        .padding(.bottom, 12)
+        .scrollContentBackground(.hidden)
     }
 
     // MARK: - Menu Bar Tab
 
     private var menuBarTab: some View {
-        Form {
-            Section {
-                MenuBarLivePreview(scale: resolvedMenuBarIconScale.wrappedValue)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-            } header: {
-                Text(localized("Preview"))
-            }
+        ScrollView {
+            VStack(spacing: 14) {
+                SettingsSectionCard(title: localized("Preview")) {
+                    MenuBarLivePreview(scale: resolvedMenuBarIconScale.wrappedValue)
+                }
 
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        SettingsIconLabel(icon: "arrow.left.and.right", iconColor: .purple)
-                        Text(localized("Icon Size"))
-                            .font(.system(size: 13))
+                SettingsSectionCard(title: localized("Appearance")) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            SettingsIconLabel(icon: "arrow.left.and.right", iconColor: .purple)
+                            Text(localized("Icon Size"))
+                                .font(.system(size: 13))
 
-                        Spacer()
+                            Spacer()
 
-                        Text("\(Int((resolvedMenuBarIconScale.wrappedValue * 100).rounded()))%")
-                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                            Text("\(Int((resolvedMenuBarIconScale.wrappedValue * 100).rounded()))%")
+                                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 7)
+                                .padding(.vertical, 2)
+                                .background(Color.primary.opacity(0.06), in: Capsule())
+                        }
+
+                        HStack(spacing: 12) {
+                            Text(localized("Small"))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+
+                            Slider(
+                                value: resolvedMenuBarIconScale,
+                                in: MenuBarIconSize.minimumScale...MenuBarIconSize.maximumScale,
+                                step: MenuBarIconSize.step
+                            )
+                            .accessibilityLabel(localized("Menu bar icon size"))
+
+                            Text(localized("Large"))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Text(localized("Adjust DuoBar to better match your menu bar."))
+                            .font(.caption)
                             .foregroundStyle(.secondary)
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 2)
-                            .background(Color.primary.opacity(0.06), in: Capsule())
+                    }
+                    .padding(.vertical, 2)
+                }
+
+                SettingsSectionCard(title: localized("Behavior")) {
+                    SettingsCardRow(
+                        icon: "percent",
+                        iconColor: .green,
+                        title: localized("Show battery percentage in popover"),
+                        subtitle: nil
+                    ) {
+                        Toggle("", isOn: $showBatteryPercentage)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
                     }
 
-                    HStack(spacing: 12) {
-                        Text(localized("Small"))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                    Divider().opacity(0.4)
 
-                        Slider(
-                            value: resolvedMenuBarIconScale,
-                            in: MenuBarIconSize.minimumScale...MenuBarIconSize.maximumScale,
-                            step: MenuBarIconSize.step
-                        )
-                        .accessibilityLabel(localized("Menu bar icon size"))
-
-                        Text(localized("Large"))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                    SettingsCardRow(
+                        icon: "sparkles",
+                        iconColor: .pink,
+                        title: localized("Enable animations"),
+                        subtitle: nil
+                    ) {
+                        Toggle("", isOn: $animationsEnabled)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
                     }
-
-                    Text(localized("Adjust DuoBar to better match your menu bar."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 4)
-            } header: {
-                Text(localized("Appearance"))
             }
-
-            Section {
-                SettingsCardRow(
-                    icon: "percent",
-                    iconColor: .green,
-                    title: localized("Show battery percentage in popover"),
-                    subtitle: nil
-                ) {
-                    Toggle("", isOn: $showBatteryPercentage)
-                        .toggleStyle(.switch)
-                        .labelsHidden()
-                }
-
-                SettingsCardRow(
-                    icon: "sparkles",
-                    iconColor: .pink,
-                    title: localized("Enable animations"),
-                    subtitle: nil
-                ) {
-                    Toggle("", isOn: $animationsEnabled)
-                        .toggleStyle(.switch)
-                        .labelsHidden()
-                }
-            } header: {
-                Text(localized("Behavior"))
-            }
+            .padding(16)
         }
-        .formStyle(.grouped)
-        .padding(.horizontal, 12)
-        .padding(.bottom, 12)
+        .scrollContentBackground(.hidden)
     }
 
     // MARK: - Battery & Power Tab
 
     private var batteryTab: some View {
-        Form {
-            if showsBatteryRingSettings {
-                Section {
-                    SettingsCardRow(
-                        icon: "paintpalette.fill",
-                        iconColor: .orange,
-                        title: localized("Battery Color Coding"),
-                        subtitle: localized("Color the battery ring green, yellow, or red based on charge level.")
-                    ) {
-                        Toggle("", isOn: $batteryColorCoding)
-                            .toggleStyle(.switch)
-                            .labelsHidden()
-                    }
-                } header: {
-                    Text(localized("Battery Ring"))
-                }
-            }
-
-            if showsAdaptiveRingSettings {
-                Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            SettingsIconLabel(icon: "gauge.with.dots.needle.bottom.50percent", iconColor: .indigo)
-                            Text(localized("Adaptive Ring Priority"))
-                                .font(.system(size: 13))
-
-                            Spacer()
-
-                            Picker("", selection: adaptiveRingPriority) {
-                                ForEach(PerformancePreference.allCases, id: \.self) { preference in
-                                    Text(preference.localizedDisplayName).tag(preference)
-                                }
-                            }
-                            .labelsHidden()
-                            .pickerStyle(.menu)
-                            .frame(maxWidth: 160)
+        ScrollView {
+            VStack(spacing: 14) {
+                if showsBatteryRingSettings {
+                    SettingsSectionCard(title: localized("Battery Ring")) {
+                        SettingsCardRow(
+                            icon: "paintpalette.fill",
+                            iconColor: .orange,
+                            title: localized("Battery Color Coding"),
+                            subtitle: localized("Color the battery ring green, yellow, or red based on charge level.")
+                        ) {
+                            Toggle("", isOn: $batteryColorCoding)
+                                .toggleStyle(.switch)
+                                .labelsHidden()
                         }
-
-                        Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
-                    .padding(.vertical, 4)
+                }
 
-                    SettingsCardRow(
-                        icon: "slider.horizontal.2.square",
-                        iconColor: .mint,
-                        title: localized("Adaptive Ring Color Coding"),
-                        subtitle: nil
-                    ) {
-                        Toggle("", isOn: $adaptiveRingColorCoding)
-                            .toggleStyle(.switch)
-                            .labelsHidden()
+                if showsAdaptiveRingSettings {
+                    SettingsSectionCard(title: localized("Adaptive Ring")) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                SettingsIconLabel(icon: "gauge.with.dots.needle.bottom.50percent", iconColor: .indigo)
+                                Text(localized("Adaptive Ring Priority"))
+                                    .font(.system(size: 13))
+
+                                Spacer()
+
+                                Picker("", selection: adaptiveRingPriority) {
+                                    ForEach(PerformancePreference.allCases, id: \.self) { preference in
+                                        Text(preference.localizedDisplayName).tag(preference)
+                                    }
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.menu)
+                                .frame(maxWidth: 160)
+                            }
+
+                            Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 2)
+
+                        Divider().opacity(0.4)
+
+                        SettingsCardRow(
+                            icon: "slider.horizontal.2.square",
+                            iconColor: .mint,
+                            title: localized("Adaptive Ring Color Coding"),
+                            subtitle: nil
+                        ) {
+                            Toggle("", isOn: $adaptiveRingColorCoding)
+                                .toggleStyle(.switch)
+                                .labelsHidden()
+                        }
                     }
-                } header: {
-                    Text(localized("Adaptive Ring"))
                 }
             }
+            .padding(16)
         }
-        .formStyle(.grouped)
-        .padding(.horizontal, 12)
-        .padding(.bottom, 12)
+        .scrollContentBackground(.hidden)
     }
 
     // MARK: - About Tab
@@ -440,6 +437,45 @@ struct SettingsView: View {
 
 // MARK: - Native Styling Components
 
+private struct SettingsSectionCard<Content: View>: View {
+    let title: String?
+    @ViewBuilder let content: () -> Content
+
+    init(title: String? = nil, @ViewBuilder content: @escaping () -> Content) {
+        self.title = title
+        self.content = content
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let title {
+                Text(title)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 4)
+            }
+
+            VStack(spacing: 8) {
+                content()
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color(nsColor: .controlBackgroundColor).opacity(0.35))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(Color.primary.opacity(0.08), lineWidth: 0.5)
+                    )
+            )
+        }
+    }
+}
+
 private struct SettingsIconLabel: View {
     let icon: String
     let iconColor: Color
@@ -531,7 +567,7 @@ private struct MenuBarLivePreview: View {
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color(nsColor: .windowBackgroundColor))
+                    .fill(.ultraThinMaterial)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .stroke(Color.primary.opacity(0.08), lineWidth: 1)
@@ -541,3 +577,70 @@ private struct MenuBarLivePreview: View {
         .padding(.vertical, 2)
     }
 }
+
+// MARK: - Window Translucency & Materials
+
+private final class WindowConfigView: NSView {
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        applyWindowTranslucency()
+    }
+
+    override func viewDidMoveToSuperview() {
+        super.viewDidMoveToSuperview()
+        applyWindowTranslucency()
+    }
+
+    private func applyWindowTranslucency() {
+        guard let window = self.window else { return }
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.titlebarAppearsTransparent = true
+
+        if let themeFrame = window.contentView?.superview {
+            let identifier = NSUserInterfaceItemIdentifier("DuoBarWindowVisualEffect")
+            if !themeFrame.subviews.contains(where: { $0.identifier == identifier }) {
+                let effectView = NSVisualEffectView(frame: themeFrame.bounds)
+                effectView.identifier = identifier
+                effectView.autoresizingMask = [.width, .height]
+                effectView.material = .sidebar
+                effectView.blendingMode = .behindWindow
+                effectView.state = .active
+                themeFrame.addSubview(effectView, positioned: .below, relativeTo: nil)
+            }
+        }
+    }
+}
+
+private struct WindowConfigurator: NSViewRepresentable {
+    func makeNSView(context: Context) -> WindowConfigView {
+        WindowConfigView()
+    }
+
+    func updateNSView(_ nsView: WindowConfigView, context: Context) {
+        DispatchQueue.main.async {
+            nsView.viewDidMoveToWindow()
+        }
+    }
+}
+
+private struct VisualEffectView: NSViewRepresentable {
+    var material: NSVisualEffectView.Material = .sidebar
+    var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
+    var state: NSVisualEffectView.State = .active
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = state
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
+        nsView.state = state
+    }
+}
+
