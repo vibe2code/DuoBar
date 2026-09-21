@@ -52,12 +52,17 @@ jobs:
             appcast.xml
           generate_release_notes: true
 
+      - name: Prepare site directory
+        run: |
+          mkdir -p _site
+          cp appcast.xml _site/
+          cp index.html _site/
+
       - name: Deploy appcast to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./_site
           publish_branch: gh-pages
-          include_files: appcast.xml,index.html
           keep_files: true
           commit_message: "Update appcast for ${{ steps.appcast.outputs.TAG }}"
