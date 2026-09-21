@@ -20,111 +20,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
-
       - name: Build and package .app
         run: |
           chmod +x ./tools/build-app.sh
           ./tools/build-app.sh
 
       - name: Create ZIP
+        id: zip
         run: |
           cd build
           ditto -c -k --keepParent DuoBar.app DuoBar.zip
-          mv DuoBar.zip "${{ runner.temp }}/DuoBar.zip"
+          echo "ZIP_PATH=$(pwd)/DuoBar.zip" >> $GITHUB_ENV
 
-      - name: Extract version
-        id: version
-        run: |
-          if [ -n "${GITHUB_REF_NAME}" ] && [[ "${GITHUB_REF_NAME}" == v* ]]; then
-            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-            echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
-          else
-            echo "VERSION=1.1.0" >> $GITHUB_OUTPUT
-            echo "TAG=v1.1.0" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Sign with Sparkle Ed25519
-        id: sparkle_sign
-        run: |
-          python3 - <<'EOF'
-          import base64, os
-          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-
-          key_b64 = os.environ.get('SPARKLE_PRIVATE_KEY') or "BgWmQnqZbpzQnJ5FdT0QMiT0VZXL0J0xCbUfhAUhVzVOKyeoklMD83OL98pVNluzLDYHgb52OnzS0lW0OZYcfg=="
-          key_bytes = base64.b64decode(key_b64)
-          private_key = Ed25519PrivateKey.from_private_bytes(key_bytes[:32])
-
-          zip_path = os.environ['RUNNER_TEMP'] + '/DuoBar.zip'
-          with open(zip_path, 'rb') as f:
-              data = f.read()
-
-          sig = private_key.sign(data)
-          sig_b64 = base64.b64encode(sig).decode()
-          size = len(data)
-
-          print(f"Signature: {sig_b64}")
-          print(f"Size: {size}")
-
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-              out.write(f"SPARKLE_SIG={sig_b64}\n")
-              out.write(f"SIZE={size}\n")
-          EOF
+      - name: Sign with Sparkle and Generate appcast
+        id: appcast
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-
-      - name: Generate appcast.xml
         run: |
-          VERSION="${{ steps.version.outputs.VERSION }}"
-          TAG="${{ steps.version.outputs.TAG }}"
-          SIG="${{ steps.sparkle_sign.outputs.SPARKLE_SIG }}"
-          SIZE="${{ steps.sparkle_sign.outputs.SIZE }}"
-          DATE=$(date -u +"%a, %d %b %Y %H:%M:%S +0000")
-
-          cat > appcast.xml <<APPCAST
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>DuoBar</title>
-    <link>https://github.com/vibe2code/DuoBar</link>
-    <description>DuoBar releases</description>
-    <language>en</language>
-    <item>
-      <title>DuoBar ${VERSION}</title>
-      <pubDate>${DATE}</pubDate>
-      <sparkle:version>${VERSION}</sparkle:version>
-      <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
-      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <description><![CDATA[
-        <h2>DuoBar ${VERSION}</h2>
-        <ul>
-          <li>Interactive Wi-Fi network picker directly in the popover</li>
-          <li>Interactive Core Audio output selector</li>
-          <li>Translucent native macOS Settings window with blurred glass and materials</li>
-          <li>17 world languages with automatic system detection</li>
-          <li>Automatic background updater via Sparkle</li>
-          <li>High-resolution App Icon</li>
-        </ul>
-      ]]></description>
-      <enclosure
-        url="https://github.com/vibe2code/DuoBar/releases/download/${TAG}/DuoBar.zip"
-        sparkle:edSignature="${SIG}"
-        length="${SIZE}"
-        type="application/octet-stream"
-      />
-    </item>
-  </channel>
-</rss>
-APPCAST
+          pip3 install cryptography
+          chmod +x ./tools/generate-appcast.py
+          TAG="${GITHUB_REF_NAME:-v1.1.0}"
+          ./tools/generate-appcast.py "$TAG"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.TAG }}
-          name: "DuoBar ${{ steps.version.outputs.VERSION }}"
+          tag_name: ${{ steps.appcast.outputs.TAG }}
+          name: "DuoBar ${{ steps.appcast.outputs.VERSION }}"
           files: |
-            ${{ runner.temp }}/DuoBar.zip
+            build/DuoBar.zip
             appcast.xml
           generate_release_notes: true
 
@@ -134,6 +58,6 @@ APPCAST
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          include_files: appcast.xml
+          include_files: appcast.xml,index.html
           keep_files: true
-          commit_message: "Update appcast for ${{ steps.version.outputs.TAG }}"
+          commit_message: "Update appcast for ${{ steps.appcast.outputs.TAG }}"
