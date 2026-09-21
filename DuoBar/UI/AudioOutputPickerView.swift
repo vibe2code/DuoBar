@@ -32,7 +32,7 @@ private struct AudioOutputDeviceRow: View {
             HStack(spacing: 10) {
                 Image(systemName: deviceSymbol)
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(isSelected ? .accent : .secondary)
+                    .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
                     .frame(width: 20)
 
                 Text(device.name)
@@ -45,7 +45,7 @@ private struct AudioOutputDeviceRow: View {
                 if isSelected {
                     Image(systemName: "checkmark")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.accentColor)
                 }
             }
             .padding(.horizontal, 8)

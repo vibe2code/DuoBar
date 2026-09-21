@@ -160,7 +160,7 @@ private struct WiFiNetworkRow: View {
                     if isSelected && !isConnecting {
                         Image(systemName: "checkmark")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(.accent)
+                            .foregroundStyle(Color.accentColor)
                     } else if isConnecting {
                         ProgressView().scaleEffect(0.6)
                     }

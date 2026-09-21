@@ -59,9 +59,9 @@ final class NetworkService: NSObject, @preconcurrency CLLocationManagerDelegate 
                     return WiFiNetworkInfo(
                         ssid: ssid,
                         rssi: cwNetwork.rssiValue,
-                        isSecured: cwNetwork.supportsSecurity(.WPA2Personal)
-                            || cwNetwork.supportsSecurity(.WPA3Personal)
-                            || cwNetwork.supportsSecurity(.WPA2Enterprise)
+                        isSecured: cwNetwork.supportsSecurity(.wpa2Personal)
+                            || cwNetwork.supportsSecurity(.wpa3Personal)
+                            || cwNetwork.supportsSecurity(.wpa2Enterprise)
                             || cwNetwork.supportsSecurity(.personal),
                         bssid: cwNetwork.bssid
                     )

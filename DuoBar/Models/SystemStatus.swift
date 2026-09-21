@@ -235,6 +235,20 @@ struct AudioStatus: Equatable, Sendable {
     var connectedBluetoothOutputs: [AudioDeviceStatus]
     var allOutputDevices: [AudioDeviceStatus]
 
+    init(
+        isAvailable: Bool,
+        defaultOutput: AudioDeviceStatus? = nil,
+        volume: OutputVolumeStatus,
+        connectedBluetoothOutputs: [AudioDeviceStatus] = [],
+        allOutputDevices: [AudioDeviceStatus] = []
+    ) {
+        self.isAvailable = isAvailable
+        self.defaultOutput = defaultOutput
+        self.volume = volume
+        self.connectedBluetoothOutputs = connectedBluetoothOutputs
+        self.allOutputDevices = allOutputDevices
+    }
+
     static let unavailable = AudioStatus(
         isAvailable: false,
         defaultOutput: nil,
