@@ -21,7 +21,8 @@ let package = Package(
             ],
             path: "DuoBar",
             resources: [
-                .process("Assets.xcassets")
+                .process("Assets.xcassets"),
+                .process("Resources/AppIcon.icns")
             ]
         )
     ]
