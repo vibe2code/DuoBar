@@ -77,3 +77,21 @@
 "volume unavailable" = "volume unavailable";
 "battery unavailable" = "battery unavailable";
 "%@, %@, %@" = "%@, %@, %@";
+
+/* Settings Redesign */
+"Startup" = "Startup";
+"Software Updates" = "Software Updates";
+"Check for Updates" = "Check for Updates";
+"Keep DuoBar up to date with latest improvements." = "Keep DuoBar up to date with latest improvements.";
+"Check Now…" = "Check Now…";
+"Check for Updates…" = "Check for Updates…";
+"Automatically launch DuoBar when you log into your Mac." = "Automatically launch DuoBar when you log into your Mac.";
+"Preview" = "Preview";
+"Simulated Menu Bar" = "Simulated Menu Bar";
+"Appearance" = "Appearance";
+"Behavior" = "Behavior";
+"Battery & Power" = "Battery & Power";
+"Color the battery ring green, yellow, or red based on charge level." = "Color the battery ring green, yellow, or red based on charge level.";
+"About" = "About";
+"Lightweight, native status & monitor for your macOS menu bar." = "Lightweight, native status & monitor for your macOS menu bar.";
+"Developer" = "Developer";

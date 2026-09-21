@@ -2,6 +2,16 @@ import ServiceManagement
 import SwiftUI
 
 struct SettingsView: View {
+    private enum SettingsTab: String, Hashable {
+        case general
+        case menuBar
+        case battery
+        case about
+        #if DEBUG
+        case debug
+        #endif
+    }
+
     @AppStorage(PreferenceKeys.showBatteryPercentage) private var showBatteryPercentage = true
     @AppStorage(PreferenceKeys.animationsEnabled) private var animationsEnabled = true
     @AppStorage(PreferenceKeys.menuBarIconScale) private var menuBarIconScale = MenuBarIconSize.defaultScale
@@ -11,99 +21,52 @@ struct SettingsView: View {
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
+
+    @State private var selectedTab: SettingsTab = .general
+
     #if DEBUG
     @AppStorage(PreferenceKeys.simulateDesktopMac) private var simulateDesktopMac = false
     #endif
 
     var body: some View {
-        Form {
-            Section(localized("Menu Bar")) {
-                Toggle(localized("Show battery percentage in popover"), isOn: $showBatteryPercentage)
-                Toggle(localized("Enable animations"), isOn: $animationsEnabled)
+        TabView(selection: $selectedTab) {
+            generalTab
+                .tabItem {
+                    Label(localized("General"), systemImage: "gearshape")
+                }
+                .tag(SettingsTab.general)
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(localized("Icon Size"))
-                    HStack(spacing: 10) {
-                        Text(localized("Small"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Slider(
-                            value: resolvedMenuBarIconScale,
-                            in: MenuBarIconSize.minimumScale...MenuBarIconSize.maximumScale,
-                            step: MenuBarIconSize.step
-                        )
-                        .accessibilityLabel(localized("Menu bar icon size"))
-                        .accessibilityValue(localized("%d%%", Int((MenuBarIconSize.resolve(menuBarIconScale) * 100).rounded())))
-                        Text(localized("Large"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+            menuBarTab
+                .tabItem {
+                    Label(localized("Menu Bar"), systemImage: "menubar.rectangle")
+                }
+                .tag(SettingsTab.menuBar)
+
+            if showsBatteryRingSettings || showsAdaptiveRingSettings {
+                batteryTab
+                    .tabItem {
+                        Label(localized("Battery & Power"), systemImage: "battery.100.bolt")
                     }
-                    Text(localized("Adjust DuoBar to better match your menu bar."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                    .tag(SettingsTab.battery)
             }
 
-            Section(localized("General")) {
-                Toggle(
-                    localized("Launch DuoBar at login"),
-                    isOn: Binding(
-                        get: { launchAtLogin.isEnabled },
-                        set: launchAtLogin.setEnabled
-                    )
-                )
-
-                if launchAtLogin.requiresApproval {
-                    Text(localized("Approval is required in System Settings → General → Login Items."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            aboutTab
+                .tabItem {
+                    Label(localized("About"), systemImage: "info.circle")
                 }
-
-                if let errorMessage = launchAtLogin.errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .textSelection(.enabled)
-                }
-
-                Button(localized("Check for Updates…")) {
-                    PreferenceKeys.updaterService?.checkForUpdates()
-                }
-                .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
-            }
-
-
-            if showsBatteryRingSettings {
-                Section(localized("Battery Ring")) {
-                    Toggle(localized("Battery Color Coding"), isOn: $batteryColorCoding)
-                }
-            }
-
-            if showsAdaptiveRingSettings {
-                Section(localized("Adaptive Ring")) {
-                    Picker(localized("Adaptive Ring Priority"), selection: adaptiveRingPriority) {
-                        ForEach(PerformancePreference.allCases, id: \.self) { preference in
-                            Text(preference.localizedDisplayName).tag(preference)
-                        }
-                    }
-                    Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Toggle(localized("Adaptive Ring Color Coding"), isOn: $adaptiveRingColorCoding)
-                }
-            }
+                .tag(SettingsTab.about)
 
             #if DEBUG
             if !MarketingCaptureMode.isEnabled {
-                DebugPerformanceDiagnosticsView()
-                DebugDuoGlyphTuningView()
+                debugTab
+                    .tabItem {
+                        Label(localized("Developer"), systemImage: "hammer")
+                    }
+                    .tag(SettingsTab.debug)
             }
             #endif
         }
-        .formStyle(.grouped)
-        .scenePadding()
-        .frame(width: 420, height: settingsHeight)
-        .navigationTitle(localized("DuoBar Settings"))
+        .frame(width: 480, height: tabHeight)
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             launchAtLogin.refresh()
@@ -118,13 +81,328 @@ struct SettingsView: View {
         }
     }
 
-    private var settingsHeight: CGFloat {
+    private var tabHeight: CGFloat {
         #if DEBUG
-        MarketingCaptureMode.isEnabled ? 360 : 850
-        #else
-        360
+        if selectedTab == .debug { return 700 }
         #endif
+        switch selectedTab {
+        case .general: return 320
+        case .menuBar: return 420
+        case .battery: return 340
+        case .about: return 330
+        #if DEBUG
+        case .debug: return 700
+        #endif
+        }
     }
+
+    // MARK: - General Tab
+
+    private var generalTab: some View {
+        Form {
+            Section {
+                SettingsCardRow(
+                    icon: "arrow.right.circle.fill",
+                    iconColor: .blue,
+                    title: localized("Launch DuoBar at login"),
+                    subtitle: localized("Automatically launch DuoBar when you log into your Mac.")
+                ) {
+                    Toggle("", isOn: Binding(
+                        get: { launchAtLogin.isEnabled },
+                        set: launchAtLogin.setEnabled
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                }
+
+                if launchAtLogin.requiresApproval {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.yellow)
+                        Text(localized("Approval is required in System Settings → General → Login Items."))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.top, 4)
+                }
+
+                if let errorMessage = launchAtLogin.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .textSelection(.enabled)
+                }
+            } header: {
+                Text(localized("Startup"))
+            }
+
+            Section {
+                SettingsCardRow(
+                    icon: "arrow.triangle.2.circlepath.circle.fill",
+                    iconColor: .teal,
+                    title: localized("Check for Updates"),
+                    subtitle: localized("Keep DuoBar up to date with latest improvements.")
+                ) {
+                    Button(localized("Check Now…")) {
+                        PreferenceKeys.updaterService?.checkForUpdates()
+                    }
+                    .controlSize(.small)
+                    .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
+                }
+            } header: {
+                Text(localized("Software Updates"))
+            }
+        }
+        .formStyle(.grouped)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
+    }
+
+    // MARK: - Menu Bar Tab
+
+    private var menuBarTab: some View {
+        Form {
+            Section {
+                MenuBarLivePreview(scale: resolvedMenuBarIconScale.wrappedValue)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+            } header: {
+                Text(localized("Preview"))
+            }
+
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        SettingsIconLabel(icon: "arrow.left.and.right", iconColor: .purple)
+                        Text(localized("Icon Size"))
+                            .font(.system(size: 13))
+
+                        Spacer()
+
+                        Text("\(Int((resolvedMenuBarIconScale.wrappedValue * 100).rounded()))%")
+                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 2)
+                            .background(Color.primary.opacity(0.06), in: Capsule())
+                    }
+
+                    HStack(spacing: 12) {
+                        Text(localized("Small"))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                        Slider(
+                            value: resolvedMenuBarIconScale,
+                            in: MenuBarIconSize.minimumScale...MenuBarIconSize.maximumScale,
+                            step: MenuBarIconSize.step
+                        )
+                        .accessibilityLabel(localized("Menu bar icon size"))
+
+                        Text(localized("Large"))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Text(localized("Adjust DuoBar to better match your menu bar."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 4)
+            } header: {
+                Text(localized("Appearance"))
+            }
+
+            Section {
+                SettingsCardRow(
+                    icon: "percent",
+                    iconColor: .green,
+                    title: localized("Show battery percentage in popover"),
+                    subtitle: nil
+                ) {
+                    Toggle("", isOn: $showBatteryPercentage)
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                }
+
+                SettingsCardRow(
+                    icon: "sparkles",
+                    iconColor: .pink,
+                    title: localized("Enable animations"),
+                    subtitle: nil
+                ) {
+                    Toggle("", isOn: $animationsEnabled)
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                }
+            } header: {
+                Text(localized("Behavior"))
+            }
+        }
+        .formStyle(.grouped)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
+    }
+
+    // MARK: - Battery & Power Tab
+
+    private var batteryTab: some View {
+        Form {
+            if showsBatteryRingSettings {
+                Section {
+                    SettingsCardRow(
+                        icon: "paintpalette.fill",
+                        iconColor: .orange,
+                        title: localized("Battery Color Coding"),
+                        subtitle: localized("Color the battery ring green, yellow, or red based on charge level.")
+                    ) {
+                        Toggle("", isOn: $batteryColorCoding)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
+                    }
+                } header: {
+                    Text(localized("Battery Ring"))
+                }
+            }
+
+            if showsAdaptiveRingSettings {
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            SettingsIconLabel(icon: "gauge.with.dots.needle.bottom.50percent", iconColor: .indigo)
+                            Text(localized("Adaptive Ring Priority"))
+                                .font(.system(size: 13))
+
+                            Spacer()
+
+                            Picker("", selection: adaptiveRingPriority) {
+                                ForEach(PerformancePreference.allCases, id: \.self) { preference in
+                                    Text(preference.localizedDisplayName).tag(preference)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                            .frame(maxWidth: 160)
+                        }
+
+                        Text(localized("Used only when multiple system conditions need attention. Critical conditions can still take priority."))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+
+                    SettingsCardRow(
+                        icon: "slider.horizontal.2.square",
+                        iconColor: .mint,
+                        title: localized("Adaptive Ring Color Coding"),
+                        subtitle: nil
+                    ) {
+                        Toggle("", isOn: $adaptiveRingColorCoding)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
+                    }
+                } header: {
+                    Text(localized("Adaptive Ring"))
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
+    }
+
+    // MARK: - About Tab
+
+    private var aboutTab: some View {
+        VStack(spacing: 16) {
+            Spacer()
+
+            // App Icon with macOS drop shadow & border
+            if let iconImage = NSImage(named: "AppIcon") ?? NSApp.applicationIconImage {
+                Image(nsImage: iconImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 72, height: 72)
+                    .shadow(color: .black.opacity(0.18), radius: 6, x: 0, y: 3)
+            } else {
+                Image(systemName: "gauge.with.dots.needle.bottom.50percent")
+                    .font(.system(size: 48))
+                    .foregroundStyle(Color.accentColor)
+            }
+
+            VStack(spacing: 4) {
+                Text("DuoBar")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 6) {
+                    Text("Version 1.1.0")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+
+                    Text("•")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+
+                    Text("Build 3")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Color.primary.opacity(0.05), in: Capsule())
+
+                Text(localized("Lightweight, native status & monitor for your macOS menu bar."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 4)
+                    .padding(.horizontal, 32)
+            }
+
+            HStack(spacing: 12) {
+                Button(action: {
+                    PreferenceKeys.updaterService?.checkForUpdates()
+                }) {
+                    Label(localized("Check for Updates…"), systemImage: "arrow.triangle.2.circlepath")
+                }
+                .controlSize(.regular)
+                .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
+
+                if let gitHubURL = URL(string: "https://github.com/vibe2code/DuoBar") {
+                    Link(destination: gitHubURL) {
+                        Label("GitHub", systemImage: "link")
+                    }
+                    .controlSize(.regular)
+                }
+            }
+            .padding(.top, 4)
+
+            Spacer()
+
+            Text("Released under the MIT License.")
+                .font(.system(size: 10))
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 12)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 20)
+    }
+
+    // MARK: - Debug Tab
+
+    #if DEBUG
+    private var debugTab: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                DebugPerformanceDiagnosticsView()
+                DebugDuoGlyphTuningView()
+            }
+            .padding(16)
+        }
+    }
+    #endif
+
+    // MARK: - Helpers
 
     private var adaptiveRingPriority: Binding<PerformancePreference> {
         Binding(
@@ -157,5 +435,109 @@ struct SettingsView: View {
         #else
         deviceContextService.current().ringBehavior == .batteryRing
         #endif
+    }
+}
+
+// MARK: - Native Styling Components
+
+private struct SettingsIconLabel: View {
+    let icon: String
+    let iconColor: Color
+
+    var body: some View {
+        Image(systemName: icon)
+            .font(.system(size: 11, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: 22, height: 22)
+            .background(iconColor, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+    }
+}
+
+private struct SettingsCardRow<Content: View>: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let subtitle: String?
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        HStack(spacing: 12) {
+            SettingsIconLabel(icon: icon, iconColor: iconColor)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 13))
+                    .foregroundStyle(.primary)
+
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Spacer(minLength: 8)
+
+            content()
+        }
+        .padding(.vertical, 3)
+    }
+}
+
+private struct MenuBarLivePreview: View {
+    let scale: Double
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack(spacing: 16) {
+                Text(localized("Simulated Menu Bar"))
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+
+                Spacer()
+
+                // Live Preview of DuoBar glyph inside simulated menu bar
+                HStack(spacing: 6) {
+                    ZStack {
+                        Circle()
+                            .stroke(Color.primary.opacity(0.2), lineWidth: 2 * scale)
+                        Circle()
+                            .trim(from: 0, to: 0.82)
+                            .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 2 * scale, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                    }
+                    .frame(width: 16 * scale, height: 16 * scale)
+
+                    HStack(spacing: 2.2 * scale) {
+                        Circle().fill(Color.primary).frame(width: 2.5 * scale, height: 2.5 * scale)
+                        Circle().fill(Color.primary).frame(width: 2.5 * scale, height: 2.5 * scale)
+                        Circle().fill(Color.primary.opacity(0.35)).frame(width: 2.5 * scale, height: 2.5 * scale)
+                    }
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+
+                // Standard macOS menu bar indicators
+                Image(systemName: "switch.2")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+
+                Text("9:41")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundStyle(.primary)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(nsColor: .windowBackgroundColor))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+                    )
+            )
+        }
+        .padding(.vertical, 2)
     }
 }

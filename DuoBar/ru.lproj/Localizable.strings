@@ -86,3 +86,21 @@
 "Cancel" = "Отмена";
 "Incorrect password" = "Неверный пароль";
 "Check for Updates…" = "Проверить обновления…";
+
+/* Settings Redesign */
+"Startup" = "Автозапуск";
+"Software Updates" = "Обновление ПО";
+"Check for Updates" = "Проверка обновлений";
+"Keep DuoBar up to date with latest improvements." = "Поддерживайте актуальную версию DuoBar.";
+"Check Now…" = "Проверить…";
+"Check for Updates…" = "Проверить обновления…";
+"Automatically launch DuoBar when you log into your Mac." = "Автоматически открывать DuoBar при входе в систему.";
+"Preview" = "Предпросмотр";
+"Simulated Menu Bar" = "Строка меню";
+"Appearance" = "Внешний вид";
+"Behavior" = "Поведение";
+"Battery & Power" = "Питание и кольцо";
+"Color the battery ring green, yellow, or red based on charge level." = "Окрашивать кольцо в зелёный, жёлтый или красный цвет в зависимости от уровня заряда.";
+"About" = "О программе";
+"Lightweight, native status & monitor for your macOS menu bar." = "Компактный и нативный индикатор статуса в строке меню macOS.";
+"Developer" = "Разработчик";
