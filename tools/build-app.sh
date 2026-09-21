@@ -71,11 +71,24 @@ if [ -f "$REPO_ROOT/DuoBar/Resources/AppIcon.icns" ]; then
 fi
 
 # Copy Sparkle framework
-SPARKLE_FW="$REPO_ROOT/.build/artifacts/sparkle/Sparkle/Sparkle.framework"
-if [ -d "$SPARKLE_FW" ]; then
+SPARKLE_FW=""
+for cand in \
+    "$REPO_ROOT/.build/arm64-apple-macosx/release/Sparkle.framework" \
+    "$REPO_ROOT/.build/artifacts/sparkle/Sparkle/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework" \
+    "$REPO_ROOT/.build/artifacts/sparkle/Sparkle/Sparkle.framework"; do
+    if [ -d "$cand" ]; then
+        SPARKLE_FW="$cand"
+        break
+    fi
+done
+
+if [ -n "$SPARKLE_FW" ]; then
     mkdir -p "$CONTENTS/Frameworks"
     cp -R "$SPARKLE_FW" "$CONTENTS/Frameworks/"
 fi
+
+# Ensure rpath is configured so dyld can locate @rpath/Sparkle.framework in Frameworks
+install_name_tool -add_rpath @executable_path/../Frameworks "$MACOS/DuoBar" 2>/dev/null || true
 
 # Copy SPM resource bundle if present
 SPM_BUNDLE="$REPO_ROOT/.build/release/DuoBar_DuoBar.bundle"

@@ -28,17 +28,21 @@ final class BluetoothService {
     }
 
     func refresh() {
-        guard let controller = IOBluetoothHostController.default() else {
-            onStatusChange?(.unavailable)
-            return
-        }
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let status: BluetoothStatus
+            if let controller = IOBluetoothHostController.default() {
+                status = BluetoothStatus(
+                    isAvailable: true,
+                    isPoweredOn: controller.powerState == kBluetoothHCIPowerStateON
+                )
+            } else {
+                status = .unavailable
+            }
 
-        onStatusChange?(
-            BluetoothStatus(
-                isAvailable: true,
-                isPoweredOn: controller.powerState == kBluetoothHCIPowerStateON
-            )
-        )
+            DispatchQueue.main.async { [weak self] in
+                self?.onStatusChange?(status)
+            }
+        }
     }
 
     deinit {
