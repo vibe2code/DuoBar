@@ -6,8 +6,21 @@ struct StatusRow: View {
     let detail: String
     let stateText: String
     let tint: Color
+    var isExpanded: Bool = false
+    var action: (() -> Void)? = nil
 
     var body: some View {
+        Group {
+            if let action {
+                Button(action: action) { rowContent }
+                    .buttonStyle(.plain)
+            } else {
+                rowContent
+            }
+        }
+    }
+
+    private var rowContent: some View {
         HStack(spacing: 11) {
             Image(systemName: symbol)
                 .font(.system(size: 13, weight: .semibold))
@@ -26,13 +39,30 @@ struct StatusRow: View {
 
             Spacer(minLength: 8)
 
-            Text(stateText)
-                .font(.system(size: 10.5, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
+            if action != nil {
+                HStack(spacing: 4) {
+                    Text(stateText)
+                        .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.tertiary)
+                        .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                        .animation(.spring(response: 0.3), value: isExpanded)
+                }
+            } else {
+                Text(stateText)
+                    .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
         }
         .padding(.horizontal, 10)
         .frame(height: 48)
-        .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .background(.primary.opacity(action != nil && isExpanded ? 0.07 : 0.045),
+                    in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .animation(.easeInOut(duration: 0.15), value: isExpanded)
     }
 }

@@ -100,6 +100,21 @@ final class SystemStatusStore: ObservableObject {
         return audioOutputService.setMuted(muted)
     }
 
+    @discardableResult
+    func setDefaultOutputDevice(uid: String) -> Bool {
+        audioOutputService.setDefaultOutputDevice(uid: uid)
+    }
+
+    func scanForWiFiNetworks() async -> [WiFiNetworkInfo] {
+        await networkService.scanForNetworks()
+    }
+
+    func connectToWiFi(ssid: String, password: String?) async -> Bool {
+        let success = await networkService.connectToNetwork(ssid: ssid, password: password)
+        if success { networkService.refresh() }
+        return success
+    }
+
     private func mutate(_ update: (inout SystemStatus) -> Void) {
         let previous = status
         var next = status

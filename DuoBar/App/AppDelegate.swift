@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusStore: SystemStatusStore?
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
+    private var updaterService: UpdaterService?
 
     #if DEBUG
     private var marketingCaptureObserver: NSObjectProtocol?
@@ -20,7 +21,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             PreferenceKeys.showBatteryPercentage: true,
             PreferenceKeys.animationsEnabled: true,
             PreferenceKeys.menuBarIconScale: MenuBarIconSize.defaultScale,
-            PreferenceKeys.batteryColorCoding: false
+            PreferenceKeys.batteryColorCoding: false,
+            // Sparkle appcast URL — points to GitHub Pages branch
+            "SUFeedURL": "https://vibe2code.github.io/DuoBar/appcast.xml",
+            "SUPublicEDKey": "TisnqJJTA/Nzi/fKVTZbsyw2B4G+djp80tJVtDmWHH4="
         ])
         super.init()
     }
@@ -42,6 +46,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
         let statusStore = SystemStatusStore()
         self.statusStore = statusStore
+
+        // Start auto-updater
+        let updaterService = UpdaterService()
+        self.updaterService = updaterService
+        PreferenceKeys.updaterService = updaterService
 
         #if DEBUG
         if MarketingCaptureMode.isEnabled {

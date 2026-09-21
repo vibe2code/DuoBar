@@ -45,6 +45,47 @@ final class NetworkService: NSObject, @preconcurrency CLLocationManagerDelegate 
         locationManager.requestWhenInUseAuthorization()
     }
 
+    /// Scan for nearby Wi-Fi networks. Returns results asynchronously.
+    func scanForNetworks() async -> [WiFiNetworkInfo] {
+        guard let interface = client.interface() else { return [] }
+        return await Task.detached(priority: .userInitiated) {
+            let networks = try? interface.scanForNetworks(withSSID: nil)
+            guard let networks else { return [] }
+            var seen = Set<String>()
+            return networks
+                .compactMap { cwNetwork -> WiFiNetworkInfo? in
+                    guard let ssid = cwNetwork.ssid, !ssid.isEmpty else { return nil }
+                    guard seen.insert(ssid).inserted else { return nil }
+                    return WiFiNetworkInfo(
+                        ssid: ssid,
+                        rssi: cwNetwork.rssiValue,
+                        isSecured: cwNetwork.supportsSecurity(.WPA2Personal)
+                            || cwNetwork.supportsSecurity(.WPA3Personal)
+                            || cwNetwork.supportsSecurity(.WPA2Enterprise)
+                            || cwNetwork.supportsSecurity(.personal),
+                        bssid: cwNetwork.bssid
+                    )
+                }
+                .sorted { $0.rssi > $1.rssi }
+        }.value
+    }
+
+    /// Associate to a Wi-Fi network. Pass nil password for open networks.
+    func connectToNetwork(ssid: String, password: String?) async -> Bool {
+        guard let interface = client.interface() else { return false }
+        return await Task.detached(priority: .userInitiated) {
+            // Find the network in a fresh scan
+            let networks = (try? interface.scanForNetworks(withSSID: ssid.data(using: .utf8))) ?? []
+            guard let target = networks.first(where: { $0.ssid == ssid }) else { return false }
+            do {
+                try interface.associate(to: target, password: password)
+                return true
+            } catch {
+                return false
+            }
+        }.value
+    }
+
     func refresh() {
         let path = latestPath ?? pathMonitor.currentPath
         let wifiInterface = client.interface()

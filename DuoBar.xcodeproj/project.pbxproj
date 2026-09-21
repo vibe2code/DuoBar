@@ -13,6 +13,7 @@
 		A10000000000000000000024 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000034 /* ServiceManagement.framework */; };
 		A10000000000000000000025 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000035 /* XCTest.framework */; };
 		A10000000000000000000026 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000036 /* CoreLocation.framework */; };
+		B551DF03DEAD000000000001 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = B551DF02DEAD000000000001 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 				A10000000000000000000023 /* IOBluetooth.framework in Frameworks */,
 				A10000000000000000000024 /* ServiceManagement.framework in Frameworks */,
 				A10000000000000000000026 /* CoreLocation.framework in Frameworks */,
+				B551DF03DEAD000000000001 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +127,7 @@
 			);
 			name = DuoBar;
 			packageProductDependencies = (
+				B551DF02DEAD000000000001 /* Sparkle */,
 			);
 			productName = DuoBar;
 			productReference = A10000000000000000000012 /* DuoBar.app */;
@@ -183,12 +186,36 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A10000000000000000000003 /* Products */;
 			projectDirPath = "";
+			packageReferences = (
+				B551DF01DEAD000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			projectRoot = "";
 			targets = (
 				A10000000000000000000011 /* DuoBar */,
 				A10000000000000000000013 /* DuoBarTests */,
 			);
 		};
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B551DF01DEAD000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+
+/* Begin XCSwiftPackageProductDependency section */
+		B551DF02DEAD000000000001 /* XCSwiftPackageProductDependency */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B551DF01DEAD000000000001 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */

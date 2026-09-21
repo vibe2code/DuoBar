@@ -113,6 +113,9 @@ final class AudioOutputService {
         let bluetoothOutputs = outputDevices
             .filter { $0.isAlive && $0.transport.isBluetooth }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        let sortedAllDevices = outputDevices
+            .filter { $0.isAlive }
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
         let volume = readVolumeStatus(deviceID: defaultDeviceID)
         publish(
@@ -120,9 +123,36 @@ final class AudioOutputService {
                 isAvailable: defaultOutput != nil || !outputDevices.isEmpty,
                 defaultOutput: defaultOutput,
                 volume: volume,
-                connectedBluetoothOutputs: bluetoothOutputs
+                connectedBluetoothOutputs: bluetoothOutputs,
+                allOutputDevices: sortedAllDevices
             )
         )
+    }
+
+    @discardableResult
+    func setDefaultOutputDevice(uid: String) -> Bool {
+        // Find deviceID matching the UID
+        let deviceID = readAudioDeviceIDs()
+            .filter(isOutputDevice)
+            .first { makeDeviceStatus($0)?.uid == uid }
+        guard let deviceID else { return false }
+
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var deviceIDVar = deviceID
+        let result = AudioObjectSetPropertyData(
+            Self.systemObject,
+            &address,
+            0,
+            nil,
+            UInt32(MemoryLayout<AudioDeviceID>.size),
+            &deviceIDVar
+        )
+        if result == noErr { refresh(rebindDeviceListeners: true) }
+        return result == noErr
     }
 
     private func registerSystemListener(selector: AudioObjectPropertySelector) {

@@ -65,7 +65,13 @@ struct SettingsView: View {
                         .foregroundStyle(.red)
                         .textSelection(.enabled)
                 }
+
+                Button(localized("Check for Updates…")) {
+                    PreferenceKeys.updaterService?.checkForUpdates()
+                }
+                .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
             }
+
 
             if showsBatteryRingSettings {
                 Section(localized("Battery Ring")) {

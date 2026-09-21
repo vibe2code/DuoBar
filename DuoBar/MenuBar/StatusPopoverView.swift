@@ -7,82 +7,129 @@ struct StatusPopoverView: View {
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     private let onClose: () -> Void
 
+    @State private var showWiFiPicker = false
+    @State private var showAudioPicker = false
+
     init(statusStore: SystemStatusStore, onClose: @escaping () -> Void) {
         self.statusStore = statusStore
         self.onClose = onClose
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text("DuoBar")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                Spacer()
-                DuoGlyphView(
-                    status: statusStore.status,
-                    metrics: DuoGlyphMetrics.standard.sized(20),
-                    animationsEnabled: false,
-                    batteryColorCodingEnabled: batteryColorCoding
-                )
-            }
-            .padding(.horizontal, 2)
-
-            StatusRow(
-                symbol: networkSymbol,
-                title: localized("Network"),
-                detail: networkDetail,
-                stateText: networkState,
-                tint: .primary
-            )
-
-            VolumeStatusRow(
-                volume: statusStore.status.audio.volume,
-                hasOutputDevice: statusStore.status.audio.defaultOutput != nil,
-                playbackDeviceIdentifier: statusStore.status.audio.defaultOutput?.uid,
-                onSetVolume: statusStore.setVolume,
-                onSetMuted: statusStore.setMuted
-            )
-
-            StatusRow(
-                symbol: batterySymbol,
-                title: localized("Battery"),
-                detail: batteryDetail,
-                stateText: batteryPercentage,
-                tint: .primary
-            )
-
-            StatusRow(
-                symbol: audioOutputSymbol,
-                title: localized("Audio Output"),
-                detail: audioOutputDetail,
-                stateText: audioOutputState,
-                tint: .primary
-            )
-
-            #if DEBUG
-            if !MarketingCaptureMode.isEnabled {
-                DebugStatusSimulatorView(statusStore: statusStore)
-            }
-            #endif
-
-            Divider()
-
-            HStack(spacing: 6) {
-                settingsAction
-
-                Spacer()
-
-                Button(localized("Quit DuoBar")) {
-                    NSApp.terminate(nil)
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 8) {
+                HStack {
+                    Text("DuoBar")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    Spacer()
+                    DuoGlyphView(
+                        status: statusStore.status,
+                        metrics: DuoGlyphMetrics.standard.sized(20),
+                        animationsEnabled: false,
+                        batteryColorCodingEnabled: batteryColorCoding
+                    )
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                .padding(.horizontal, 2)
+
+                // MARK: Network Row + Wi-Fi Picker
+                VStack(spacing: 6) {
+                    StatusRow(
+                        symbol: networkSymbol,
+                        title: localized("Network"),
+                        detail: networkDetail,
+                        stateText: networkState,
+                        tint: .primary,
+                        isExpanded: showWiFiPicker,
+                        action: statusStore.status.network.transport == .wifi
+                            ? {
+                                withAnimation(.spring(response: 0.35)) {
+                                    showWiFiPicker.toggle()
+                                    if showWiFiPicker { showAudioPicker = false }
+                                }
+                            }
+                            : nil
+                    )
+
+                    if showWiFiPicker {
+                        WiFiNetworkPickerContainer(
+                            statusStore: statusStore,
+                            currentSSID: statusStore.status.network.ssid
+                        )
+                    }
+                }
+
+                VolumeStatusRow(
+                    volume: statusStore.status.audio.volume,
+                    hasOutputDevice: statusStore.status.audio.defaultOutput != nil,
+                    playbackDeviceIdentifier: statusStore.status.audio.defaultOutput?.uid,
+                    onSetVolume: statusStore.setVolume,
+                    onSetMuted: statusStore.setMuted
+                )
+
+                StatusRow(
+                    symbol: batterySymbol,
+                    title: localized("Battery"),
+                    detail: batteryDetail,
+                    stateText: batteryPercentage,
+                    tint: .primary
+                )
+
+                // MARK: Audio Output Row + Device Picker
+                VStack(spacing: 6) {
+                    StatusRow(
+                        symbol: audioOutputSymbol,
+                        title: localized("Audio Output"),
+                        detail: audioOutputDetail,
+                        stateText: audioOutputState,
+                        tint: .primary,
+                        isExpanded: showAudioPicker,
+                        action: statusStore.status.audio.allOutputDevices.count > 1
+                            ? {
+                                withAnimation(.spring(response: 0.35)) {
+                                    showAudioPicker.toggle()
+                                    if showAudioPicker { showWiFiPicker = false }
+                                }
+                            }
+                            : nil
+                    )
+
+                    if showAudioPicker {
+                        AudioOutputPickerView(
+                            devices: statusStore.status.audio.allOutputDevices,
+                            currentUID: statusStore.status.audio.defaultOutput?.uid,
+                            onSelect: { uid in
+                                statusStore.setDefaultOutputDevice(uid: uid)
+                                withAnimation(.spring(response: 0.35)) { showAudioPicker = false }
+                            }
+                        )
+                    }
+                }
+
+                #if DEBUG
+                if !MarketingCaptureMode.isEnabled {
+                    DebugStatusSimulatorView(statusStore: statusStore)
+                }
+                #endif
+
+                Divider()
+
+                HStack(spacing: 6) {
+                    settingsAction
+
+                    Spacer()
+
+                    Button(localized("Quit DuoBar")) {
+                        NSApp.terminate(nil)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
+                }
+                .font(.system(size: 11.5, weight: .medium))
+                .padding(.horizontal, 3)
             }
-            .font(.system(size: 11.5, weight: .medium))
-            .padding(.horizontal, 3)
+            .padding(12)
+            .frame(width: 304)
         }
-        .padding(12)
-        .frame(width: 304)
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             statusStore.requestWiFiSSIDAccess()
@@ -132,6 +179,8 @@ struct StatusPopoverView: View {
         }
         return nil
     }
+
+    // MARK: - Computed strings
 
     private var networkSymbol: String {
         let network = statusStore.status.network
@@ -225,6 +274,8 @@ struct StatusPopoverView: View {
         }
     }
 }
+
+// MARK: - Debug
 
 #if DEBUG
 private struct DebugStatusSimulatorView: View {

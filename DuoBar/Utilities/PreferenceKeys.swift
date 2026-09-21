@@ -6,6 +6,9 @@ enum PreferenceKeys {
     static let adaptiveRingPriority = "adaptiveRingPriority"
     static let adaptiveRingColorCoding = "adaptiveRingColorCoding"
 
+    // Injected by AppDelegate at launch
+    static var updaterService: UpdaterService?
+
     #if DEBUG
     static let simulateDesktopMac = "debug.simulateDesktopMac"
     #endif

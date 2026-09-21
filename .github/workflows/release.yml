@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Resolve SPM packages
+        run: xcodebuild -resolvePackageDependencies -project DuoBar.xcodeproj -scheme DuoBar
+
+      - name: Build archive (unsigned)
+        run: |
+          xcodebuild archive \
+            -project DuoBar.xcodeproj \
+            -scheme DuoBar \
+            -configuration Release \
+            -archivePath "${{ runner.temp }}/DuoBar.xcarchive" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            ONLY_ACTIVE_ARCH=NO
+
+      - name: Export .app
+        run: |
+          cp -R "${{ runner.temp }}/DuoBar.xcarchive/Products/Applications/DuoBar.app" \
+                "${{ runner.temp }}/DuoBar.app"
+
+      - name: Create ZIP
+        run: |
+          cd "${{ runner.temp }}"
+          ditto -c -k --keepParent DuoBar.app DuoBar.zip
+
+      - name: Extract version
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Sign with Sparkle Ed25519
+        id: sparkle_sign
+        run: |
+          # Use Python to sign the zip with the Ed25519 private key (Sparkle format)
+          python3 - <<'EOF'
+          import base64, hashlib, sys
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+          from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, NoEncryption
+          import os
+
+          key_b64 = os.environ['SPARKLE_PRIVATE_KEY']
+          key_bytes = base64.b64decode(key_b64)
+          private_key = Ed25519PrivateKey.from_private_bytes(key_bytes[:32])
+
+          with open(os.environ['RUNNER_TEMP'] + '/DuoBar.zip', 'rb') as f:
+              data = f.read()
+
+          sig = private_key.sign(data)
+          sig_b64 = base64.b64encode(sig).decode()
+          print(f"SPARKLE_SIG={sig_b64}")
+          EOF
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+
+      - name: Get ZIP size
+        id: zip_size
+        run: |
+          SIZE=$(wc -c < "${{ runner.temp }}/DuoBar.zip" | tr -d ' ')
+          echo "SIZE=$SIZE" >> $GITHUB_OUTPUT
+
+      - name: Generate appcast.xml
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          TAG="${GITHUB_REF_NAME}"
+          SIG="${{ steps.sparkle_sign.outputs.SPARKLE_SIG }}"
+          SIZE="${{ steps.zip_size.outputs.SIZE }}"
+          DATE=$(date -u +"%a, %d %b %Y %H:%M:%S +0000")
+
+          cat > appcast.xml <<APPCAST
+          <?xml version="1.0" encoding="utf-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+            <channel>
+              <title>DuoBar</title>
+              <link>https://github.com/vibe2code/DuoBar</link>
+              <description>DuoBar releases</description>
+              <language>en</language>
+              <item>
+                <title>Version ${VERSION}</title>
+                <pubDate>${DATE}</pubDate>
+                <sparkle:version>${VERSION}</sparkle:version>
+                <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
+                <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+                <enclosure
+                  url="https://github.com/vibe2code/DuoBar/releases/download/${TAG}/DuoBar.zip"
+                  sparkle:signature="${SIG}"
+                  sparkle:edSignature="${SIG}"
+                  length="${SIZE}"
+                  type="application/octet-stream"
+                />
+              </item>
+            </channel>
+          </rss>
+          APPCAST
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ runner.temp }}/DuoBar.zip
+          generate_release_notes: true
+          name: "DuoBar ${{ steps.version.outputs.VERSION }}"
+
+      - name: Deploy appcast to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          include_files: appcast.xml
+          keep_files: true
+          commit_message: "Update appcast for ${{ github.ref_name }}"

@@ -207,17 +207,40 @@ struct AudioDeviceStatus: Equatable, Sendable, Identifiable {
     }
 }
 
+struct WiFiNetworkInfo: Equatable, Sendable, Identifiable {
+    var id: String { bssid ?? ssid }
+    var ssid: String
+    var rssi: Int
+    var isSecured: Bool
+    var bssid: String?
+
+    var signalStrength: Double {
+        min(max(Double(rssi + 100) / 65.0, 0), 1)
+    }
+
+    var signalBars: Int {
+        switch rssi {
+        case ..<(-85): return 1
+        case -85..<(-75): return 2
+        case -75..<(-67): return 3
+        default: return 4
+        }
+    }
+}
+
 struct AudioStatus: Equatable, Sendable {
     var isAvailable: Bool
     var defaultOutput: AudioDeviceStatus?
     var volume: OutputVolumeStatus
     var connectedBluetoothOutputs: [AudioDeviceStatus]
+    var allOutputDevices: [AudioDeviceStatus]
 
     static let unavailable = AudioStatus(
         isAvailable: false,
         defaultOutput: nil,
         volume: .unavailable,
-        connectedBluetoothOutputs: []
+        connectedBluetoothOutputs: [],
+        allOutputDevices: []
     )
 
     var connectedAudioDevice: AudioDeviceStatus? {
