@@ -9,6 +9,10 @@ struct WiFiNetworkPickerView: View {
     @State private var isScanning = false
     @State private var passwordTarget: WiFiNetworkInfo? = nil
     @State private var password = ""
+    @State private var isPasswordVisible = false
+    @State private var savePassword = true
+    @State private var isFromKeychain = false
+    @State private var isFetchingSystemPassword = false
     @State private var isConnecting = false
     @State private var connectionError = false
 
@@ -39,6 +43,10 @@ struct WiFiNetworkPickerView: View {
                             isConnecting: isConnecting && passwordTarget?.ssid == network.ssid,
                             showingPassword: passwordTarget?.ssid == network.ssid,
                             password: $password,
+                            isPasswordVisible: $isPasswordVisible,
+                            savePassword: $savePassword,
+                            isFromKeychain: isFromKeychain,
+                            isFetchingSystemPassword: isFetchingSystemPassword && passwordTarget?.ssid == network.ssid,
                             connectionError: connectionError && passwordTarget?.ssid == network.ssid,
                             onTap: { handleNetworkTap(network) },
                             onConnect: { handleConnect(network) },
@@ -92,6 +100,38 @@ struct WiFiNetworkPickerView: View {
             withAnimation(.spring(response: 0.3)) {
                 passwordTarget = network
                 password = ""
+                isPasswordVisible = false
+                savePassword = true
+                isFromKeychain = false
+                isFetchingSystemPassword = false
+            }
+
+            if let saved = WiFiKeychainService.shared.getSavedPassword(for: network.ssid) {
+                password = saved
+                isFromKeychain = true
+                return
+            }
+
+            if WiFiKeychainService.shared.isKnownSystemNetwork(ssid: network.ssid) {
+                isFetchingSystemPassword = true
+                Task {
+                    if let sysPwd = await WiFiKeychainService.shared.fetchSystemPassword(for: network.ssid, timeoutSeconds: 3.5) {
+                        await MainActor.run {
+                            if passwordTarget?.ssid == network.ssid {
+                                password = sysPwd
+                                isFromKeychain = true
+                                isFetchingSystemPassword = false
+                                WiFiKeychainService.shared.savePassword(sysPwd, for: network.ssid)
+                            }
+                        }
+                    } else {
+                        await MainActor.run {
+                            if passwordTarget?.ssid == network.ssid {
+                                isFetchingSystemPassword = false
+                            }
+                        }
+                    }
+                }
             }
         } else {
             Task { await connectDirect(to: network, password: nil) }
@@ -100,10 +140,17 @@ struct WiFiNetworkPickerView: View {
 
     private func handleConnect(_ network: WiFiNetworkInfo) {
         let pwd = password.isEmpty ? nil : password
-        Task { await connectDirect(to: network, password: pwd) }
+        let shouldSave = savePassword
+        Task {
+            let success = await connectDirect(to: network, password: pwd)
+            if success && shouldSave, let pwd, !pwd.isEmpty {
+                WiFiKeychainService.shared.savePassword(pwd, for: network.ssid)
+            }
+        }
     }
 
-    private func connectDirect(to network: WiFiNetworkInfo, password: String?) async {
+    @discardableResult
+    private func connectDirect(to network: WiFiNetworkInfo, password: String?) async -> Bool {
         isConnecting = true
         connectionError = false
         let success = await onConnect(network.ssid, password)
@@ -113,12 +160,17 @@ struct WiFiNetworkPickerView: View {
         } else {
             connectionError = true
         }
+        return success
     }
 
     private func cancelPassword() {
         withAnimation(.spring(response: 0.3)) {
             passwordTarget = nil
             password = ""
+            isPasswordVisible = false
+            savePassword = true
+            isFromKeychain = false
+            isFetchingSystemPassword = false
             connectionError = false
         }
     }
@@ -132,6 +184,10 @@ private struct WiFiNetworkRow: View {
     let isConnecting: Bool
     let showingPassword: Bool
     @Binding var password: String
+    @Binding var isPasswordVisible: Bool
+    @Binding var savePassword: Bool
+    let isFromKeychain: Bool
+    let isFetchingSystemPassword: Bool
     let connectionError: Bool
     let onTap: () -> Void
     let onConnect: () -> Void
@@ -174,24 +230,80 @@ private struct WiFiNetworkRow: View {
             .buttonStyle(.plain)
 
             if showingPassword {
-                VStack(spacing: 6) {
-                    SecureField(localized("Password"), text: $password)
+                VStack(spacing: 7) {
+                    // Password Input Field with Show/Hide Eye Button
+                    HStack(spacing: 6) {
+                        Group {
+                            if isPasswordVisible {
+                                TextField(localized("Password"), text: $password)
+                            } else {
+                                SecureField(localized("Password"), text: $password)
+                            }
+                        }
                         .textFieldStyle(.roundedBorder)
                         .font(.system(size: 12))
                         .onSubmit { onConnect() }
 
-                    if connectionError {
-                        Text(localized("Incorrect password"))
-                            .font(.system(size: 10.5))
-                            .foregroundStyle(.red)
+                        Button(action: { isPasswordVisible.toggle() }) {
+                            Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                                .font(.system(size: 11.5))
+                                .foregroundStyle(.secondary)
+                                .frame(width: 20, height: 20)
+                        }
+                        .buttonStyle(.plain)
+                        .help(isPasswordVisible ? localized("Hide password") : localized("Show password"))
                     }
 
-                    HStack(spacing: 8) {
+                    // Keychain Indicator or Fetching Progress
+                    if isFetchingSystemPassword {
+                        HStack(spacing: 6) {
+                            ProgressView().scaleEffect(0.55)
+                            Text(localized("Checking Keychain…"))
+                                .font(.system(size: 10))
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 2)
+                    } else if isFromKeychain && !password.isEmpty {
+                        HStack(spacing: 5) {
+                            Image(systemName: "key.fill")
+                                .font(.system(size: 9))
+                                .foregroundStyle(Color.accentColor)
+                            Text(localized("Saved in Keychain"))
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 2)
+                    }
+
+                    if connectionError {
+                        HStack {
+                            Text(localized("Incorrect password"))
+                                .font(.system(size: 10.5))
+                                .foregroundStyle(.red)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 2)
+                    }
+
+                    // Save Password Checkbox & Action Buttons
+                    HStack(alignment: .center, spacing: 8) {
+                        Toggle(isOn: $savePassword) {
+                            Text(localized("Save password"))
+                                .font(.system(size: 11))
+                                .foregroundStyle(.secondary)
+                        }
+                        .toggleStyle(.checkbox)
+                        .controlSize(.mini)
+
+                        Spacer()
+
                         Button(localized("Cancel"), action: onCancelPassword)
                             .buttonStyle(.plain)
                             .font(.system(size: 11.5))
                             .foregroundStyle(.secondary)
-                        Spacer()
+
                         Button(localized("Join"), action: onConnect)
                             .buttonStyle(.borderedProminent)
                             .controlSize(.small)
@@ -200,7 +312,7 @@ private struct WiFiNetworkRow: View {
                     }
                 }
                 .padding(.horizontal, 8)
-                .padding(.bottom, 6)
+                .padding(.bottom, 7)
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
@@ -260,8 +372,12 @@ struct WiFiNetworkPickerContainer: View {
                 WiFiNetworkListView(
                     networks: networks,
                     currentSSID: currentSSID,
-                    onConnect: { ssid, pwd in
-                        await statusStore.connectToWiFi(ssid: ssid, password: pwd)
+                    onConnect: { ssid, pwd, shouldSave in
+                        let success = await statusStore.connectToWiFi(ssid: ssid, password: pwd)
+                        if success && shouldSave, let pwd, !pwd.isEmpty {
+                            WiFiKeychainService.shared.savePassword(pwd, for: ssid)
+                        }
+                        return success
                     }
                 )
             }
@@ -308,10 +424,14 @@ struct WiFiNetworkPickerContainer: View {
 private struct WiFiNetworkListView: View {
     let networks: [WiFiNetworkInfo]
     let currentSSID: String?
-    let onConnect: (String, String?) async -> Bool
+    let onConnect: (_ ssid: String, _ password: String?, _ savePassword: Bool) async -> Bool
 
     @State private var passwordTarget: String? = nil
     @State private var password = ""
+    @State private var isPasswordVisible = false
+    @State private var savePassword = true
+    @State private var isFromKeychain = false
+    @State private var isFetchingSystemPassword = false
     @State private var isConnecting = false
     @State private var connectionError = false
 
@@ -325,6 +445,10 @@ private struct WiFiNetworkListView: View {
                         isConnecting: isConnecting && passwordTarget == network.ssid,
                         showingPassword: passwordTarget == network.ssid,
                         password: $password,
+                        isPasswordVisible: $isPasswordVisible,
+                        savePassword: $savePassword,
+                        isFromKeychain: isFromKeychain,
+                        isFetchingSystemPassword: isFetchingSystemPassword && passwordTarget == network.ssid,
                         connectionError: connectionError && passwordTarget == network.ssid,
                         onTap: { handleTap(network) },
                         onConnect: { handleConnect(network) },
@@ -347,29 +471,77 @@ private struct WiFiNetworkListView: View {
             withAnimation(.spring(response: 0.3)) {
                 passwordTarget = network.ssid
                 password = ""
+                isPasswordVisible = false
+                savePassword = true
+                isFromKeychain = false
+                isFetchingSystemPassword = false
+            }
+
+            // Step 1: Check ReDuoBar app's private Keychain first (instant)
+            if let saved = WiFiKeychainService.shared.getSavedPassword(for: network.ssid) {
+                password = saved
+                isFromKeychain = true
+                return
+            }
+
+            // Step 2: Check if macOS System Keychain knows this network
+            if WiFiKeychainService.shared.isKnownSystemNetwork(ssid: network.ssid) {
+                isFetchingSystemPassword = true
+                Task {
+                    if let sysPwd = await WiFiKeychainService.shared.fetchSystemPassword(for: network.ssid, timeoutSeconds: 3.5) {
+                        await MainActor.run {
+                            if passwordTarget == network.ssid {
+                                password = sysPwd
+                                isFromKeychain = true
+                                isFetchingSystemPassword = false
+                                // Save into app keychain so next time is instant
+                                WiFiKeychainService.shared.savePassword(sysPwd, for: network.ssid)
+                            }
+                        }
+                    } else {
+                        await MainActor.run {
+                            if passwordTarget == network.ssid {
+                                isFetchingSystemPassword = false
+                            }
+                        }
+                    }
+                }
             }
         } else {
-            Task { await doConnect(ssid: network.ssid, pwd: nil) }
+            Task { await doConnect(ssid: network.ssid, pwd: nil, shouldSave: false) }
         }
     }
 
     private func handleConnect(_ network: WiFiNetworkInfo) {
-        Task { await doConnect(ssid: network.ssid, pwd: password.isEmpty ? nil : password) }
+        Task {
+            await doConnect(
+                ssid: network.ssid,
+                pwd: password.isEmpty ? nil : password,
+                shouldSave: savePassword
+            )
+        }
     }
 
-    private func doConnect(ssid: String, pwd: String?) async {
+    private func doConnect(ssid: String, pwd: String?, shouldSave: Bool) async {
         isConnecting = true
         connectionError = false
-        let ok = await onConnect(ssid, pwd)
+        let ok = await onConnect(ssid, pwd, shouldSave)
         isConnecting = false
-        if ok { withAnimation { passwordTarget = nil } }
-        else { connectionError = true }
+        if ok {
+            withAnimation { passwordTarget = nil }
+        } else {
+            connectionError = true
+        }
     }
 
     private func cancelPassword() {
         withAnimation(.spring(response: 0.3)) {
             passwordTarget = nil
             password = ""
+            isPasswordVisible = false
+            savePassword = true
+            isFromKeychain = false
+            isFetchingSystemPassword = false
             connectionError = false
         }
     }

@@ -123,3 +123,15 @@
 "%dh %dm" = "%d ώ %d λ";
 "%dm" = "%d λ";
 "%d devices" = "%d συσκευές";
+
+/* Keychain, Updates & Installation */
+"Show password" = "Εμφάνιση κωδικού";
+"Hide password" = "Απόκρυψη κωδικού";
+"Save password" = "Αποθήκευση κωδικού";
+"Saved in Keychain" = "Αποθηκεύτηκε στην Κλείδα";
+"Checking Keychain…" = "Έλεγχος Κλείδας…";
+"Updates" = "Ενημερώσεις";
+"Automatically check for updates" = "Αυτόματος έλεγχος για ενημερώσεις";
+"Keep ReDuoBar up to date with new features and bug fixes." = "Διατηρήστε το ReDuoBar ενημερωμένο.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "Εγκαταστήστε το ReDuoBar στις Εφαρμογές για ενεργοποίηση της αυτόματης εκκίνησης.";
+"Install to Applications" = "Εγκατάσταση στις Εφαρμογές";

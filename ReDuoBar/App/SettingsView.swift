@@ -96,10 +96,10 @@ struct SettingsView: View {
         if selectedTab == .debug { return 700 }
         #endif
         switch selectedTab {
-        case .general: return 270
+        case .general: return 360
         case .menuBar: return 430
         case .battery: return 310
-        case .about: return 320
+        case .about: return 340
         #if DEBUG
         case .debug: return 700
         #endif
@@ -124,6 +124,26 @@ struct SettingsView: View {
                         ))
                         .toggleStyle(.switch)
                         .labelsHidden()
+                        .disabled(!launchAtLogin.isInstalledInApplications)
+                    }
+
+                    if !launchAtLogin.isInstalledInApplications {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "info.circle.fill")
+                                    .foregroundStyle(.orange)
+                                Text(localized("Install ReDuoBar to Applications to enable Launch at Login."))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Button(action: { launchAtLogin.installToApplications() }) {
+                                Label(localized("Install to Applications"), systemImage: "arrow.down.app")
+                            }
+                            .controlSize(.small)
+                            .padding(.top, 2)
+                        }
+                        .padding(.top, 4)
                     }
 
                     if launchAtLogin.requiresApproval {
@@ -142,6 +162,22 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.red)
                             .textSelection(.enabled)
+                    }
+                }
+
+                SettingsSectionCard(title: localized("Updates")) {
+                    SettingsCardRow(
+                        icon: "arrow.triangle.2.circlepath.circle.fill",
+                        iconColor: .teal,
+                        title: localized("Automatically check for updates"),
+                        subtitle: localized("Keep ReDuoBar up to date with new features and bug fixes.")
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { PreferenceKeys.updaterService?.automaticallyChecksForUpdates ?? true },
+                            set: { PreferenceKeys.updaterService?.automaticallyChecksForUpdates = $0 }
+                        ))
+                        .toggleStyle(.switch)
+                        .labelsHidden()
                     }
                 }
 
@@ -335,7 +371,9 @@ struct SettingsView: View {
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 6) {
-                    Text("Version 1.2.1")
+                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2.1"
+                    let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "5"
+                    Text("Version \(version)")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
 
@@ -343,7 +381,7 @@ struct SettingsView: View {
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
 
-                    Text("Build 4")
+                    Text("Build \(build)")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
@@ -359,21 +397,34 @@ struct SettingsView: View {
                     .padding(.horizontal, 32)
             }
 
-            HStack(spacing: 12) {
-                Button(action: {
-                    PreferenceKeys.updaterService?.checkForUpdates()
-                }) {
-                    Label(localized("Check for Updates…"), systemImage: "arrow.triangle.2.circlepath")
-                }
-                .controlSize(.regular)
-                .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
-
-                if let gitHubURL = URL(string: "https://github.com/vibe2code/ReDuoBar") {
-                    Link(destination: gitHubURL) {
-                        Label("GitHub", systemImage: "link")
+            VStack(spacing: 8) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        PreferenceKeys.updaterService?.checkForUpdates()
+                    }) {
+                        Label(localized("Check for Updates…"), systemImage: "arrow.triangle.2.circlepath")
                     }
                     .controlSize(.regular)
+                    .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
+
+                    if let gitHubURL = URL(string: "https://github.com/vibe2code/ReDuoBar") {
+                        Link(destination: gitHubURL) {
+                            Label("GitHub", systemImage: "link")
+                        }
+                        .controlSize(.regular)
+                    }
                 }
+
+                Toggle(isOn: Binding(
+                    get: { PreferenceKeys.updaterService?.automaticallyChecksForUpdates ?? true },
+                    set: { PreferenceKeys.updaterService?.automaticallyChecksForUpdates = $0 }
+                )) {
+                    Text(localized("Automatically check for updates"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .toggleStyle(.checkbox)
+                .controlSize(.small)
             }
             .padding(.top, 4)
 

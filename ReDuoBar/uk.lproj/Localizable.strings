@@ -123,3 +123,15 @@
 "%dh %dm" = "%d год %d хв";
 "%dm" = "%d хв";
 "%d devices" = "%d пристроїв";
+
+/* Keychain, Updates & Installation */
+"Show password" = "Показати пароль";
+"Hide password" = "Сховати пароль";
+"Save password" = "Зберегти пароль";
+"Saved in Keychain" = "Збережено у В'язці ключів";
+"Checking Keychain…" = "Перевірка В'язки ключів…";
+"Updates" = "Оновлення";
+"Automatically check for updates" = "Автоматично перевіряти оновлення";
+"Keep ReDuoBar up to date with new features and bug fixes." = "Підтримуйте ReDuoBar в актуальному стані.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "Встановіть ReDuoBar у папку «Програми» для роботи автозапуску.";
+"Install to Applications" = "Встановити в Програми";

@@ -123,3 +123,15 @@
 "%dh %dm" = "%d س %d د";
 "%dm" = "%d د";
 "%d devices" = "%d أجهزة";
+
+/* Keychain, Updates & Installation */
+"Show password" = "إظهار كلمة المرور";
+"Hide password" = "إخفاء كلمة المرور";
+"Save password" = "حفظ كلمة المرور";
+"Saved in Keychain" = "محفوظ في سلسلة المفاتيح";
+"Checking Keychain…" = "التحقق من سلسلة المفاتيح…";
+"Updates" = "التحديثات";
+"Automatically check for updates" = "التحقق من التحديثات تلقائيًا";
+"Keep ReDuoBar up to date with new features and bug fixes." = "حافظ على تحديث ReDuoBar بأحدث الميزات والإصلاحات.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "ثبّت ReDuoBar في مجلد التطبيقات لتفعيل التشغيل عند تسجيل الدخول.";
+"Install to Applications" = "تثبيت في التطبيقات";

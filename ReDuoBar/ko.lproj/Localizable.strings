@@ -123,3 +123,15 @@
 "%dh %dm" = "%d시간 %d분";
 "%dm" = "%d분";
 "%d devices" = "%d개 기기";
+
+/* Keychain, Updates & Installation */
+"Show password" = "암호 보기";
+"Hide password" = "암호 가리기";
+"Save password" = "암호 저장";
+"Saved in Keychain" = "키체인에 저장됨";
+"Checking Keychain…" = "키체인 확인 중…";
+"Updates" = "업데이트";
+"Automatically check for updates" = "업데이트 자동 확인";
+"Keep ReDuoBar up to date with new features and bug fixes." = "ReDuoBar를 최신 기능 및 수정 사항으로 최신 상태로 유지합니다.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "로그인 시 자동 실행을 활성화하려면 ReDuoBar를 응용 프로그램 폴더에 설치하십시오.";
+"Install to Applications" = "응용 프로그램에 설치";

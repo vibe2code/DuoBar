@@ -123,3 +123,15 @@
 "%dh %dm" = "%d घंटे %d मिनट";
 "%dm" = "%d मिनट";
 "%d devices" = "%d उपकरण";
+
+/* Keychain, Updates & Installation */
+"Show password" = "पासवर्ड दिखाएं";
+"Hide password" = "पासवर्ड छुपाएं";
+"Save password" = "पासवर्ड सहेजें";
+"Saved in Keychain" = "कीचेन में सहेजा गया";
+"Checking Keychain…" = "कीचेन जांच रहे हैं…";
+"Updates" = "अपडेट";
+"Automatically check for updates" = "अपडेट के लिए स्वचालित रूप से जांचें";
+"Keep ReDuoBar up to date with new features and bug fixes." = "ReDuoBar को नई सुविधाओं और सुधारों के साथ अद्यतित रखें।";
+"Install ReDuoBar to Applications to enable Launch at Login." = "लॉगिन पर शुरू करने के लिए ReDuoBar को ऍप्लिकेशन्स में स्थापित करें।";
+"Install to Applications" = "ऍप्लिकेशन्स में स्थापित करें";

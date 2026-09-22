@@ -123,3 +123,15 @@
 "%dh %dm" = "%d godz. %d min";
 "%dm" = "%d min";
 "%d devices" = "%d urządzeń";
+
+/* Keychain, Updates & Installation */
+"Show password" = "Pokaż hasło";
+"Hide password" = "Ukryj hasło";
+"Save password" = "Zapisz hasło";
+"Saved in Keychain" = "Zapisano w pęku kluczy";
+"Checking Keychain…" = "Sprawdzanie pęku kluczy…";
+"Updates" = "Uaktualnienia";
+"Automatically check for updates" = "Automatycznie sprawdzaj uaktualnienia";
+"Keep ReDuoBar up to date with new features and bug fixes." = "Utrzymuj ReDuoBar w najnowszej wersji.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "Zainstaluj ReDuoBar w folderze Programy, aby włączyć uruchamianie przy logowaniu.";
+"Install to Applications" = "Zainstaluj w Programach";

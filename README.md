@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/app-icon.png" alt="ReDuoBar App Icon" width="110" height="110">
+<img src="assets/reduobar-app-icon.png" alt="ReDuoBar App Icon" width="128" height="128">
 
 # ReDuoBar
 
@@ -30,8 +30,8 @@
       <img src="assets/duobar-popover.png" alt="ReDuoBar Popover" width="280">
     </td>
     <td align="center" width="33%">
-      <b>Wi-Fi Picker & Power</b><br>
-      <i>CoreWLAN scan & 1-click switch</i><br><br>
+      <b>Wi-Fi & Keychain Autofill</b><br>
+      <i>Passwords, eye reveal & 1-click join</i><br><br>
       <img src="assets/duobar-wifi-picker.png" alt="Wi-Fi Picker" width="280">
     </td>
     <td align="center" width="33%">
@@ -42,18 +42,18 @@
   </tr>
   <tr>
     <td align="center" width="33%">
-      <b>General & Hover</b><br>
-      <i>Launch at login & Open on Hover</i><br><br>
+      <b>General & Startup</b><br>
+      <i>Applications installer & auto-updates</i><br><br>
       <img src="assets/duobar-general.png" alt="ReDuoBar General Settings" width="280">
     </td>
     <td align="center" width="33%">
       <b>Menu Bar & Preview</b><br>
-      <i>Scaling slider & simulated bar</i><br><br>
+      <i>Scaling slider & live preview</i><br><br>
       <img src="assets/duobar-settings.png" alt="ReDuoBar Menu Bar Settings" width="280">
     </td>
     <td align="center" width="33%">
       <b>About & Updates</b><br>
-      <i>Version 1.2.0 & Sparkle update</i><br><br>
+      <i>Dynamic build info & Sparkle 2</i><br><br>
       <img src="assets/duobar-about.png" alt="ReDuoBar About Dialog" width="280">
     </td>
   </tr>
@@ -69,9 +69,14 @@ ReDuoBar adapts the unified 3-in-1 status concept for your Mac's menu bar. Inste
 
 * **Outer Ring:** Live Battery Ring on MacBooks (charge level, dynamic bolt, low-power states) or Adaptive Performance Ring on desktop Macs.
 * **Center Glyph:** Active network indicator (Wi-Fi signal strength, Ethernet, or offline state) with dynamic AirPods connection animations.
-* **Lower Dots:** Four live dots representing output volume.
+* **Lower Dots:** Four live dots representing output volume with instant mute support.
 
-ReDuoBar elevates this visual concept into a **fully interactive, system-grade macOS utility** featuring direct network and audio switching, native frosted-glass settings, Sparkle automatic updates, and 17 localizations.
+ReDuoBar elevates this visual concept into a **fully interactive, system-grade macOS utility** featuring:
+- Wi-Fi network picker with macOS Keychain password autofill, show/hide password toggle, and password saving.
+- Bluetooth device status and 1-click power toggle.
+- Direct Core Audio output device selector and volume control.
+- Sparkle 2 automatic updates toggle and Launch at Login support.
+- Native frosted-glass settings and 17 world localizations.
 
 ---
 
@@ -79,36 +84,40 @@ ReDuoBar elevates this visual concept into a **fully interactive, system-grade m
 
 | Feature / Capability | Original DuoBar (v1.0.0) | ReDuoBar (vibe2code) | Impact & Improvements |
 | :--- | :---: | :---: | :--- |
-| **📶 Wi-Fi Network Picker** | ❌ None *(Static text)* | **✅ Full Interactive Picker** | Scans surrounding Wi-Fi networks in real-time via CoreWLAN, displays signal bars (3 tiers), security badges, and enables 1-click network connection with password dialog. |
-| **⚡ Wi-Fi Power Control** | ❌ None | **✅ 1-Click Power Toggle** | Turn Wi-Fi module on or off instantly directly from the popover or network picker header. |
-| **🎧 Audio Output Selector** | ❌ None *(Static text)* | **✅ Interactive Switcher** | Direct Core Audio device enumeration. Switch output seamlessly between Built-in Speakers, AirPods, Bluetooth headsets, HDMI, and USB DACs right from the popover. |
+| **📶 Wi-Fi Network Picker** | ❌ None *(Static text)* | **✅ Interactive + Keychain** | Real-time CoreWLAN scanning, signal tiers, security badges, **macOS Keychain password autofill**, **show/hide password toggle**, and **auto-save credentials**. |
+| **⚡ Wi-Fi Power Control** | ❌ None | **✅ 1-Click Power Toggle** | Turn Wi-Fi module on or off instantly directly from the popover with clean single-toggle UI. |
+| **🔵 Bluetooth Power & Devices** | ❌ None *(Static)* | **✅ Live Devices & Power Toggle** | Power toggle and scrollable device list with paired peripheral statuses. |
+| **🎧 Audio Output Selector** | ❌ None *(Static text)* | **✅ Interactive Switcher** | Direct Core Audio device enumeration. Switch output seamlessly between Speakers, AirPods, Bluetooth headsets, HDMI, and USB DACs. |
+| **🔊 Output Mute Toggle** | ❌ None | **✅ 1-Click Mute Control** | Mute or unmute system audio directly with live visual feedback on the lower glyph dots. |
 | **👆 Open on Hover** | ❌ None | **✅ Instant Hover Reveal** | Optional toggle in Settings to open the status popover automatically when hovering over the menu bar icon. |
 | **🔋 Laptop Adaptive Ring** | ❌ None | **✅ Smart 100% Handover** | When a MacBook is plugged in and reaches full charge, ReDuoBar automatically transitions the ring to display CPU / thermal load or display brightness. |
 | **🪟 Settings Window Design** | ⚠️ Basic Gray Form | **✅ Frosted Glass Translucency** | Native macOS Ventura/Sonoma/Sequoia styling using `NSVisualEffectView` (`.behindWindow`), translucent material cards, and transparent titlebar. |
 | **👁️ Live Glyph Preview** | ❌ None | **✅ Live Settings Preview** | Interactive preview of the menu bar glyph inside the Settings window with real-time size adjustment. |
+| **🔄 Auto-Updates** | ❌ None *(Manual download)* | **✅ Sparkle 2 + Checkbox** | Background updates signed with Ed25519 keys, hosted on GitHub Pages appcast feed. Includes in-app "Automatically check for updates" toggle and manual check. |
+| **🚀 Launch at Login** | ⚠️ Rudimentary | **✅ Native `SMAppService` + Helper** | Robust `SMAppService` integration with system approval tracking and 1-click "Install to Applications" helper for reliable execution. |
 | **🌍 Localizations** | ⚠️ 3 Languages *(en, zh-Hans, zh-Hant)* | **✅ 17 World Languages** | Full native translations with auto system language detection: English, Russian, Ukrainian, Greek, German, French, Spanish, Italian, Portuguese (BR), Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish. |
-| **🔄 Auto-Updates** | ❌ None *(Manual download)* | **✅ Sparkle 2 + Ed25519** | Fully automated background updates signed with Ed25519 keys, hosted on GitHub Pages appcast feed. Includes in-app "Check for Updates..." button. |
-| **🎨 App Icon & Branding** | ❌ Xcode Placeholder | **✅ High-Res Retina Icon** | Custom polished metallic dark icon (`AppIcon.icns` & 256×256 PNG) integrated into the `.app` bundle, Dock, and About window. |
+| **🎨 App Icon & Branding** | ❌ Xcode Placeholder | **✅ Custom Squircle Icon** | Custom polished dark metallic icon (`AppIcon.icns` & 1024×1024 Retina PNG) integrated into the `.app` bundle, Dock, and About window. |
 | **⚙️ CLI Packaging** | ❌ Xcode IDE Only | **✅ Standalone `build-app.sh`** | Build, bundle, sign, and package a standalone `ReDuoBar.app` using `swift build` directly from the command line without opening Xcode. |
 | **🤖 GitHub Actions CI/CD** | ❌ None | **✅ Automated CI & Releases** | Automated build verification on every commit/PR (`build.yml`), plus automated releases and appcast deployments (`release.yml`). |
-| **📏 Menu Bar Sizing** | ⚠️ Static size | **✅ Scaling Slider** | Granular icon scaling control with real-time feedback to fit any display notch or resolution. |
-| **🚀 Launch at Login** | ⚠️ Rudimentary | **✅ Native `SMAppService`** | Robust Ventura/Sonoma/Sequoia `SMAppService` integration with system approval status tracking. |
 
 ---
 
 ## 🌟 Key Innovations & Enhancements
 
-### 📶 Interactive Wi-Fi Network Picker & ⚡ 1-Click Power Toggle
+### 📶 Interactive Wi-Fi Network Picker & Keychain Integration
 No more navigating through macOS System Settings or Control Center just to connect to a hotspot or toggle Wi-Fi:
 * **Live Network Discovery:** Scans surrounding Wi-Fi networks in real-time using `CoreWLAN`.
+* **Keychain Password Autofill:** Instantly recognizes known networks from macOS System Keychain and pre-fills saved passwords from ReDuoBar's private Keychain.
+* **Show/Hide Password:** One-click eye toggle (`SecureField` ↔ `TextField`) to verify what you're entering.
+* **Save Password Checkbox:** Automatically remembers network passwords securely in macOS Keychain upon connection.
 * **Visual Status Indicators:** Multi-tier signal strength icons (Strong, Good, Weak) and security lock badges (WPA2/WPA3).
-* **Instant Power Switch:** Turn your Mac's Wi-Fi interface ON or OFF with a single click directly from the popover or network header.
-* **Seamless Connection:** Connect to networks with a native password prompt and immediate status confirmation.
+* **Instant Power Switch:** Turn your Mac's Wi-Fi interface ON or OFF with a single click.
 
-### 🎧 Seamless Audio Output Switcher
+### 🎧 Seamless Audio Output Switcher & Mute Control
 Instantly redirect system audio without opening Control Center or Sound preferences:
 * **Core Audio Integration:** Enumerates all active output devices (MacBook Speakers, AirPods, Bluetooth headphones, Studio Display, HDMI, and USB DACs).
 * **Direct 1-Click Switching:** Select your output destination with instant feedback and active checkmark.
+* **Instant Mute:** Click the volume icon or mute button to toggle silence with live feedback on the lower dots.
 * **Per-Device Glyphs:** Tailored SF Symbols for AirPods Pro, over-ear headphones, displays, and built-in speakers.
 
 ### 👆 Open on Hover (Instant Hover Reveal)
@@ -126,10 +135,10 @@ Maximizing the utility of your menu bar space:
 Designed from the ground up to match modern macOS Sequoia and Sonoma styling:
 * **Frosted Glass Vibrancy:** Powered by `NSVisualEffectView` with `.behindWindow` blending and `.ultraThinMaterial` grouped cards.
 * **Structured Tabs:**
-  * **General:** Launch at login (`SMAppService`) and Open on Hover interaction.
+  * **General:** Launch at login (`SMAppService`) with 1-click Applications install helper, Sparkle auto-updates checkbox, and Open on Hover interaction.
   * **Menu Bar:** Granular icon scaling slider (Small to Large) with a **Live Simulated Menu Bar** preview, animation controls, and popover battery percentage toggle.
   * **Battery & Power:** Custom battery color-coding and low-power alert thresholds.
-  * **About:** Version info (Version 1.2.0 • Build 4), MIT License details, GitHub repository link, and centralized Sparkle update checker.
+  * **About:** Dynamic version and build info, MIT License details, GitHub repository link, and centralized Sparkle update controls.
 
 ### 🌐 17 World Languages Supported
 ReDuoBar automatically detects and adapts to your macOS system language on launch:
@@ -145,28 +154,6 @@ ReDuoBar automatically detects and adapts to your macOS system language on launc
 | 🇪🇸 | **Español** (`es`) | 🇹🇷 | **Türkçe** (`tr`) |
 | 🇮🇹 | **Italiano** (`it`) | 🇵🇱 | **Polski** (`pl`) |
 | 🇧🇷 | **Português (Brasil)** (`pt-BR`) | | |
-
-### 🔄 Automatic Updates via Sparkle 2 & GitHub Pages
-* Built on the robust **Sparkle 2** auto-update framework.
-* Every binary release is cryptographically signed using **Ed25519 (EdDSA)**.
-* Appcast manifest (`appcast.xml`) is continuously updated and hosted via **GitHub Pages** (`https://vibe2code.github.io/ReDuoBar/appcast.xml`).
-* Centralized "Check for Updates..." button in the About tab, plus silent background update checks.
-
----
-
-## 🚀 GitHub Actions Automation
-
-ReDuoBar features a robust CI/CD pipeline on GitHub Actions:
-
-* **[Build CI (`build.yml`)](.github/workflows/build.yml):**
-  * Automatically triggered on every `push` and `pull_request` to `main`.
-  * Runs on `macos-15` runner.
-  * Compiles release binaries, generates the `.app` bundle, validates code signing, and creates downloadable `ReDuoBar.zip` build artifacts.
-* **[Release CI (`release.yml`)](.github/workflows/release.yml):**
-  * Automatically triggered on git tags (e.g. `v1.2.0`) or manual workflow dispatch.
-  * Generates cryptographically signed Sparkle appcast entries with Ed25519.
-  * Publishes GitHub Releases with release notes and attachments.
-  * Deploys updated `appcast.xml` and download portal to the `gh-pages` branch.
 
 ---
 
@@ -202,17 +189,15 @@ chmod +x ./tools/build-app.sh
 
 The output will be available at `build/ReDuoBar.app`.
 
-### Using Xcode IDE
-Open `ReDuoBar.xcodeproj` in Xcode, select the **ReDuoBar** target, and press **Cmd + R**.
-
 ---
 
 ## 🔒 Privacy & Permissions
 
-* **100% Local Processing:** All battery, network, and audio data is processed strictly on-device.
+* **100% Local Processing:** All battery, network, audio, and keychain data is processed strictly on-device.
 * **Zero Telemetry:** No analytics, no tracking, and no third-party data collection.
 * **Network Permissions:**
-  * **Location Services:** macOS requires location permission for `CoreWLAN` to display Wi-Fi network names (SSIDs). Denying this permission will still allow ReDuoBar to display signal strength and interface status.
+  * **Location Services:** macOS requires location permission for `CoreWLAN` to display Wi-Fi network names (SSIDs).
+  * **Keychain:** Saved Wi-Fi credentials are kept strictly in local macOS Keychain storage.
   * **Bluetooth:** Used via Core Audio to identify active AirPods and audio peripherals.
 
 ---
@@ -221,4 +206,4 @@ Open `ReDuoBar.xcodeproj` in Xcode, select the **ReDuoBar** target, and press **
 
 * Licensed under the [MIT License](LICENSE).
 * Re-engineered and expanded by [**vibe2code**](https://github.com/vibe2code).
-* Original concept and foundation inspired by [DuoBar by Mikeli7666](https://github.com/Mikeli7666/DuoBar).
+* Original concept inspired by [DuoBar by Mikeli7666](https://github.com/Mikeli7666/DuoBar).

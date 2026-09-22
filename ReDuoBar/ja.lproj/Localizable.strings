@@ -123,3 +123,15 @@
 "%dh %dm" = "%d時間%d分";
 "%dm" = "%d分";
 "%d devices" = "%d台のデバイス";
+
+/* Keychain, Updates & Installation */
+"Show password" = "パスワードを表示";
+"Hide password" = "パスワードを非表示";
+"Save password" = "パスワードを保存";
+"Saved in Keychain" = "キーチェーンに保存済み";
+"Checking Keychain…" = "キーチェーンを確認中…";
+"Updates" = "アップデート";
+"Automatically check for updates" = "アップデートを自動的に確認";
+"Keep ReDuoBar up to date with new features and bug fixes." = "ReDuoBarを常に最新の機能と修正で最新の状態に保ちます。";
+"Install ReDuoBar to Applications to enable Launch at Login." = "ログイン項目の有効化にはReDuoBarをアプリケーションにインストールしてください。";
+"Install to Applications" = "アプリケーションにインストール";

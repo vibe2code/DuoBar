@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <title>ReDuoBar — The Reimagined macOS Menu Bar Status Indicator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="One compact macOS menu bar glyph combining Battery, Network, and Volume with interactive Wi-Fi and audio switching, frosted-glass settings, and Sparkle auto-updates.">
-  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <meta name="description" content="One compact macOS menu bar glyph combining Battery, Network, and Volume with interactive Wi-Fi with Keychain autofill, Bluetooth, audio switching, and Sparkle auto-updates.">
+  <link rel="icon" type="image/png" href="assets/reduobar-app-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -685,7 +685,7 @@
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
-        <img src="assets/app-icon.png" alt="ReDuoBar Logo">
+        <img src="assets/reduobar-app-icon.png" alt="ReDuoBar Logo">
         <span>ReDuoBar</span>
       </a>
       <ul class="nav-links">
@@ -721,7 +721,7 @@
       </a>
     </div>
     <div class="meta-tags">
-      Latest Version: <b>v1.1.0</b> (v1.2.0 ready) · Sparkle Auto-Updates · 17 Languages
+      Latest Release: <b>v1.2.1</b> · Sparkle Auto-Updates · 17 Languages
     </div>
   </section>
 
@@ -918,12 +918,12 @@
           <tr>
             <td class="col-feature">📶 Wi-Fi Network Picker</td>
             <td class="col-orig">❌ Static name only</td>
-            <td class="col-modern">✅ Live CoreWLAN scan, signal strength bars, WPA locks & direct password join</td>
+            <td class="col-modern">✅ Live CoreWLAN scan, signal bars, WPA locks, <b>macOS Keychain password autofill</b>, eye toggle & auto-save</td>
           </tr>
           <tr>
             <td class="col-feature">🎧 Audio Output Selector</td>
             <td class="col-orig">❌ Static label only</td>
-            <td class="col-modern">✅ Interactive Core Audio device switcher (AirPods, Speakers, HDMI, USB DAC)</td>
+            <td class="col-modern">✅ Interactive Core Audio device switcher (AirPods, Speakers, HDMI, USB DAC) + 1-click mute</td>
           </tr>
           <tr>
             <td class="col-feature">⚡ Wi-Fi Power Control</td>
@@ -948,12 +948,12 @@
           <tr>
             <td class="col-feature">🔄 Auto-Updates</td>
             <td class="col-orig">❌ None (manual download)</td>
-            <td class="col-modern">✅ Sparkle 2 framework + Ed25519 cryptographic signatures & GitHub Pages feed</td>
+            <td class="col-modern">✅ Sparkle 2 framework + in-app auto-check toggle, Ed25519 signatures & GitHub Pages feed</td>
           </tr>
           <tr>
             <td class="col-feature">🎨 Application Icon</td>
             <td class="col-orig">❌ Generic placeholder</td>
-            <td class="col-modern">✅ High-resolution 256×256 Retina metallic icon (`AppIcon.icns`)</td>
+            <td class="col-modern">✅ Custom high-resolution Retina squircle icon (`AppIcon.icns` & 1024×1024 master PNG)</td>
           </tr>
           <tr>
             <td class="col-feature">🤖 GitHub Actions CI/CD</td>

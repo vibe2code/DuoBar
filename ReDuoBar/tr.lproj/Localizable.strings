@@ -123,3 +123,15 @@
 "%dh %dm" = "%d sa %d dk";
 "%dm" = "%d dk";
 "%d devices" = "%d aygıt";
+
+/* Keychain, Updates & Installation */
+"Show password" = "Parolayı göster";
+"Hide password" = "Parolayı gizle";
+"Save password" = "Parolayı kaydet";
+"Saved in Keychain" = "Anahtar Zinciri'nde kayıtlı";
+"Checking Keychain…" = "Anahtar Zinciri kontrol ediliyor…";
+"Updates" = "Güncellemeler";
+"Automatically check for updates" = "Güncellemeleri otomatik denetle";
+"Keep ReDuoBar up to date with new features and bug fixes." = "ReDuoBar'ı yeni özellikler ve hata düzeltmeleriyle güncel tutun.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "Girişte başlatmayı etkinleştirmek için ReDuoBar'ı Uygulamalar klasörüne yükleyin.";
+"Install to Applications" = "Uygulamalar'a Yükle";

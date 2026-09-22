@@ -8,6 +8,11 @@ final class UpdaterService: NSObject, ObservableObject {
     private let updaterController: SPUStandardUpdaterController
 
     @Published private(set) var canCheckForUpdates = false
+    @Published var automaticallyChecksForUpdates: Bool {
+        didSet {
+            updaterController.updater.automaticallyChecksForUpdates = automaticallyChecksForUpdates
+        }
+    }
 
     override init() {
         updaterController = SPUStandardUpdaterController(
@@ -15,6 +20,7 @@ final class UpdaterService: NSObject, ObservableObject {
             updaterDelegate: nil,
             userDriverDelegate: nil
         )
+        automaticallyChecksForUpdates = updaterController.updater.automaticallyChecksForUpdates
         super.init()
         updaterController.updater.publisher(for: \.canCheckForUpdates)
             .receive(on: RunLoop.main)

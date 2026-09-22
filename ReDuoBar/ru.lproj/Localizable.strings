@@ -131,3 +131,15 @@
 "%dh %dm" = "%d ч %d мин";
 "%dm" = "%d мин";
 "%d devices" = "%d устройств";
+
+/* Keychain, Updates & Installation */
+"Show password" = "Показать пароль";
+"Hide password" = "Скрыть пароль";
+"Save password" = "Сохранить пароль";
+"Saved in Keychain" = "Сохранён в Связке ключей";
+"Checking Keychain…" = "Проверка Связки ключей…";
+"Updates" = "Обновления";
+"Automatically check for updates" = "Автоматически проверять обновления";
+"Keep ReDuoBar up to date with new features and bug fixes." = "Поддерживайте ReDuoBar в актуальном состоянии с новыми функциями и исправлениями.";
+"Install ReDuoBar to Applications to enable Launch at Login." = "Установите ReDuoBar в папку «Программы» для работы автозапуска.";
+"Install to Applications" = "Установить в Программы";

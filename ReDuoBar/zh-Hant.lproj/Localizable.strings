@@ -122,3 +122,15 @@
 "%dh %dm" = "%d小時%d分鐘";
 "%dm" = "%d分鐘";
 "%d devices" = "%d個裝置";
+
+/* Keychain, Updates & Installation */
+"Show password" = "顯示密碼";
+"Hide password" = "隱藏密碼";
+"Save password" = "儲存密碼";
+"Saved in Keychain" = "已儲存在鑰匙圈中";
+"Checking Keychain…" = "正在檢查鑰匙圈…";
+"Updates" = "更新";
+"Automatically check for updates" = "自動檢查更新項目";
+"Keep ReDuoBar up to date with new features and bug fixes." = "保持 ReDuoBar 為最新版本，獲取新功能與修復。";
+"Install ReDuoBar to Applications to enable Launch at Login." = "請將 ReDuoBar 安裝至「應用程式」以啟用登入時開機啟動。";
+"Install to Applications" = "安裝至應用程式";
