@@ -1,6 +1,6 @@
-# DuoBar Assets
+# ReDuoBar Assets
 
-Visual media assets for DuoBar documentation, release notes, and GitHub showcases:
+Visual media assets for ReDuoBar documentation, release notes, and GitHub showcases:
 
 - **`app-icon.png`**: 256×256 Retina application icon.
 - **`duobar-popover.png`**: Clean interactive menu bar popover showcasing live Wi-Fi status, audio output device, volume slider, and battery status in English.

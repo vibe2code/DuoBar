@@ -8,9 +8,9 @@ def main():
     tag = f"v{version.lstrip('v')}"
     version = version.lstrip('v')
     
-    zip_path = os.environ.get('ZIP_PATH') or os.path.join(repo_root, 'build', 'DuoBar.zip')
+    zip_path = os.environ.get('ZIP_PATH') or os.path.join(repo_root, 'build', 'ReDuoBar.zip')
     if not os.path.exists(zip_path):
-        zip_path = os.path.join(os.environ.get('RUNNER_TEMP', '/tmp'), 'DuoBar.zip')
+        zip_path = os.path.join(os.environ.get('RUNNER_TEMP', '/tmp'), 'ReDuoBar.zip')
         
     with open(zip_path, 'rb') as f:
         data = f.read()
@@ -29,18 +29,18 @@ def main():
     appcast_content = f"""<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
   <channel>
-    <title>DuoBar</title>
-    <link>https://github.com/vibe2code/DuoBar</link>
-    <description>DuoBar releases</description>
+    <title>ReDuoBar</title>
+    <link>https://github.com/vibe2code/ReDuoBar</link>
+    <description>ReDuoBar releases</description>
     <language>en</language>
     <item>
-      <title>DuoBar {version}</title>
+      <title>ReDuoBar {version}</title>
       <pubDate>{date_str}</pubDate>
       <sparkle:version>{version}</sparkle:version>
       <sparkle:shortVersionString>{version}</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
-        <h2>DuoBar {version}</h2>
+        <h2>ReDuoBar {version}</h2>
         <ul>
           <li>Interactive Wi-Fi network picker directly in the popover</li>
           <li>Interactive Core Audio output selector</li>
@@ -51,7 +51,7 @@ def main():
         </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/vibe2code/DuoBar/releases/download/{tag}/DuoBar.zip"
+        url="https://github.com/vibe2code/ReDuoBar/releases/download/{tag}/ReDuoBar.zip"
         sparkle:edSignature="{sig_b64}"
         length="{size}"
         type="application/octet-stream"
@@ -64,7 +64,7 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(appcast_content)
 
-    print(f"Generated appcast.xml for DuoBar {version} (size={size}, sig={sig_b64})")
+    print(f"Generated appcast.xml for ReDuoBar {version} (size={size}, sig={sig_b64})")
 
     # Output for GitHub Actions if running in CI
     gh_out = os.environ.get('GITHUB_OUTPUT')

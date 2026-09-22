@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build & Package DuoBar
+    name: Build & Package ReDuoBar
     runs-on: macos-15
 
     steps:
@@ -25,16 +25,16 @@ jobs:
           swift --version
           uname -a
 
-      - name: Build DuoBar.app
+      - name: Build ReDuoBar.app
         run: |
           chmod +x ./tools/build-app.sh
           ./tools/build-app.sh
 
       - name: Validate Application Bundle
         run: |
-          APP="build/DuoBar.app"
+          APP="build/ReDuoBar.app"
           test -d "$APP" || { echo "❌ Missing $APP"; exit 1; }
-          test -f "$APP/Contents/MacOS/DuoBar" || { echo "❌ Missing executable binary"; exit 1; }
+          test -f "$APP/Contents/MacOS/ReDuoBar" || { echo "❌ Missing executable binary"; exit 1; }
           test -f "$APP/Contents/Info.plist" || { echo "❌ Missing Info.plist"; exit 1; }
           test -f "$APP/Contents/Resources/AppIcon.icns" || { echo "❌ Missing AppIcon.icns"; exit 1; }
           test -d "$APP/Contents/Frameworks/Sparkle.framework" || { echo "❌ Missing Sparkle.framework"; exit 1; }
@@ -44,12 +44,12 @@ jobs:
       - name: Create ZIP Archive
         run: |
           cd build
-          ditto -c -k --keepParent DuoBar.app DuoBar.zip
-          ls -lh DuoBar.zip
+          ditto -c -k --keepParent ReDuoBar.app ReDuoBar.zip
+          ls -lh ReDuoBar.zip
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DuoBar-macOS
-          path: build/DuoBar.zip
+          name: ReDuoBar-macOS
+          path: build/ReDuoBar.zip
           retention-days: 14

@@ -2,24 +2,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "DuoBar",
+    name: "ReDuoBar",
     defaultLocalization: "en",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "DuoBar", targets: ["DuoBar"])
+        .executable(name: "ReDuoBar", targets: ["ReDuoBar"])
     ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.6.0")
     ],
     targets: [
         .executableTarget(
-            name: "DuoBar",
+            name: "ReDuoBar",
             dependencies: [
                 .product(name: "Sparkle", package: "Sparkle")
             ],
-            path: "DuoBar",
+            path: "ReDuoBar",
             resources: [
                 .process("Assets.xcassets"),
                 .process("Resources/AppIcon.icns")

@@ -7,13 +7,13 @@ cd "$REPO_ROOT"
 VERSION="${1:-1.2.0}"
 TAG="v${VERSION#v}"
 
-echo "==> 📦 Building DuoBar release..."
+echo "==> 📦 Building ReDuoBar release..."
 "$REPO_ROOT/tools/build-app.sh"
 
-echo "==> 🗜️ Creating DuoBar.zip..."
-rm -f "$REPO_ROOT/build/DuoBar.zip"
+echo "==> 🗜️ Creating ReDuoBar.zip..."
+rm -f "$REPO_ROOT/build/ReDuoBar.zip"
 cd "$REPO_ROOT/build"
-ditto -c -k --keepParent DuoBar.app DuoBar.zip
+ditto -c -k --keepParent ReDuoBar.app ReDuoBar.zip
 cd "$REPO_ROOT"
 
 echo "==> 🔏 Signing with Sparkle Ed25519..."
@@ -25,7 +25,7 @@ priv_b64 = os.environ.get('SPARKLE_PRIVATE_KEY') or "BgWmQnqZbpzQnJ5FdT0QMiT0VZX
 key_bytes = base64.b64decode(priv_b64)
 private_key = Ed25519PrivateKey.from_private_bytes(key_bytes[:32])
 
-zip_path = 'build/DuoBar.zip'
+zip_path = 'build/ReDuoBar.zip'
 with open(zip_path, 'rb') as f:
     data = f.read()
 
@@ -48,18 +48,18 @@ cat > "$REPO_ROOT/appcast.xml" <<APPCAST
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
   <channel>
-    <title>DuoBar</title>
-    <link>https://github.com/vibe2code/DuoBar</link>
-    <description>DuoBar releases</description>
+    <title>ReDuoBar</title>
+    <link>https://github.com/vibe2code/ReDuoBar</link>
+    <description>ReDuoBar releases</description>
     <language>en</language>
     <item>
-      <title>DuoBar ${VERSION}</title>
+      <title>ReDuoBar ${VERSION}</title>
       <pubDate>${DATE}</pubDate>
       <sparkle:version>${VERSION}</sparkle:version>
       <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
-        <h2>DuoBar ${VERSION}</h2>
+        <h2>ReDuoBar ${VERSION}</h2>
         <ul>
           <li>Interactive Wi-Fi network picker directly in the popover</li>
           <li>Interactive Core Audio output selector</li>
@@ -70,7 +70,7 @@ cat > "$REPO_ROOT/appcast.xml" <<APPCAST
         </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/vibe2code/DuoBar/releases/download/${TAG}/DuoBar.zip"
+        url="https://github.com/vibe2code/ReDuoBar/releases/download/${TAG}/ReDuoBar.zip"
         sparkle:edSignature="${SPARKLE_SIG}"
         length="${SPARKLE_SIZE}"
         type="application/octet-stream"
@@ -81,10 +81,10 @@ cat > "$REPO_ROOT/appcast.xml" <<APPCAST
 APPCAST
 
 echo "==> 🚀 Publishing GitHub Release ${TAG}..."
-gh release create "${TAG}" "$REPO_ROOT/build/DuoBar.zip" "$REPO_ROOT/appcast.xml" \
-  --title "DuoBar ${VERSION}" \
+gh release create "${TAG}" "$REPO_ROOT/build/ReDuoBar.zip" "$REPO_ROOT/appcast.xml" \
+  --title "ReDuoBar ${VERSION}" \
   --generate-notes \
-  --repo vibe2code/DuoBar \
-  || gh release upload "${TAG}" "$REPO_ROOT/build/DuoBar.zip" "$REPO_ROOT/appcast.xml" --clobber --repo vibe2code/DuoBar
+  --repo vibe2code/ReDuoBar \
+  || gh release upload "${TAG}" "$REPO_ROOT/build/ReDuoBar.zip" "$REPO_ROOT/appcast.xml" --clobber --repo vibe2code/ReDuoBar
 
 echo "==> ✨ Release published successfully!"

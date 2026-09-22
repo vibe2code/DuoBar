@@ -4,11 +4,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-echo "==> 🔨 Building DuoBar with swift build (release)..."
+echo "==> 🔨 Building ReDuoBar with swift build (release)..."
 swift build -c release
 
-BIN_PATH="$REPO_ROOT/.build/release/DuoBar"
-APP_DIR="$REPO_ROOT/build/DuoBar.app"
+BIN_PATH="$REPO_ROOT/.build/release/ReDuoBar"
+APP_DIR="$REPO_ROOT/build/ReDuoBar.app"
 CONTENTS="$APP_DIR/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
@@ -18,8 +18,8 @@ rm -rf "$APP_DIR"
 mkdir -p "$MACOS" "$RESOURCES"
 
 # Copy binary
-cp "$BIN_PATH" "$MACOS/DuoBar"
-chmod +x "$MACOS/DuoBar"
+cp "$BIN_PATH" "$MACOS/ReDuoBar"
+chmod +x "$MACOS/ReDuoBar"
 
 # Create Info.plist
 cat > "$CONTENTS/Info.plist" << 'PLIST'
@@ -30,17 +30,17 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleName</key>
-    <string>DuoBar</string>
+    <string>ReDuoBar</string>
     <key>CFBundleDisplayName</key>
-    <string>DuoBar</string>
+    <string>ReDuoBar</string>
     <key>CFBundleIdentifier</key>
-    <string>com.mikeli.duobar</string>
+    <string>com.vibe2code.reduobar</string>
     <key>CFBundleVersion</key>
     <string>4</string>
     <key>CFBundleShortVersionString</key>
     <string>1.2.0</string>
     <key>CFBundleExecutable</key>
-    <string>DuoBar</string>
+    <string>ReDuoBar</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundleIconName</key>
@@ -52,11 +52,11 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>DuoBar uses location access only to display the name of the Wi-Fi network you are connected to.</string>
+    <string>ReDuoBar uses location access only to display the name of the Wi-Fi network you are connected to.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>DuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.</string>
+    <string>ReDuoBar uses Bluetooth availability with public audio metadata to recognize supported Bluetooth audio connections.</string>
     <key>SUFeedURL</key>
-    <string>https://vibe2code.github.io/DuoBar/appcast.xml</string>
+    <string>https://vibe2code.github.io/ReDuoBar/appcast.xml</string>
     <key>SUPublicEDKey</key>
     <string>TisnqJJTA/Nzi/fKVTZbsyw2B4G+djp80tJVtDmWHH4=</string>
 </dict>
@@ -66,8 +66,8 @@ PLIST
 echo "APPL????" > "$CONTENTS/PkgInfo"
 
 # Copy AppIcon.icns
-if [ -f "$REPO_ROOT/DuoBar/Resources/AppIcon.icns" ]; then
-    cp "$REPO_ROOT/DuoBar/Resources/AppIcon.icns" "$RESOURCES/AppIcon.icns"
+if [ -f "$REPO_ROOT/ReDuoBar/Resources/AppIcon.icns" ]; then
+    cp "$REPO_ROOT/ReDuoBar/Resources/AppIcon.icns" "$RESOURCES/AppIcon.icns"
 fi
 
 # Copy Sparkle framework
@@ -88,16 +88,16 @@ if [ -n "$SPARKLE_FW" ]; then
 fi
 
 # Ensure rpath is configured so dyld can locate @rpath/Sparkle.framework in Frameworks
-install_name_tool -add_rpath @executable_path/../Frameworks "$MACOS/DuoBar" 2>/dev/null || true
+install_name_tool -add_rpath @executable_path/../Frameworks "$MACOS/ReDuoBar" 2>/dev/null || true
 
 # Copy SPM resource bundle if present
-SPM_BUNDLE="$REPO_ROOT/.build/release/DuoBar_DuoBar.bundle"
+SPM_BUNDLE="$REPO_ROOT/.build/release/ReDuoBar_ReDuoBar.bundle"
 if [ -d "$SPM_BUNDLE" ]; then
     cp -R "$SPM_BUNDLE" "$RESOURCES/"
 fi
 
 # Copy all lproj folders (localizations)
-for lproj in "$REPO_ROOT"/DuoBar/*.lproj; do
+for lproj in "$REPO_ROOT"/ReDuoBar/*.lproj; do
     if [ -d "$lproj" ]; then
         cp -R "$lproj" "$RESOURCES/"
     fi
@@ -106,4 +106,4 @@ done
 echo "==> 🔏 Ad-hoc code signing..."
 codesign --force --deep --sign - "$APP_DIR" 2>/dev/null || true
 
-echo "==> ✨ DuoBar.app successfully built at: $APP_DIR"
+echo "==> ✨ ReDuoBar.app successfully built at: $APP_DIR"

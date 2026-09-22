@@ -29,8 +29,8 @@ jobs:
         id: zip
         run: |
           cd build
-          ditto -c -k --keepParent DuoBar.app DuoBar.zip
-          echo "ZIP_PATH=$(pwd)/DuoBar.zip" >> $GITHUB_ENV
+          ditto -c -k --keepParent ReDuoBar.app ReDuoBar.zip
+          echo "ZIP_PATH=$(pwd)/ReDuoBar.zip" >> $GITHUB_ENV
 
       - name: Sign with Sparkle and Generate appcast
         id: appcast
@@ -39,16 +39,16 @@ jobs:
         run: |
           pip3 install --break-system-packages cryptography
           chmod +x ./tools/generate-appcast.py
-          TAG="${GITHUB_REF_NAME:-v1.1.0}"
+          TAG="${GITHUB_REF_NAME:-v1.2.0}"
           ./tools/generate-appcast.py "$TAG"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.appcast.outputs.TAG }}
-          name: "DuoBar ${{ steps.appcast.outputs.VERSION }}"
+          name: "ReDuoBar ${{ steps.appcast.outputs.VERSION }}"
           files: |
-            build/DuoBar.zip
+            build/ReDuoBar.zip
             appcast.xml
           generate_release_notes: true
 

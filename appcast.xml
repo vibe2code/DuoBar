@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
   <channel>
-    <title>DuoBar</title>
-    <link>https://github.com/vibe2code/DuoBar</link>
-    <description>DuoBar releases</description>
+    <title>ReDuoBar</title>
+    <link>https://github.com/vibe2code/ReDuoBar</link>
+    <description>ReDuoBar releases</description>
     <language>en</language>
     <item>
-      <title>DuoBar 1.1.0</title>
+      <title>ReDuoBar 1.1.0</title>
       <pubDate>Mon, 21 Sep 2026 19:59:06 +0000</pubDate>
       <sparkle:version>1.1.0</sparkle:version>
       <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
-        <h2>DuoBar 1.1.0</h2>
+        <h2>ReDuoBar 1.1.0</h2>
         <ul>
           <li>Interactive Wi-Fi network picker directly in the popover</li>
           <li>Interactive Core Audio output selector</li>
@@ -23,7 +23,7 @@
         </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/vibe2code/DuoBar/releases/download/v1.1.0/DuoBar.zip"
+        url="https://github.com/vibe2code/ReDuoBar/releases/download/v1.1.0/ReDuoBar.zip"
         sparkle:edSignature="UC2+AUNHabDnnSRNviBShOm34rcjyXE1RNDC8IqrIwdtJS/Mx9BK16LI6rJYOCqzl3KLmYVxk6ICI4q192faCQ=="
         length="2957131"
         type="application/octet-stream"
