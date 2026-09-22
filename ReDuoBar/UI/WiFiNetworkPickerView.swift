@@ -337,23 +337,28 @@ private struct WiFiNetworkListView: View {
     @State private var connectionError = false
 
     var body: some View {
-        VStack(spacing: 2) {
-            ForEach(networks) { network in
-                WiFiNetworkRow(
-                    network: network,
-                    isSelected: network.ssid == currentSSID,
-                    isConnecting: isConnecting && passwordTarget == network.ssid,
-                    showingPassword: passwordTarget == network.ssid,
-                    password: $password,
-                    connectionError: connectionError && passwordTarget == network.ssid,
-                    onTap: { handleTap(network) },
-                    onConnect: { handleConnect(network) },
-                    onCancelPassword: { cancelPassword() }
-                )
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(spacing: 2) {
+                ForEach(networks) { network in
+                    WiFiNetworkRow(
+                        network: network,
+                        isSelected: network.ssid == currentSSID,
+                        isConnecting: isConnecting && passwordTarget == network.ssid,
+                        showingPassword: passwordTarget == network.ssid,
+                        password: $password,
+                        connectionError: connectionError && passwordTarget == network.ssid,
+                        onTap: { handleTap(network) },
+                        onConnect: { handleConnect(network) },
+                        onCancelPassword: { cancelPassword() }
+                    )
+                }
             }
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
         }
-        .padding(.horizontal, 8)
-        .padding(.top, 4)
+        .frame(maxHeight: 185)
+        .padding(.horizontal, 4)
+        .padding(.top, 2)
     }
 
     private func handleTap(_ network: WiFiNetworkInfo) {

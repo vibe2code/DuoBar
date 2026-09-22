@@ -45,18 +45,22 @@ struct BluetoothDevicePickerView: View {
                     .padding(.vertical, 14)
                     .padding(.horizontal, 8)
             } else {
-                VStack(spacing: 2) {
-                    ForEach(statusStore.status.bluetooth.devices) { device in
-                        BluetoothDeviceRow(
-                            device: device,
-                            isConnecting: connectingAddress == device.address,
-                            onToggleConnect: {
-                                handleToggleConnect(device)
-                            }
-                        )
+                ScrollView(.vertical, showsIndicators: true) {
+                    VStack(spacing: 2) {
+                        ForEach(statusStore.status.bluetooth.devices) { device in
+                            BluetoothDeviceRow(
+                                device: device,
+                                isConnecting: connectingAddress == device.address,
+                                onToggleConnect: {
+                                    handleToggleConnect(device)
+                                }
+                            )
+                        }
                     }
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
                 }
-                .padding(.horizontal, 4)
+                .frame(maxHeight: 185)
             }
 
             Divider()

@@ -6,17 +6,22 @@ struct AudioOutputPickerView: View {
     let onSelect: (String) -> Void
 
     var body: some View {
-        VStack(spacing: 2) {
-            ForEach(devices) { device in
-                AudioOutputDeviceRow(
-                    device: device,
-                    isSelected: device.uid == currentUID,
-                    onSelect: { onSelect(device.uid) }
-                )
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(spacing: 2) {
+                ForEach(devices) { device in
+                    AudioOutputDeviceRow(
+                        device: device,
+                        isSelected: device.uid == currentUID,
+                        onSelect: { onSelect(device.uid) }
+                    )
+                }
             }
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
+        .frame(maxHeight: 185)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 4)
         .background(.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         .transition(.opacity.combined(with: .move(edge: .top)))
     }

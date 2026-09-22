@@ -98,11 +98,7 @@ struct StatusRow: View {
 
     private var mainContent: some View {
         HStack(spacing: 11) {
-            Image(systemName: symbol)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(tint)
-                .frame(width: 28, height: 28)
-                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            iconView
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)
@@ -122,5 +118,25 @@ struct StatusRow: View {
             .layoutPriority(1)
         }
         .contentShape(Rectangle())
+    }
+
+    @ViewBuilder
+    private var iconView: some View {
+        if symbol.hasPrefix("NS") || symbol.contains("Template"), let img = NSImage(named: NSImage.Name(symbol)) {
+            Image(nsImage: img)
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 14, height: 16)
+                .foregroundStyle(tint)
+                .frame(width: 28, height: 28)
+                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        } else {
+            Image(systemName: symbol)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(tint)
+                .frame(width: 28, height: 28)
+                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
     }
 }

@@ -69,9 +69,9 @@ final class MenuBarController: NSObject {
         popover.delegate = self
         let initialHeight: CGFloat
         if MarketingCaptureMode.expandsWiFiPicker {
-            initialHeight = 560
+            initialHeight = 505
         } else if MarketingCaptureMode.expandsAudioPicker {
-            initialHeight = 490
+            initialHeight = 480
         } else {
             initialHeight = 372
         }

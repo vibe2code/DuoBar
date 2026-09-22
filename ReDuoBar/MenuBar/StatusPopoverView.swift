@@ -73,7 +73,7 @@ struct StatusPopoverView: View {
                         title: localized("Bluetooth"),
                         detail: bluetoothDetail,
                         stateText: bluetoothState,
-                        tint: .primary,
+                        tint: statusStore.status.bluetooth.isPoweredOn ? .primary : .secondary,
                         isExpanded: showBTPicker,
                         action: statusStore.status.bluetooth.isAvailable ? {
                             withAnimation(.spring(response: 0.35)) {
@@ -247,13 +247,13 @@ struct StatusPopoverView: View {
     private func notifyPopoverHeight() {
         let targetHeight: CGFloat
         if showWiFiPicker {
-            targetHeight = 560
+            targetHeight = 505
         } else if showBTPicker {
-            targetHeight = 520
-        } else if showAudioPicker {
             targetHeight = 490
+        } else if showAudioPicker {
+            targetHeight = 480
         } else if showBatteryPicker {
-            targetHeight = 500
+            targetHeight = 480
         } else {
             targetHeight = 372
         }
@@ -388,9 +388,7 @@ struct StatusPopoverView: View {
     }
 
     private var bluetoothSymbol: String {
-        let bt = statusStore.status.bluetooth
-        if !bt.isAvailable { return "bluetooth.slash" }
-        return bt.isPoweredOn ? "bluetooth" : "bluetooth.slash"
+        "NSBluetoothTemplate"
     }
 
     private var bluetoothDetail: String {
