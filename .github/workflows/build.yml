@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Package DuoBar
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Environment Information
+        run: |
+          swift --version
+          uname -a
+
+      - name: Build DuoBar.app
+        run: |
+          chmod +x ./tools/build-app.sh
+          ./tools/build-app.sh
+
+      - name: Validate Application Bundle
+        run: |
+          APP="build/DuoBar.app"
+          test -d "$APP" || { echo "❌ Missing $APP"; exit 1; }
+          test -f "$APP/Contents/MacOS/DuoBar" || { echo "❌ Missing executable binary"; exit 1; }
+          test -f "$APP/Contents/Info.plist" || { echo "❌ Missing Info.plist"; exit 1; }
+          test -f "$APP/Contents/Resources/AppIcon.icns" || { echo "❌ Missing AppIcon.icns"; exit 1; }
+          test -d "$APP/Contents/Frameworks/Sparkle.framework" || { echo "❌ Missing Sparkle.framework"; exit 1; }
+          codesign -v --deep --strict "$APP"
+          echo "✅ Bundle verification passed successfully!"
+
+      - name: Create ZIP Archive
+        run: |
+          cd build
+          ditto -c -k --keepParent DuoBar.app DuoBar.zip
+          ls -lh DuoBar.zip
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DuoBar-macOS
+          path: build/DuoBar.zip
+          retention-days: 14

@@ -1,105 +1,189 @@
 <div align="center">
 
+<img src="assets/app-icon.png" alt="DuoBar App Icon" width="110" height="110">
+
 # DuoBar
 
-### One compact macOS menu bar indicator for Battery, Network, and Volume.
+### The all-in-one macOS menu bar indicator for Battery, Network, and Volume — Reimagined.
 
-**Three live states. One glyph. Less menu bar clutter.**
+**Three live states. One glyph. Zero menu bar clutter.**
 
-[**Download DuoBar**](https://github.com/vibe2code/DuoBar/releases/latest) · [**Watch the Launch Film**](https://github.com/Mikeli7666/DuoBar/releases/download/v1.0.0/DuoBar-1.0-Official-Launch-Film.mp4)
-
-macOS 13+ · Apple Silicon or Intel · Universal 2 · Free and Open Source
+[![Latest Release](https://img.shields.io/github/v/release/vibe2code/DuoBar?style=for-the-badge&color=007AFF&label=Release)](https://github.com/vibe2code/DuoBar/releases/latest)
+[![Build CI](https://img.shields.io/github/actions/workflow/status/vibe2code/DuoBar/build.yml?branch=main&style=for-the-badge&label=Build%20CI)](https://github.com/vibe2code/DuoBar/actions/workflows/build.yml)
+[![Release CI](https://img.shields.io/github/actions/workflow/status/vibe2code/DuoBar/release.yml?style=for-the-badge&label=Release%20CI)](https://github.com/vibe2code/DuoBar/actions/workflows/release.yml)
+[![Platform](https://img.shields.io/badge/Platform-macOS%2013%2B-lightgrey?style=for-the-badge&logo=apple)](https://github.com/vibe2code/DuoBar/releases)
+[![Architecture](https://img.shields.io/badge/Arch-Universal%20(arm64%20%2B%20x86__64)-informational?style=for-the-badge)](https://github.com/vibe2code/DuoBar/releases)
+[![Languages](https://img.shields.io/badge/Languages-17%20Locales-orange?style=for-the-badge)](https://github.com/vibe2code/DuoBar#--17-world-languages-supported)
+[![License](https://img.shields.io/github/license/vibe2code/DuoBar?style=for-the-badge&color=brightgreen)](LICENSE)
 
 <br>
 
-<img src="marketing/1.0/launch-film/final/DuoBar-1.0-Launch-Poster.png" alt="DuoBar" width="820">
+[**⬇️ Download Latest Release**](https://github.com/vibe2code/DuoBar/releases/latest) · [**✨ What's New**](#-comparison-original-duobar-vs-modern-duobar) · [**📖 Documentation**](#-installation) · [**💬 Report Issue**](https://github.com/vibe2code/DuoBar/issues)
+
+<br>
+
+<table align="center">
+  <tr>
+    <td align="center" width="50%">
+      <b>Interactive Status Popover</b><br>
+      <i>Wi-Fi picker, Audio output switcher, volume & battery</i><br><br>
+      <img src="assets/duobar-popover.png" alt="DuoBar Popover" width="360">
+    </td>
+    <td align="center" width="50%">
+      <b>Native macOS Frosted Glass Settings</b><br>
+      <i>Vibrant translucency, live glyph preview & tabs</i><br><br>
+      <img src="assets/duobar-settings.png" alt="DuoBar Settings Window" width="500">
+    </td>
+  </tr>
+</table>
 
 </div>
 
-## One glyph, three live states
+---
 
-DuoBar adapts the iPhone Duo-style three-in-one status concept for the Mac menu bar. One compact glyph presents the system information normally spread across several indicators:
+## ⚡ Overview
 
-- **Outer arc** → a live Battery Ring on MacBooks, or an Adaptive Ring on desktop Macs
-- **Center** → the active network: Wi-Fi, Ethernet, or an offline/fallback state
-- **Four lower dots** → live output volume
+DuoBar adapts the unified 3-in-1 status concept for your Mac's menu bar. Instead of cluttering your menu bar with separate battery, Wi-Fi, and volume icons, DuoBar combines them into a single, elegant glyph:
 
-Persistent status stays monochrome and native-looking. When AirPods or another supported Bluetooth audio output becomes active, the center briefly transitions from Network → AirPods/headphones → Network. Disconnecting does not trigger an animation.
+* **Outer Ring:** Live Battery Ring on MacBooks (charge level, dynamic bolt, low-power states) or Adaptive Performance Ring on desktop Macs.
+* **Center Glyph:** Active network indicator (Wi-Fi signal strength, Ethernet, or offline state) with dynamic AirPods connection animations.
+* **Lower Dots:** Four live dots representing output volume.
 
-## Adaptive Ring and Battery Ring
+Modern DuoBar elevates this visual concept into a **fully interactive, system-grade macOS utility** featuring direct network and audio switching, native frosted-glass settings, Sparkle automatic updates, and 17 localizations.
 
-On MacBooks, the outer Battery Ring shows live battery level, a dynamic charging bolt, and optional battery color coding for charging, Low Power Mode, and low-battery states. On desktop Macs, Adaptive Ring shows display brightness when publicly available and automatically surfaces sustained CPU, memory, or thermal pressure when it needs attention. It remains automatic: there is no manual metric selector.
+---
 
-## DuoBar on macOS
+## ⚔️ Comparison: Original DuoBar vs. Modern DuoBar
 
-DuoBar redesigns the original menu bar status around Battery, Network, and Volume. It adds full interactive pickers for Wi-Fi and Audio Output, automatic updates via Sparkle, and a native translucent macOS Settings window.
+| Feature / Capability | Original DuoBar (v1.0.0) | Modern DuoBar (vibe2code) | Impact & Improvements |
+| :--- | :---: | :---: | :--- |
+| **📶 Wi-Fi Network Picker** | ❌ None *(Static text)* | **✅ Full Interactive Picker** | Scans surrounding Wi-Fi networks in real-time via CoreWLAN, displays signal bars (3 tiers), security badges, and enables 1-click network connection with password dialog. |
+| **🎧 Audio Output Selector** | ❌ None *(Static text)* | **✅ Interactive Switcher** | Direct Core Audio device enumeration. Switch output seamlessly between Built-in Speakers, AirPods, Bluetooth headsets, HDMI, and USB DACs right from the popover. |
+| **🪟 Settings Window Design** | ⚠️ Basic Gray Form | **✅ Frosted Glass Translucency** | Native macOS Ventura/Sonoma/Sequoia styling using `NSVisualEffectView` (`.behindWindow`), translucent material cards, and transparent titlebar. |
+| **👁️ Live Glyph Preview** | ❌ None | **✅ Live Settings Preview** | Interactive preview of the menu bar glyph inside the Settings window with real-time size adjustment. |
+| **🌍 Localizations** | ⚠️ 3 Languages *(en, zh-Hans, zh-Hant)* | **✅ 17 World Languages** | Full native translations with auto system language detection: English, Russian, Ukrainian, Greek, German, French, Spanish, Italian, Portuguese (BR), Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish. |
+| **🔄 Auto-Updates** | ❌ None *(Manual download)* | **✅ Sparkle 2 + Ed25519** | Fully automated background updates signed with Ed25519 keys, hosted on GitHub Pages appcast feed. Includes in-app "Check for Updates..." button. |
+| **🎨 App Icon & Branding** | ❌ Xcode Placeholder | **✅ High-Res Retina Icon** | Custom polished metallic dark icon (`AppIcon.icns` & 256×256 PNG) integrated into the `.app` bundle, Dock, and About window. |
+| **⚙️ CLI Packaging** | ❌ Xcode IDE Only | **✅ Standalone `build-app.sh`** | Build, bundle, sign, and package a standalone `DuoBar.app` using `swift build` directly from the command line without opening Xcode. |
+| **🤖 GitHub Actions CI/CD** | ❌ None | **✅ Automated CI & Releases** | Automated build verification on every commit/PR (`build.yml`), plus automated releases and appcast deployments (`release.yml`). |
+| **📏 Menu Bar Sizing** | ⚠️ Static size | **✅ Scaling Slider** | Granular icon scaling control with real-time feedback to fit any display notch or resolution. |
+| **🚀 Launch at Login** | ⚠️ Rudimentary | **✅ Native `SMAppService`** | Robust Ventura/Sonoma/Sequoia `SMAppService` integration with system approval status tracking. |
+
+---
+
+## 🌟 Key Innovations & Enhancements
+
+### 📶 Interactive Wi-Fi Network Picker
+No more opening System Settings or Control Center just to switch Wi-Fi networks. Clicking the Network item in the DuoBar popover reveals:
+* Live scan of nearby Wi-Fi networks using macOS `CoreWLAN`.
+* Visual signal strength indicators (Strong, Good, Weak).
+* Security status indicators (WPA2/WPA3 lock glyphs).
+* Active network checkmark and direct connection prompt for password-protected networks.
+
+### 🎧 Seamless Audio Output Switcher
+Quickly redirect your audio output on the fly:
+* Dynamic enumeration of all available Core Audio output devices.
+* Immediate output switching without latency.
+* Smart recognition of connected AirPods and Bluetooth audio gear with temporary status animations.
+
+### 🪟 Native Translucent macOS Settings
+Designed to feel like an official Apple System Settings pane:
+* **Frosted Glass:** Powered by `NSVisualEffectView` with `.behindWindow` blending and `.ultraThinMaterial` grouped cards.
+* **Tabbed Interface:** Clean tabs for `General` (Launch at Login, Updates), `Menu Bar` (Icon scaling, ring styling), `Battery & Power` (Colors, low battery alerts), and `About`.
+* **Live Glyph Preview:** See your customizations instantly as you tweak settings.
 
 <p align="center">
-  <img src="marketing/1.0/DuoBar-1.0-Feature-Overview.png" alt="DuoBar feature states: Default, Battery Low, Ethernet, AirPods Connected, and No Connection" width="100%">
+  <img src="assets/duobar-about.png" alt="DuoBar About Dialog" width="520">
 </p>
 
-## ✨ What's New & Key Features
+### 🌐 17 World Languages Supported
+DuoBar automatically adapts to your system's language on launch:
 
-- **Interactive Wi-Fi Picker:** Click on the Wi-Fi status in the popover to view available networks, signal strength, security badges, and switch networks directly.
-- **Interactive Audio Output Picker:** Click on the audio device in the popover to view all Core Audio output devices and switch between them instantly.
-- **Native macOS Settings Window:**
-  - Redesigned tabbed interface (`General`, `Menu Bar`, `Battery & Power`, `About`, `Developer`).
-  - Native macOS frosted-glass translucency and vibrancy (`NSVisualEffectView` with `.behindWindow` blending and `.ultraThinMaterial` cards).
-  - Live preview of the menu bar glyph inside settings.
-  - Transparent titlebar matching native macOS System Settings.
-- **17 World Languages Supported:** Automatic system language detection with full localizations for:
-  - English, Russian (Русский), Ukrainian (Українська), Greek (Ελληνικά), German (Deutsch), French (Français), Italian (Italiano), Spanish (Español), Portuguese (Português - Brasil), Japanese (日本語), Korean (한국어), Simplified Chinese (简体中文), Traditional Chinese (繁體中文), Arabic (العربية), Hindi (हिन्दी), Turkish (Türkçe), Polish (Polski).
-- **Auto-Updater via Sparkle:** In-app update checking and seamless background updates via Sparkle framework with EdDSA signatures.
-- **App Icon & Standalone Packaging:** High-resolution `AppIcon.icns` bundled into a standalone macOS application build script (`tools/build-app.sh`).
-- **Battery Ring:** Live level, dynamic charging bolt, low-battery state, and optional Battery Color Coding.
-- **Adaptive Ring for Desktop Macs:** Brightness baseline with automatic CPU, memory, and thermal pressure awareness.
-- **Network States:** Automatic Wi-Fi, Ethernet, and offline network states.
-- **Volume Control:** Four-dot live volume indicator with slider and public Core Audio mute control where supported.
-- **AirPods Connection Presentation:** Dynamic glyph transition upon connecting supported Bluetooth headphones.
-- **Adjustable Menu-Bar Icon Size:** Custom scaling slider with real-time preview.
-- **Launch at Login:** Native `SMAppService` launch at login support with approval status checks.
-- **Universal 2:** Native support for Apple Silicon (arm64) and Intel (x86_64) on macOS 13+.
+| Flag | Language | Flag | Language |
+| :---: | :--- | :---: | :--- |
+| 🇺🇸 | **English** (`en`) | 🇯🇵 | **日本語** (`ja`) |
+| 🇷🇺 | **Русский** (`ru`) | 🇰🇷 | **한국어** (`ko`) |
+| 🇺🇦 | **Українська** (`uk`) | 🇨🇳 | **简体中文** (`zh-Hans`) |
+| 🇬🇷 | **Ελληνικά** (`el`) | 🇹🇼 | **繁體中文** (`zh-Hant`) |
+| 🇩🇪 | **Deutsch** (`de`) | 🇸🇦 | **العربية** (`ar`) |
+| 🇫🇷 | **Français** (`fr`) | 🇮🇳 | **हिन्दी** (`hi`) |
+| 🇪🇸 | **Español** (`es`) | 🇹🇷 | **Türkçe** (`tr`) |
+| 🇮🇹 | **Italiano** (`it`) | 🇵🇱 | **Polski** (`pl`) |
+| 🇧🇷 | **Português (Brasil)** (`pt-BR`) | | |
 
-## Requirements
+### 🔄 Automatic Updates via Sparkle
+* Built on the industry-standard **Sparkle 2** framework.
+* Every release is cryptographically signed with **Ed25519 (EdDSA)**.
+* Continuous appcast manifest hosted reliably via **GitHub Pages** (`https://vibe2code.github.io/DuoBar/appcast.xml`).
+* Check for updates manually from Settings or let DuoBar notify you automatically when a new version is released.
 
-**macOS 13.0+ (Ventura, Sonoma, Sequoia)**<br>
-**Apple Silicon or Intel**
+---
 
-## Installation
+## 🚀 GitHub Actions Automation
 
-1. Download the latest release from [GitHub Releases](https://github.com/vibe2code/DuoBar/releases).
-2. Move `DuoBar.app` to your `/Applications` folder.
-3. Launch DuoBar from Applications or Spotlight.
-4. If macOS displays a gatekeeper warning on first launch (ad-hoc signed builds), right-click DuoBar and choose **Open**, or go to **System Settings → Privacy & Security → Open Anyway**.
+DuoBar features a robust CI/CD pipeline on GitHub Actions:
 
-## Permissions
+* **[Build CI (`build.yml`)](.github/workflows/build.yml):**
+  * Automatically triggered on every `push` and `pull_request` to `main`.
+  * Runs on `macos-15` runner.
+  * Compiles release binaries, generates the `.app` bundle, validates code signing, and creates downloadable `DuoBar.zip` build artifacts.
+* **[Release CI (`release.yml`)](.github/workflows/release.yml):**
+  * Automatically triggered on git tags (e.g. `v1.1.0`) or manual workflow dispatch.
+  * Generates cryptographically signed Sparkle appcast entries with Ed25519.
+  * Publishes GitHub Releases with release notes and attachments.
+  * Deploys updated `appcast.xml` and download portal to the `gh-pages` branch.
 
-- **Location:** macOS may require authorization before CoreWLAN can expose the current Wi-Fi network name and scan available SSIDs. Denying access does not break basic connection, interface, or signal state.
-- **Bluetooth:** DuoBar observes Bluetooth controller endpoints via Core Audio to reflect active AirPods and headphones.
+---
 
-## Building from Source
+## 📥 Installation
 
-### Using Command Line Tools (`swift build`)
-You can build and bundle `DuoBar.app` without opening Xcode:
+### Direct Download
+1. Download the latest `DuoBar.zip` from [**GitHub Releases**](https://github.com/vibe2code/DuoBar/releases/latest).
+2. Unzip and drag `DuoBar.app` to your `/Applications` folder.
+3. Launch **DuoBar**.
+
+> [!NOTE]
+> Because community builds are ad-hoc signed, macOS Gatekeeper may show a warning on first launch. If prompted, right-click `DuoBar.app` and select **Open**, or navigate to **System Settings → Privacy & Security → Open Anyway**.
+
+---
+
+## 🔨 Building from Source
+
+### Prerequisites
+* macOS 13.0+ (Ventura, Sonoma, Sequoia)
+* Xcode 15+ or Swift 5.9+ Command Line Tools (`xcode-select --install`)
+
+### Fast Build via Terminal
+You can build and package a complete standalone `DuoBar.app` with a single command:
 
 ```bash
+git clone https://github.com/vibe2code/DuoBar.git
+cd DuoBar
+
 # Build release and package into build/DuoBar.app
+chmod +x ./tools/build-app.sh
 ./tools/build-app.sh
 ```
 
-### Using Xcode
-Open `DuoBar.xcodeproj` in Xcode, select the **DuoBar** scheme, and press **Cmd+R** to build and run.
+The output will be available at `build/DuoBar.app`.
 
-## Privacy
+### Using Xcode IDE
+Open `DuoBar.xcodeproj` in Xcode, select the **DuoBar** target, and press **Cmd + R**.
 
-- All system status processing is performed entirely locally on your Mac.
-- No analytics, telemetry, or user tracking.
-- Network requests are strictly limited to auto-update feeds (Sparkle) when checking for releases.
+---
 
-## Disclaimer
+## 🔒 Privacy & Permissions
 
-DuoBar is an independent open-source project and is not affiliated with or endorsed by Apple Inc.
+* **100% Local Processing:** All battery, network, and audio data is processed strictly on-device.
+* **Zero Telemetry:** No analytics, no tracking, and no third-party data collection.
+* **Network Permissions:**
+  * **Location Services:** macOS requires location permission for `CoreWLAN` to display Wi-Fi network names (SSIDs). Denying this permission will still allow DuoBar to display signal strength and interface status.
+  * **Bluetooth:** Used via Core Audio to identify active AirPods and audio peripherals.
 
-## License
+---
 
-DuoBar is released under the [MIT License](LICENSE).
+## 📄 License & Acknowledgements
+
+* Licensed under the [MIT License](LICENSE).
+* Re-engineered and expanded by [**vibe2code**](https://github.com/vibe2code).
+* Original concept and foundation inspired by [DuoBar by Mikeli7666](https://github.com/Mikeli7666/DuoBar).
