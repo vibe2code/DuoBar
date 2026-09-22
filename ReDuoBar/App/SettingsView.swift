@@ -335,7 +335,7 @@ struct SettingsView: View {
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 6) {
-                    Text("Version 1.2.0")
+                    Text("Version 1.2.1")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
 

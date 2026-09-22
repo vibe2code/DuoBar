@@ -36,9 +36,9 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
     <key>CFBundleIdentifier</key>
     <string>com.vibe2code.reduobar</string>
     <key>CFBundleVersion</key>
-    <string>4</string>
+    <string>5</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.2.0</string>
+    <string>1.2.1</string>
     <key>CFBundleExecutable</key>
     <string>ReDuoBar</string>
     <key>CFBundleIconFile</key>
