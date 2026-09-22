@@ -216,48 +216,241 @@
     /* Live Interactive Menu Bar Simulator */
     .simulator-container {
       position: relative;
-      max-width: 840px;
+      max-width: 860px;
       margin: 0 auto 90px;
       border-radius: var(--radius-lg);
-      background: var(--bg-surface);
+      background: rgba(18, 20, 26, 0.72);
       border: 1px solid var(--border);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-      padding: 28px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
+      padding: 24px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
     }
     .sim-bar {
-      height: 40px;
-      background: rgba(255, 255, 255, 0.05);
+      height: 38px;
+      background: rgba(32, 34, 42, 0.75);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      margin-bottom: 24px;
+      padding: 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      user-select: none;
     }
-    .sim-apple { font-size: 16px; opacity: 0.8; }
-    .sim-center-text {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-    .sim-tray {
+    .sim-left-menus {
       display: flex;
       align-items: center;
       gap: 16px;
+      font-size: 0.82rem;
+    }
+    .sim-apple { font-size: 15px; opacity: 0.95; cursor: pointer; }
+    .sim-app-name { font-weight: 700; color: #fff; cursor: pointer; }
+    .sim-menu-item { color: rgba(255, 255, 255, 0.65); cursor: pointer; transition: color 0.15s; }
+    .sim-menu-item:hover { color: #fff; }
+    .sim-tray {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sim-duobar-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .sim-duobar-item:hover, .sim-duobar-item.active {
+      background: rgba(255, 255, 255, 0.18);
     }
     .sim-glyph {
-      width: 32px;
-      height: 24px;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.15s;
+      width: 26px;
+      height: 26px;
+      display: block;
     }
-    .sim-glyph:hover { transform: scale(1.1); }
-    .sim-clock { font-size: 0.82rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sim-glyph circle, .sim-glyph path, .sim-glyph rect {
+      transition: stroke-dasharray 0.4s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s, fill 0.3s, opacity 0.3s;
+    }
+    .sim-sys-icon {
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .sim-clock {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      font-variant-numeric: tabular-nums;
+      margin-left: 4px;
+    }
+
+    /* Popover Simulator */
+    .sim-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+    .sim-popover {
+      width: 320px;
+      max-width: 100%;
+      background: rgba(26, 28, 35, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(35px) saturate(180%);
+      -webkit-backdrop-filter: blur(35px) saturate(180%);
+      padding: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .sim-popover.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px) scale(0.97);
+    }
+    .sim-popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .sim-popover-header span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .sim-card-row {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 9px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .sim-card-row:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .sim-row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sim-row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sim-icon-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .sim-icon-blue { background: rgba(10, 132, 255, 0.2); color: #0a84ff; }
+    .sim-icon-green { background: rgba(48, 209, 88, 0.2); color: #30d158; }
+    .sim-icon-orange { background: rgba(255, 159, 10, 0.2); color: #ff9f0a; }
+    .sim-icon-purple { background: rgba(191, 90, 242, 0.2); color: #bf5af2; }
+    .sim-row-meta {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .sim-row-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .sim-row-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+    .sim-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .sim-toggle-switch {
+      width: 36px;
+      height: 20px;
+      border-radius: 11px;
+      background: #30d158;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .sim-toggle-switch.off {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .sim-toggle-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 2px;
+      left: 18px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .sim-toggle-switch.off .sim-toggle-thumb {
+      left: 2px;
+    }
+    .sim-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+    }
+    .sim-slider {
+      flex: 1;
+      accent-color: #0a84ff;
+      cursor: pointer;
+      height: 4px;
+    }
+    .sim-slider-val {
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-muted);
+      min-width: 32px;
+      text-align: right;
+    }
+    .sim-popover-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 6px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .sim-footer-btn {
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .sim-footer-btn:hover { color: #fff; }
 
     /* Interactive state switcher buttons */
     .state-switchers {
@@ -265,6 +458,7 @@
       justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
+      margin-top: 10px;
     }
     .state-btn {
       background: rgba(255, 255, 255, 0.04);
@@ -281,6 +475,12 @@
       background: rgba(0, 122, 255, 0.18);
       border-color: var(--accent);
       color: #fff;
+    }
+    .sim-hint {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 14px;
     }
 
     /* Showcase Visuals Grid */
@@ -527,25 +727,138 @@
 
   <!-- Interactive Menu Bar Simulator -->
   <div class="simulator-container">
+    <!-- Simulated macOS Menu Bar -->
     <div class="sim-bar">
-      <span class="sim-apple"></span>
-      <span class="sim-center-text">Interactive Live Simulation</span>
+      <div class="sim-left-menus">
+        <span class="sim-apple"></span>
+        <span class="sim-app-name">DuoBar</span>
+        <span class="sim-menu-item">File</span>
+        <span class="sim-menu-item">Edit</span>
+        <span class="sim-menu-item">View</span>
+        <span class="sim-menu-item">Window</span>
+        <span class="sim-menu-item">Help</span>
+      </div>
+
       <div class="sim-tray">
-        <svg id="simGlyphSvg" width="28" height="22" viewBox="0 0 28 22" class="sim-glyph">
-          <!-- Outer Arc (Battery Ring) -->
-          <circle id="simArc" cx="14" cy="11" r="9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-dasharray="45 56" stroke-dashoffset="6" />
-          <!-- Center Symbol (Wi-Fi) -->
-          <path id="simCenter" d="M11 10a4 4 0 0 1 6 0M12.5 12a2 2 0 0 1 3 0M14 14h.01" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" fill="none" />
-          <!-- Lower Volume Dots -->
-          <circle cx="8.5" cy="19" r="1" fill="#ffffff" />
-          <circle cx="12" cy="19" r="1" fill="#ffffff" />
-          <circle cx="15.5" cy="19" r="1" fill="#ffffff" />
-          <circle cx="19" cy="19" r="1" fill="rgba(255,255,255,0.25)" />
-        </svg>
-        <span class="sim-clock">Tue 9:41 AM</span>
+        <!-- Authentic DuoBar 3-in-1 Status Item -->
+        <div class="sim-duobar-item active" id="simDuoBarItem" onclick="togglePopover()" title="Click to open/close DuoBar Popover">
+          <svg id="simGlyphSvg" width="28" height="28" viewBox="0 0 32 32" class="sim-glyph">
+            <!-- Outer Ring Background Track (120.2° gap at the bottom) -->
+            <circle cx="16" cy="14.8" r="11.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="46.88 23.49" transform="rotate(150.1 16 14.8)" />
+            <!-- Active Battery Arc -->
+            <circle id="simArc" cx="16" cy="14.8" r="11.2" fill="none" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="41.25 70.37" transform="rotate(150.1 16 14.8)" />
+            <!-- Center Symbol -->
+            <g id="simCenterGroup">
+              <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              <circle cx="16" cy="15.8" r="1.1" fill="currentColor" />
+            </g>
+            <!-- 4 Volume Dots -->
+            <g id="simDots">
+              <circle id="vdot0" cx="10.8" cy="22.7" r="1.15" fill="#ffffff" opacity="1.0" />
+              <circle id="vdot1" cx="14.2" cy="23.9" r="1.15" fill="#ffffff" opacity="1.0" />
+              <circle id="vdot2" cx="17.8" cy="23.9" r="1.15" fill="#ffffff" opacity="1.0" />
+              <circle id="vdot3" cx="21.2" cy="22.7" r="1.15" fill="#ffffff" opacity="0.28" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- macOS Control Center Switcher -->
+        <div class="sim-sys-icon" title="Control Center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="7" rx="3.5" />
+            <circle cx="8" cy="7.5" r="2" fill="currentColor" />
+            <rect x="2" y="13" width="20" height="7" rx="3.5" />
+            <circle cx="16" cy="16.5" r="2" fill="currentColor" />
+          </svg>
+        </div>
+
+        <!-- Clock -->
+        <span class="sim-clock">Tue Sep 22 &nbsp;9:41 AM</span>
       </div>
     </div>
 
+    <!-- Live macOS DuoBar Popover Card -->
+    <div class="sim-stage">
+      <div class="sim-popover" id="simPopover">
+        <div class="sim-popover-header">
+          <span>DuoBar</span>
+          <span class="sim-badge" id="simPopoverStatus">Active</span>
+        </div>
+
+        <!-- Network Card with Wi-Fi Power Toggle -->
+        <div class="sim-card-row">
+          <div class="sim-row-main">
+            <div class="sim-row-left">
+              <div class="sim-icon-circle sim-icon-blue" id="simNetIcon">􀙇</div>
+              <div class="sim-row-meta">
+                <span class="sim-row-title" id="simNetTitle">Network</span>
+                <span class="sim-row-sub" id="simNetSub">Wi-Fi: Studio-5GHz</span>
+              </div>
+            </div>
+            <div class="sim-toggle-switch" id="simWifiToggle" onclick="toggleWifiPower()" title="Toggle Wi-Fi Power">
+              <div class="sim-toggle-thumb"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Volume Card with Live Slider syncing dots -->
+        <div class="sim-card-row">
+          <div class="sim-row-main">
+            <div class="sim-row-left">
+              <div class="sim-icon-circle sim-icon-purple">􀊤</div>
+              <div class="sim-row-meta">
+                <span class="sim-row-title">Volume</span>
+                <span class="sim-row-sub" id="simAudioDevice">Built-in Speakers</span>
+              </div>
+            </div>
+            <span class="sim-slider-val" id="simVolVal">75%</span>
+          </div>
+          <div class="sim-slider-container">
+            <input type="range" class="sim-slider" id="simVolSlider" min="0" max="100" value="75" oninput="onVolumeChange(this.value)">
+          </div>
+        </div>
+
+        <!-- Battery Card -->
+        <div class="sim-card-row">
+          <div class="sim-row-main">
+            <div class="sim-row-left">
+              <div class="sim-icon-circle sim-icon-green" id="simBatIcon">􀛨</div>
+              <div class="sim-row-meta">
+                <span class="sim-row-title">Battery</span>
+                <span class="sim-row-sub" id="simBatSub">88% • 4h 15m remaining</span>
+              </div>
+            </div>
+            <span class="sim-badge" id="simBatBadge">88%</span>
+          </div>
+        </div>
+
+        <!-- Audio Output Switcher -->
+        <div class="sim-card-row">
+          <div class="sim-row-main">
+            <div class="sim-row-left">
+              <div class="sim-icon-circle sim-icon-orange">􀟥</div>
+              <div class="sim-row-meta">
+                <span class="sim-row-title">Audio Output</span>
+                <span class="sim-row-sub">Switch output device</span>
+              </div>
+            </div>
+            <select class="sim-badge" id="simAudioSelect" onchange="onAudioSelectChange(this.value)" style="background: rgba(255,255,255,0.1); border: none; color: #fff; cursor: pointer; outline: none; padding: 3px 6px;">
+              <option value="speakers" style="background: #222;">Built-in Speakers</option>
+              <option value="airpods" style="background: #222;">AirPods Pro</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Popover Footer -->
+        <div class="sim-popover-footer">
+          <span class="sim-footer-btn" onclick="alert('DuoBar Settings window with live simulated menu bar preview, scaling controls, and visual effects.')">⚙ Settings</span>
+          <span class="sim-footer-btn" onclick="togglePopover()">Close ✕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- State Switchers -->
     <div class="state-switchers">
       <button class="state-btn active" onclick="setSimState('wifi')">Wi-Fi (88%)</button>
       <button class="state-btn" onclick="setSimState('airpods')">AirPods Audio</button>
@@ -554,6 +867,7 @@
       <button class="state-btn" onclick="setSimState('ethernet')">Wired Ethernet</button>
       <button class="state-btn" onclick="setSimState('offline')">Offline</button>
     </div>
+    <div class="sim-hint">💡 Click the DuoBar icon in the menu bar to open/close the popover • Drag volume slider to see 4 dots update live • Toggle Wi-Fi power directly</div>
   </div>
 
   <!-- Showcase Cards -->
@@ -718,46 +1032,203 @@
   </footer>
 
   <script>
+    const glyphDefs = {
+      wifi: `
+        <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        <circle cx="16" cy="15.8" r="1.1" fill="currentColor" />
+      `,
+      airpods: `
+        <path d="M13 10 C13 8.6 14.1 7.6 15.2 8.3 L15.2 16.5 C15.2 17 14.5 17 14.5 16.5 L14.5 12.8 C13.3 12.8 13 11.5 13 10 Z" fill="currentColor"/>
+        <path d="M19 10 C19 8.6 17.9 7.6 16.8 8.3 L16.8 16.5 C16.8 17 17.5 17 17.5 16.5 L17.5 12.8 C18.7 12.8 19 11.5 19 10 Z" fill="currentColor"/>
+      `,
+      charging: `
+        <path d="M17.5 7.5 L13 13.5 H16.5 L15 20.5 L20 12.5 H16.5 Z" fill="#30d158" />
+      `,
+      ethernet: `
+        <rect x="11.5" y="10" width="9" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M13.5 17 V19 M18.5 17 V19 M12.5 19 H19.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="14" cy="12.5" r="0.6" fill="currentColor"/>
+        <circle cx="16" cy="12.5" r="0.6" fill="currentColor"/>
+        <circle cx="18" cy="12.5" r="0.6" fill="currentColor"/>
+      `,
+      offline: `
+        <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" opacity="0.3" />
+        <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" opacity="0.3" />
+        <circle cx="16" cy="15.8" r="1.1" fill="#94a3b8" opacity="0.3" />
+        <path d="M11 9 L21 19" stroke="#ff453a" stroke-width="1.8" stroke-linecap="round"/>
+      `
+    };
+
+    let wifiPoweredOn = true;
+    let currentSimState = 'wifi';
+
     function setSimState(state) {
+      currentSimState = state;
       document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.state-btn')).find(b => b.getAttribute('onclick')?.includes(state));
+      if (activeBtn) activeBtn.classList.add('active');
 
       const arc = document.getElementById('simArc');
-      const center = document.getElementById('simCenter');
+      const center = document.getElementById('simCenterGroup');
+      const popoverStatus = document.getElementById('simPopoverStatus');
+      const netIcon = document.getElementById('simNetIcon');
+      const netTitle = document.getElementById('simNetTitle');
+      const netSub = document.getElementById('simNetSub');
+      const wifiToggle = document.getElementById('simWifiToggle');
+      const batIcon = document.getElementById('simBatIcon');
+      const batSub = document.getElementById('simBatSub');
+      const batBadge = document.getElementById('simBatBadge');
+      const audioSelect = document.getElementById('simAudioSelect');
+      const audioDevice = document.getElementById('simAudioDevice');
+
+      // Base ring circumference is ~70.37, max arc length is ~46.88
+      const maxArc = 46.88;
 
       switch(state) {
         case 'wifi':
           arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', '45 56');
-          center.setAttribute('d', 'M11 10a4 4 0 0 1 6 0M12.5 12a2 2 0 0 1 3 0M14 14h.01');
+          arc.setAttribute('stroke-dasharray', `${(0.88 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.wifi;
+          netTitle.textContent = 'Network';
+          netSub.textContent = 'Wi-Fi: Studio-5GHz';
+          wifiToggle.classList.remove('off');
+          wifiPoweredOn = true;
+          batSub.textContent = '88% • 4h 15m remaining';
+          batBadge.textContent = '88%';
+          batBadge.style.color = '#fff';
+          audioDevice.textContent = 'Built-in Speakers';
+          audioSelect.value = 'speakers';
+          popoverStatus.textContent = 'Active';
+          setVolume(75);
           break;
+
         case 'airpods':
           arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', '45 56');
-          center.setAttribute('d', 'M11 11a1.5 1.5 0 0 0 3 0V8a1.5 1.5 0 0 0-3 0v3zm3 0v4m-3-4v4');
+          arc.setAttribute('stroke-dasharray', `${(0.82 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.airpods;
+          netTitle.textContent = 'Network';
+          netSub.textContent = 'Wi-Fi: Studio-5GHz';
+          batSub.textContent = '82% • 3h 45m remaining';
+          batBadge.textContent = '82%';
+          batBadge.style.color = '#fff';
+          audioDevice.textContent = 'AirPods Pro (Spatial Audio)';
+          audioSelect.value = 'airpods';
+          popoverStatus.textContent = 'AirPods';
+          setVolume(85);
           break;
+
         case 'charging':
           arc.setAttribute('stroke', '#30d158');
-          arc.setAttribute('stroke-dasharray', '52 56');
-          center.setAttribute('d', 'M14 7l-2 5h3l-2 5');
+          arc.setAttribute('stroke-dasharray', `${(0.94 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.charging;
+          netTitle.textContent = 'Network';
+          netSub.textContent = 'Wi-Fi: Studio-5GHz';
+          batSub.textContent = 'Fast Charging • 20m until full';
+          batBadge.textContent = '94%';
+          batBadge.style.color = '#30d158';
+          popoverStatus.textContent = 'Charging';
           break;
+
         case 'lowbattery':
           arc.setAttribute('stroke', '#ff453a');
-          arc.setAttribute('stroke-dasharray', '12 56');
-          center.setAttribute('d', 'M11 10a4 4 0 0 1 6 0M12.5 12a2 2 0 0 1 3 0M14 14h.01');
+          arc.setAttribute('stroke-dasharray', `${(0.18 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.wifi;
+          batSub.textContent = '18% • Low Power Mode active';
+          batBadge.textContent = '18%';
+          batBadge.style.color = '#ff453a';
+          popoverStatus.textContent = 'Low Power';
+          setVolume(40);
           break;
+
         case 'ethernet':
           arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', '45 56');
-          center.setAttribute('d', 'M10 11h8M12 11v3h4v-3');
+          arc.setAttribute('stroke-dasharray', `${(0.90 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.ethernet;
+          netTitle.textContent = 'Ethernet';
+          netSub.textContent = 'Wired: 1.0 Gbps Full-Duplex';
+          wifiToggle.classList.add('off');
+          wifiPoweredOn = false;
+          batSub.textContent = '90% • 5h 00m remaining';
+          batBadge.textContent = '90%';
+          batBadge.style.color = '#fff';
+          popoverStatus.textContent = 'Gigabit';
           break;
+
         case 'offline':
           arc.setAttribute('stroke', '#64748b');
-          arc.setAttribute('stroke-dasharray', '45 56');
-          center.setAttribute('d', 'M11 11l6 6M17 11l-6 6');
+          arc.setAttribute('stroke-dasharray', `${(0.70 * maxArc).toFixed(2)} 70.37`);
+          center.innerHTML = glyphDefs.offline;
+          netTitle.textContent = 'Network';
+          netSub.textContent = 'Offline • Disconnected';
+          wifiToggle.classList.add('off');
+          wifiPoweredOn = false;
+          popoverStatus.textContent = 'Offline';
           break;
       }
     }
+
+    function onVolumeChange(val) {
+      document.getElementById('simVolVal').textContent = val + '%';
+      updateVolumeDots(val);
+    }
+
+    function setVolume(val) {
+      document.getElementById('simVolSlider').value = val;
+      document.getElementById('simVolVal').textContent = val + '%';
+      updateVolumeDots(val);
+    }
+
+    function updateVolumeDots(val) {
+      const v0 = document.getElementById('vdot0');
+      const v1 = document.getElementById('vdot1');
+      const v2 = document.getElementById('vdot2');
+      const v3 = document.getElementById('vdot3');
+      if (!v0 || !v1 || !v2 || !v3) return;
+
+      const num = parseInt(val, 10);
+      const activeCount = num === 0 ? 0 : (num <= 25 ? 1 : (num <= 50 ? 2 : (num <= 75 ? 3 : 4)));
+
+      v0.setAttribute('opacity', activeCount >= 1 ? '1.0' : '0.28');
+      v1.setAttribute('opacity', activeCount >= 2 ? '1.0' : '0.28');
+      v2.setAttribute('opacity', activeCount >= 3 ? '1.0' : '0.28');
+      v3.setAttribute('opacity', activeCount >= 4 ? '1.0' : '0.28');
+    }
+
+    function toggleWifiPower() {
+      const toggle = document.getElementById('simWifiToggle');
+      const netSub = document.getElementById('simNetSub');
+      wifiPoweredOn = !wifiPoweredOn;
+      if (wifiPoweredOn) {
+        toggle.classList.remove('off');
+        netSub.textContent = 'Wi-Fi: Studio-5GHz';
+        setSimState('wifi');
+      } else {
+        toggle.classList.add('off');
+        netSub.textContent = 'Wi-Fi: Turned Off';
+        setSimState('offline');
+      }
+    }
+
+    function togglePopover() {
+      const popover = document.getElementById('simPopover');
+      const item = document.getElementById('simDuoBarItem');
+      popover.classList.toggle('hidden');
+      item.classList.toggle('active');
+    }
+
+    function onAudioSelectChange(val) {
+      if (val === 'airpods') {
+        setSimState('airpods');
+      } else {
+        setSimState('wifi');
+      }
+    }
+
+    // Initialize default state on load
+    document.addEventListener('DOMContentLoaded', () => {
+      setSimState('wifi');
+    });
   </script>
 </body>
 </html>
