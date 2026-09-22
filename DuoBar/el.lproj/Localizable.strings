@@ -86,3 +86,24 @@
 "Cancel" = "Ακύρωση";
 "Incorrect password" = "Λανθασμένος κωδικός";
 "Check for Updates…" = "Έλεγχος ενημερώσεων…";
+
+/* New Features & Settings */
+"Startup" = "Έναρξη";
+"Interaction" = "Αλληλεπίδραση";
+"Open on Hover" = "Άνοιγμα με αιώρηση";
+"Open DuoBar when the pointer moves over the menu bar icon." = "Άνοιγμα του DuoBar όταν ο δείκτης μετακινείται πάνω από το εικονίδιο της γραμμής μενού.";
+"Preview" = "Προεπισκόπηση";
+"Simulated Menu Bar" = "Προσομοιωμένη γραμμή μενού";
+"Appearance" = "Εμφάνιση";
+"Behavior" = "Συμπεριφορά";
+"Battery & Power" = "Μπαταρία & Τροφοδοσία";
+"Color the battery ring green, yellow, or red based on charge level." = "Χρωματισμός του δακτυλίου μπαταρίας σε πράσινο, κίτρινο ή κόκκινο ανάλογα με το επίπεδο φόρτισης.";
+"About" = "Σχετικά";
+"Lightweight, native status & monitor for your macOS menu bar." = "Ελαφρύς, εγγενής έλεγχος κατάστασης για τη γραμμή μενού του macOS.";
+"Developer" = "Προγραμματιστής";
+"Automatically launch DuoBar when you log into your Mac." = "Αυτόματη εκκίνηση του DuoBar κατά τη σύνδεση στο Mac.";
+"Off" = "Ανενεργό";
+"Unable to change Wi-Fi power" = "Αδυναμία αλλαγής ισχύος Wi-Fi";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Ο έλεγχος Wi-Fi δεν είναι διαθέσιμος";
+"Wi-Fi power" = "Ισχύς Wi-Fi";

@@ -40,14 +40,17 @@ struct StatusPopoverView: View {
                         stateText: networkState,
                         tint: .primary,
                         isExpanded: showWiFiPicker,
-                        action: statusStore.status.network.transport == .wifi
-                            ? {
-                                withAnimation(.spring(response: 0.35)) {
-                                    showWiFiPicker.toggle()
-                                    if showWiFiPicker { showAudioPicker = false }
+                        action: (statusStore.status.network.isWiFiPoweredOn == false)
+                            ? nil
+                            : (statusStore.status.network.transport == .wifi
+                                ? {
+                                    withAnimation(.spring(response: 0.35)) {
+                                        showWiFiPicker.toggle()
+                                        if showWiFiPicker { showAudioPicker = false }
+                                    }
                                 }
-                            }
-                            : nil
+                                : nil),
+                        trailing: (statusStore.status.network.isWiFiPoweredOn == false) ? wifiPowerToggle : nil
                     )
 
                     if showWiFiPicker {
@@ -182,8 +185,22 @@ struct StatusPopoverView: View {
 
     // MARK: - Computed strings
 
+    private var wifiPowerToggle: AnyView? {
+        guard let wifiPowerState = statusStore.status.network.isWiFiPoweredOn else { return nil }
+        return AnyView(
+            Toggle(localized("Wi-Fi power"), isOn: Binding(
+                get: { wifiPowerState },
+                set: { statusStore.setWiFiPower($0) }
+            ))
+            .labelsHidden()
+            .toggleStyle(.switch)
+            .accessibilityLabel(localized("Wi-Fi power"))
+        )
+    }
+
     private var networkSymbol: String {
         let network = statusStore.status.network
+        if network.isWiFiPoweredOn == false, !network.isConnected { return "wifi.slash" }
         guard network.isConnected else { return "network.slash" }
         switch network.transport {
         case .wifi: return "wifi"
@@ -210,6 +227,7 @@ struct StatusPopoverView: View {
     private var networkState: String {
         let network = statusStore.status.network
         guard network.isAvailable else { return localized("Unavailable") }
+        if network.isWiFiPoweredOn == false, !network.isConnected { return localized("Off") }
         guard network.isConnected else { return localized("Offline") }
         switch network.transport {
         case .wifi: return localized("Wi-Fi")

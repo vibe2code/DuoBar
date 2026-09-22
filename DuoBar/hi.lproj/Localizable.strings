@@ -86,3 +86,24 @@
 "Cancel" = "रद्द करें";
 "Incorrect password" = "गलत पासवर्ड";
 "Check for Updates…" = "अपडेट की जांच करें…";
+
+/* New Features & Settings */
+"Startup" = "स्टार्टअप";
+"Interaction" = "इंटरैक्शन";
+"Open on Hover" = "होवर करने पर खोलें";
+"Open DuoBar when the pointer moves over the menu bar icon." = "जब पॉइंटर मेनू बार आइकन पर जाए तब DuoBar खोलें।";
+"Preview" = "पूर्वावलोकन";
+"Simulated Menu Bar" = "सिम्युलेटेड मेनू बार";
+"Appearance" = "दिखावट";
+"Behavior" = "व्यवहार";
+"Battery & Power" = "बैटरी और पावर";
+"Color the battery ring green, yellow, or red based on charge level." = "चार्ज स्तर के आधार पर बैटरी रिंग को हरा, पीला या लाल रंग दें।";
+"About" = "के बारे में";
+"Lightweight, native status & monitor for your macOS menu bar." = "आपके macOS मेनू बार के लिए हल्का, मूल स्टेटस मॉनिटर।";
+"Developer" = "डेवलपर";
+"Automatically launch DuoBar when you log into your Mac." = "अपने Mac में लॉग इन करते ही DuoBar को स्वचालित रूप से शुरू करें।";
+"Off" = "बंद";
+"Unable to change Wi-Fi power" = "Wi-Fi पावर बदलने में असमर्थ";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Wi-Fi नियंत्रण अनुपलब्ध है";
+"Wi-Fi power" = "Wi-Fi पावर";

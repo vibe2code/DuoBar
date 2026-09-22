@@ -104,3 +104,14 @@
 "About" = "О программе";
 "Lightweight, native status & monitor for your macOS menu bar." = "Компактный и нативный индикатор статуса в строке меню macOS.";
 "Developer" = "Разработчик";
+"Interaction" = "Взаимодействие";
+"Open on Hover" = "Открывать при наведении";
+"Open DuoBar when the pointer moves over the menu bar icon." = "Открывать DuoBar при наведении курсора на иконку в строке меню.";
+"Wi-Fi power" = "Питание Wi-Fi";
+"Off" = "Выкл";
+"Wi-Fi disabled" = "Wi-Fi выключен";
+"Wi-Fi control unavailable" = "Управление Wi-Fi недоступно";
+"Unable to change Wi-Fi power" = "Не удалось изменить состояние Wi-Fi";
+
+/* New Features & Settings */
+"Wi-Fi" = "Wi-Fi";

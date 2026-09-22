@@ -18,6 +18,7 @@ struct SettingsView: View {
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     @AppStorage(PreferenceKeys.adaptiveRingPriority) private var adaptiveRingPriorityRaw = PerformancePreference.automatic.rawValue
     @AppStorage(PreferenceKeys.adaptiveRingColorCoding) private var adaptiveRingColorCoding = false
+    @AppStorage(PreferenceKeys.openOnHover) private var openOnHover = false
     @StateObject private var launchAtLogin = LaunchAtLoginService()
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
@@ -140,18 +141,16 @@ struct SettingsView: View {
                     }
                 }
 
-                SettingsSectionCard(title: localized("Software Updates")) {
+                SettingsSectionCard(title: localized("Interaction")) {
                     SettingsCardRow(
-                        icon: "arrow.triangle.2.circlepath.circle.fill",
-                        iconColor: .teal,
-                        title: localized("Check for Updates"),
-                        subtitle: localized("Keep DuoBar up to date with latest improvements.")
+                        icon: "hand.point.up.left.fill",
+                        iconColor: .purple,
+                        title: localized("Open on Hover"),
+                        subtitle: localized("Open DuoBar when the pointer moves over the menu bar icon.")
                     ) {
-                        Button(localized("Check Now…")) {
-                            PreferenceKeys.updaterService?.checkForUpdates()
-                        }
-                        .controlSize(.small)
-                        .disabled(!(PreferenceKeys.updaterService?.canCheckForUpdates ?? false))
+                        Toggle("", isOn: $openOnHover)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
                     }
                 }
             }
@@ -332,7 +331,7 @@ struct SettingsView: View {
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 6) {
-                    Text("Version 1.1.0")
+                    Text("Version 1.2.0")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
 
@@ -340,7 +339,7 @@ struct SettingsView: View {
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
 
-                    Text("Build 3")
+                    Text("Build 4")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                 }

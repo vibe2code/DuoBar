@@ -5,6 +5,7 @@ enum PreferenceKeys {
     static let batteryColorCoding = "batteryColorCoding"
     static let adaptiveRingPriority = "adaptiveRingPriority"
     static let adaptiveRingColorCoding = "adaptiveRingColorCoding"
+    static let openOnHover = "openOnHover"
 
     // Injected by AppDelegate at launch
     static var updaterService: UpdaterService?

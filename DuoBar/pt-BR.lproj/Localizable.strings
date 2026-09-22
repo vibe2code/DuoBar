@@ -86,3 +86,24 @@
 "Cancel" = "Cancelar";
 "Incorrect password" = "Senha incorreta";
 "Check for Updates…" = "Verificar atualizações…";
+
+/* New Features & Settings */
+"Startup" = "Inicialização";
+"Interaction" = "Interação";
+"Open on Hover" = "Abrir ao passar o cursor";
+"Open DuoBar when the pointer moves over the menu bar icon." = "Abrir o DuoBar quando o cursor passar sobre o ícone da barra de menus.";
+"Preview" = "Pré-visualização";
+"Simulated Menu Bar" = "Barra de Menus Simulada";
+"Appearance" = "Aparência";
+"Behavior" = "Comportamento";
+"Battery & Power" = "Bateria e Alimentação";
+"Color the battery ring green, yellow, or red based on charge level." = "Colorir o anel da bateria em verde, amarelo ou vermelho conforme o nível de carga.";
+"About" = "Sobre";
+"Lightweight, native status & monitor for your macOS menu bar." = "Monitor de status leve e nativo para a barra de menus do macOS.";
+"Developer" = "Desenvolvedor";
+"Automatically launch DuoBar when you log into your Mac." = "Iniciar o DuoBar automaticamente ao iniciar a sessão no Mac.";
+"Off" = "Desativado";
+"Unable to change Wi-Fi power" = "Não foi possível alterar a alimentação do Wi-Fi";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Controle de Wi-Fi indisponível";
+"Wi-Fi power" = "Alimentação do Wi-Fi";

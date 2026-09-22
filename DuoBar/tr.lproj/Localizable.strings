@@ -86,3 +86,24 @@
 "Cancel" = "İptal";
 "Incorrect password" = "Yanlış şifre";
 "Check for Updates…" = "Güncellemeleri Kontrol Et…";
+
+/* New Features & Settings */
+"Startup" = "Başlangıç";
+"Interaction" = "Etkileşim";
+"Open on Hover" = "İşaretçiyle Üzerine Gelindiğinde Aç";
+"Open DuoBar when the pointer moves over the menu bar icon." = "İşaretçi menü çubuğu simgesinin üzerine geldiğinde DuoBar'ı aç.";
+"Preview" = "Önizleme";
+"Simulated Menu Bar" = "Simüle Edilen Menü Çubuğu";
+"Appearance" = "Görünüş";
+"Behavior" = "Davranış";
+"Battery & Power" = "Pil ve Güç";
+"Color the battery ring green, yellow, or red based on charge level." = "Pil halkasını şarj düzeyine göre yeşil, sarı veya kırmızı olarak renklendir.";
+"About" = "Hakkında";
+"Lightweight, native status & monitor for your macOS menu bar." = "macOS menü çubuğunuz için hafif, yerel durum monitörü.";
+"Developer" = "Geliştirici";
+"Automatically launch DuoBar when you log into your Mac." = "Mac'inizde oturum açtığınızda DuoBar'ı otomatik olarak başlatın.";
+"Off" = "Kapalı";
+"Unable to change Wi-Fi power" = "Wi-Fi gücü değiştirilemedi";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Wi-Fi denetimi kullanılamıyor";
+"Wi-Fi power" = "Wi-Fi Gücü";

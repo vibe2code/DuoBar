@@ -4,8 +4,12 @@ import Foundation
 @MainActor
 final class SystemStatusStore: ObservableObject {
     @Published private(set) var status: SystemStatus = .unavailable
+    @Published private(set) var laptopRingModeState: LaptopRingModeState
+    @Published private(set) var wifiPowerControlError: String?
 
     let priorityController = StatusPriorityController()
+    let deviceContext: DeviceContext
+    let laptopRingModeController: LaptopRingModeController
 
     private let batteryService: BatteryService
     private let networkService: NetworkService
@@ -19,11 +23,26 @@ final class SystemStatusStore: ObservableObject {
     private var debugBluetoothOverride: BluetoothStatus?
     #endif
 
-    init(startServices: Bool = true) {
+    init(
+        startServices: Bool = true,
+        deviceContext: DeviceContext? = nil,
+        laptopRingModeController: LaptopRingModeController? = nil
+    ) {
         batteryService = BatteryService()
         networkService = NetworkService()
         audioOutputService = AudioOutputService()
         bluetoothService = BluetoothService()
+        let resolvedDeviceContext = deviceContext ?? DeviceContextService().current()
+        self.deviceContext = resolvedDeviceContext
+        let resolvedLaptopRingModeController = laptopRingModeController ?? LaptopRingModeController(
+            hasInternalBattery: resolvedDeviceContext.hasInternalBattery
+        )
+        self.laptopRingModeController = resolvedLaptopRingModeController
+        laptopRingModeState = resolvedLaptopRingModeController.state
+
+        resolvedLaptopRingModeController.onStateChange = { [weak self] state in
+            self?.laptopRingModeState = state
+        }
 
         batteryService.onStatusChange = { [weak self] value in
             #if DEBUG
@@ -31,7 +50,7 @@ final class SystemStatusStore: ObservableObject {
             NSLog("%@", "[SystemStatusStore] received battery = \(percentage), charging = \(value.isCharging), pluggedIn = \(value.isPluggedIn)")
             guard self?.debugBatteryOverride == nil else { return }
             #endif
-            self?.mutate { $0.battery = value }
+            self?.acceptBatteryStatus(value)
         }
         networkService.onStatusChange = { [weak self] value in
             #if DEBUG
@@ -67,8 +86,61 @@ final class SystemStatusStore: ObservableObject {
         bluetoothService.refresh()
     }
 
+    func requestWiFiSSIDAccess(trigger: LocationRequestTrigger) {
+        networkService.requestSSIDAccess(trigger: trigger)
+    }
+
+    func setWiFiPower(_ enabled: Bool) {
+        #if DEBUG
+        guard debugNetworkOverride == nil else { return }
+        #endif
+
+        let result = networkService.setWiFiPower(enabled)
+        switch result {
+        case .success:
+            wifiPowerControlError = nil
+        case let .failure(_, message):
+            wifiPowerControlError = message
+            #if DEBUG
+            NSLog("%@", "[NetworkService] Wi-Fi power change failed: \(message)")
+            #endif
+        case .unavailable:
+            wifiPowerControlError = localized("Wi-Fi control unavailable")
+        }
+    }
+
+    var usesAdaptiveRing: Bool {
+        deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
+    }
+
+    /// The 1.2 production presentation policy. Laptop Adaptive-after-charging
+    /// remains available in the model for 1.3 development, but is intentionally
+    /// not eligible to change the released MacBook glyph yet.
+    var usesReleasedAdaptiveRing: Bool {
+        usesAdaptiveRing
+    }
+
+    var usesLaptopAdaptiveRing: Bool {
+        deviceContext.hasInternalBattery && laptopRingModeState.mode == .adaptive
+    }
+
     func requestWiFiSSIDAccess() {
-        networkService.requestSSIDAccess()
+        requestWiFiSSIDAccess(trigger: .popoverOpened)
+    }
+
+    @discardableResult
+    func setDefaultOutputDevice(uid: String) -> Bool {
+        audioOutputService.setDefaultOutputDevice(uid: uid)
+    }
+
+    func scanForWiFiNetworks() async -> [WiFiNetworkInfo] {
+        await networkService.scanForNetworks()
+    }
+
+    func connectToWiFi(ssid: String, password: String?) async -> Bool {
+        let success = await networkService.connectToNetwork(ssid: ssid, password: password)
+        if success { networkService.refresh() }
+        return success
     }
 
     @discardableResult
@@ -100,21 +172,6 @@ final class SystemStatusStore: ObservableObject {
         return audioOutputService.setMuted(muted)
     }
 
-    @discardableResult
-    func setDefaultOutputDevice(uid: String) -> Bool {
-        audioOutputService.setDefaultOutputDevice(uid: uid)
-    }
-
-    func scanForWiFiNetworks() async -> [WiFiNetworkInfo] {
-        await networkService.scanForNetworks()
-    }
-
-    func connectToWiFi(ssid: String, password: String?) async -> Bool {
-        let success = await networkService.connectToNetwork(ssid: ssid, password: password)
-        if success { networkService.refresh() }
-        return success
-    }
-
     private func mutate(_ update: (inout SystemStatus) -> Void) {
         let previous = status
         var next = status
@@ -125,6 +182,11 @@ final class SystemStatusStore: ObservableObject {
         StatusEventDetector.events(from: previous, to: next).forEach(priorityController.present)
     }
 
+    private func acceptBatteryStatus(_ battery: BatteryStatus) {
+        laptopRingModeController.update(with: battery)
+        mutate { $0.battery = battery }
+    }
+
     #if DEBUG
     func applyDebugBatteryLevel(_ level: DebugBatteryLevel) {
         var battery = debugBatteryOverride ?? status.battery
@@ -132,7 +194,7 @@ final class SystemStatusStore: ObservableObject {
         battery.isAvailable = true
         battery.isFullyCharged = level.rawValue == 100 && battery.isPluggedIn && !battery.isCharging
         debugBatteryOverride = battery
-        mutate { $0.battery = battery }
+        acceptBatteryStatus(battery)
     }
 
     func applyDebugPowerState(_ powerState: DebugPowerState) {
@@ -153,7 +215,7 @@ final class SystemStatusStore: ObservableObject {
             battery.percentage = 100
         }
         debugBatteryOverride = battery
-        mutate { $0.battery = battery }
+        acceptBatteryStatus(battery)
     }
 
     func applyDebugLowPowerMode(_ lowPowerMode: DebugLowPowerMode) {
@@ -169,7 +231,12 @@ final class SystemStatusStore: ObservableObject {
         }
         battery.isLowPowerModeEnabled = lowPowerMode.isEnabled
         debugBatteryOverride = battery
-        mutate { $0.battery = battery }
+        acceptBatteryStatus(battery)
+    }
+
+    func applyDebugBatteryStatus(_ battery: BatteryStatus) {
+        debugBatteryOverride = battery
+        acceptBatteryStatus(battery)
     }
 
     func applyDebugNetworkState(_ networkState: DebugNetworkState) {
@@ -274,6 +341,7 @@ final class SystemStatusStore: ObservableObject {
         debugAudioOverride = audio
         debugBluetoothOverride = bluetooth
         priorityController.returnToNormal()
+        laptopRingModeController.update(with: battery)
         mutate {
             $0.battery = battery
             $0.network = network

@@ -86,3 +86,24 @@
 "Cancel" = "취소";
 "Incorrect password" = "잘못된 암호";
 "Check for Updates…" = "업데이트 확인…";
+
+/* New Features & Settings */
+"Startup" = "시작";
+"Interaction" = "상호작용";
+"Open on Hover" = "마우스 오버 시 열기";
+"Open DuoBar when the pointer moves over the menu bar icon." = "포인터가 메뉴 막대 아이콘 위로 이동할 때 DuoBar를 엽니다.";
+"Preview" = "미리보기";
+"Simulated Menu Bar" = "시뮬레이션된 메뉴 막대";
+"Appearance" = "화면 모드";
+"Behavior" = "동작";
+"Battery & Power" = "배터리 및 전원";
+"Color the battery ring green, yellow, or red based on charge level." = "충전 수준에 따라 배터리 링을 녹색, 노란색 또는 빨간색으로 표시합니다.";
+"About" = "정보";
+"Lightweight, native status & monitor for your macOS menu bar." = "macOS 메뉴 막대를 위한 가볍고 네이티브한 상태 모니터.";
+"Developer" = "개발자";
+"Automatically launch DuoBar when you log into your Mac." = "Mac에 로그인할 때 DuoBar를 자동으로 실행합니다.";
+"Off" = "끔";
+"Unable to change Wi-Fi power" = "Wi-Fi 전원을 변경할 수 없습니다";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Wi-Fi 제어를 사용할 수 없습니다";
+"Wi-Fi power" = "Wi-Fi 전원";

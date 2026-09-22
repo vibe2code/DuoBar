@@ -18,7 +18,7 @@
 
 <br>
 
-[**⬇️ Download Latest Release**](https://github.com/vibe2code/DuoBar/releases/latest) · [**✨ What's New**](#-comparison-original-duobar-vs-modern-duobar) · [**📖 Documentation**](#-installation) · [**💬 Report Issue**](https://github.com/vibe2code/DuoBar/issues)
+[**⬇️ Download Latest Release**](https://github.com/vibe2code/DuoBar/releases/latest) · [**🌐 Official Website**](https://vibe2code.github.io/DuoBar/) · [**✨ What's New**](#-comparison-original-duobar-vs-modern-duobar) · [**📖 Documentation**](#-installation) · [**💬 Report Issue**](https://github.com/vibe2code/DuoBar/issues)
 
 <br>
 
@@ -58,7 +58,10 @@ Modern DuoBar elevates this visual concept into a **fully interactive, system-gr
 | Feature / Capability | Original DuoBar (v1.0.0) | Modern DuoBar (vibe2code) | Impact & Improvements |
 | :--- | :---: | :---: | :--- |
 | **📶 Wi-Fi Network Picker** | ❌ None *(Static text)* | **✅ Full Interactive Picker** | Scans surrounding Wi-Fi networks in real-time via CoreWLAN, displays signal bars (3 tiers), security badges, and enables 1-click network connection with password dialog. |
+| **⚡ Wi-Fi Power Control** | ❌ None | **✅ 1-Click Power Toggle** | Turn Wi-Fi module on or off instantly directly from the popover or network picker header. |
 | **🎧 Audio Output Selector** | ❌ None *(Static text)* | **✅ Interactive Switcher** | Direct Core Audio device enumeration. Switch output seamlessly between Built-in Speakers, AirPods, Bluetooth headsets, HDMI, and USB DACs right from the popover. |
+| **👆 Open on Hover** | ❌ None | **✅ Instant Hover Reveal** | Optional toggle in Settings to open the status popover automatically when hovering over the menu bar icon. |
+| **🔋 Laptop Adaptive Ring** | ❌ None | **✅ Smart 100% Handover** | When a MacBook is plugged in and reaches full charge, DuoBar automatically transitions the ring to display CPU / thermal load or display brightness. |
 | **🪟 Settings Window Design** | ⚠️ Basic Gray Form | **✅ Frosted Glass Translucency** | Native macOS Ventura/Sonoma/Sequoia styling using `NSVisualEffectView` (`.behindWindow`), translucent material cards, and transparent titlebar. |
 | **👁️ Live Glyph Preview** | ❌ None | **✅ Live Settings Preview** | Interactive preview of the menu bar glyph inside the Settings window with real-time size adjustment. |
 | **🌍 Localizations** | ⚠️ 3 Languages *(en, zh-Hans, zh-Hant)* | **✅ 17 World Languages** | Full native translations with auto system language detection: English, Russian, Ukrainian, Greek, German, French, Spanish, Italian, Portuguese (BR), Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish. |
@@ -128,7 +131,7 @@ DuoBar features a robust CI/CD pipeline on GitHub Actions:
   * Runs on `macos-15` runner.
   * Compiles release binaries, generates the `.app` bundle, validates code signing, and creates downloadable `DuoBar.zip` build artifacts.
 * **[Release CI (`release.yml`)](.github/workflows/release.yml):**
-  * Automatically triggered on git tags (e.g. `v1.1.0`) or manual workflow dispatch.
+  * Automatically triggered on git tags (e.g. `v1.2.0`) or manual workflow dispatch.
   * Generates cryptographically signed Sparkle appcast entries with Ed25519.
   * Publishes GitHub Releases with release notes and attachments.
   * Deploys updated `appcast.xml` and download portal to the `gh-pages` branch.

@@ -86,3 +86,24 @@
 "Cancel" = "キャンセル";
 "Incorrect password" = "パスワードが違います";
 "Check for Updates…" = "アップデートを確認…";
+
+/* New Features & Settings */
+"Startup" = "起動";
+"Interaction" = "操作";
+"Open on Hover" = "ホバーで開く";
+"Open DuoBar when the pointer moves over the menu bar icon." = "ポインタがメニューバーアイコンの上を通過したときにDuoBarを開きます。";
+"Preview" = "プレビュー";
+"Simulated Menu Bar" = "シミュレートされたメニューバー";
+"Appearance" = "外観";
+"Behavior" = "動作";
+"Battery & Power" = "バッテリーと電源";
+"Color the battery ring green, yellow, or red based on charge level." = "充電レベルに応じてバッテリーリングを緑、黄、赤に着色します。";
+"About" = "情報";
+"Lightweight, native status & monitor for your macOS menu bar." = "macOSメニューバー用の軽量でネイティブなステータスモニター。";
+"Developer" = "開発者";
+"Automatically launch DuoBar when you log into your Mac." = "MacにログインしたときにDuoBarを自動的に起動します。";
+"Off" = "オフ";
+"Unable to change Wi-Fi power" = "Wi-Fiの電源状態を変更できません";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Wi-Fi制御は利用できません";
+"Wi-Fi power" = "Wi-Fi電源";

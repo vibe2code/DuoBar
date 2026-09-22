@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-VERSION="${1:-1.1.0}"
+VERSION="${1:-1.2.0}"
 TAG="v${VERSION#v}"
 
 echo "==> 📦 Building DuoBar release..."

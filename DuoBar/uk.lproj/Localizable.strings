@@ -86,3 +86,24 @@
 "Cancel" = "Скасувати";
 "Incorrect password" = "Неправильний пароль";
 "Check for Updates…" = "Перевірити оновлення…";
+
+/* New Features & Settings */
+"Startup" = "Автозапуск";
+"Interaction" = "Взаємодія";
+"Open on Hover" = "Відкривати при наведенні";
+"Open DuoBar when the pointer moves over the menu bar icon." = "Відкривати DuoBar при наведенні курсора на іконку в рядку меню.";
+"Preview" = "Перегляд";
+"Simulated Menu Bar" = "Рядок меню";
+"Appearance" = "Вигляд";
+"Behavior" = "Поведінка";
+"Battery & Power" = "Акумулятор і живлення";
+"Color the battery ring green, yellow, or red based on charge level." = "Фарбувати кільце в зелений, жовтий або червоний колір залежно від рівня заряду.";
+"About" = "Про програму";
+"Lightweight, native status & monitor for your macOS menu bar." = "Компактний і нативний монітор стану для рядка меню macOS.";
+"Developer" = "Розробник";
+"Automatically launch DuoBar when you log into your Mac." = "Автоматично запускати DuoBar під час входу в систему Mac.";
+"Off" = "Вимк.";
+"Unable to change Wi-Fi power" = "Не вдалося змінити стан живлення Wi-Fi";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi control unavailable" = "Керування Wi-Fi недоступне";
+"Wi-Fi power" = "Живлення Wi-Fi";

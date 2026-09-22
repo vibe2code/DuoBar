@@ -232,7 +232,35 @@ struct WiFiNetworkPickerContainer: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if isScanning && networks.isEmpty {
+            HStack {
+                Text(localized("Wi-Fi"))
+                    .font(.system(size: 11.5, weight: .semibold))
+                    .foregroundStyle(.primary)
+                Spacer()
+                Toggle("", isOn: Binding(
+                    get: { statusStore.status.network.isWiFiPoweredOn ?? true },
+                    set: { statusStore.setWiFiPower($0) }
+                ))
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.mini)
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 4)
+            .padding(.bottom, 6)
+
+            Divider()
+                .padding(.horizontal, 8)
+                .padding(.bottom, 4)
+
+            if statusStore.status.network.isWiFiPoweredOn == false {
+                Text(localized("Wi-Fi disabled"))
+                    .font(.system(size: 11.5))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 8)
+            } else if isScanning && networks.isEmpty {
                 HStack(spacing: 8) {
                     ProgressView().scaleEffect(0.75)
                     Text(localized("Scanning…"))

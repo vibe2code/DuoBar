@@ -7,6 +7,8 @@
 "Large" = "大";
 "Adjust DuoBar to better match your menu bar." = "調整 DuoBar 以更符合你的選單列。";
 "General" = "一般";
+"Open on Hover" = "懸停時打開";
+"Open DuoBar when the pointer moves over the menu bar icon." = "將指標移到選單列圖示上時打開 DuoBar。";
 "Launch DuoBar at login" = "登入時啟動 DuoBar";
 "Approval is required in System Settings → General → Login Items." = "需要在「系統設定」→「一般」→「登入項目」中核准。";
 "Battery Ring" = "Battery Ring";
@@ -35,10 +37,15 @@
 "Wi-Fi disabled" = "Wi‑Fi 已關閉";
 "Not connected" = "未連線";
 "Network name unavailable" = "網路名稱無法使用";
+"Wi-Fi" = "Wi-Fi";
+"Wi-Fi power" = "Wi-Fi 開關";
+"Wi-Fi control unavailable" = "Wi-Fi 控制無法使用";
+"Unable to change Wi-Fi power" = "無法更改 Wi-Fi 開關";
 "Wired connection" = "有線連線";
 "Active connection" = "作用中連線";
 "Unavailable" = "無法使用";
 "Offline" = "離線";
+"Off" = "關閉";
 "Ethernet" = "乙太網路";
 "Connected" = "已連線";
 "No internal battery" = "沒有內建電池";
@@ -77,3 +84,25 @@
 "volume unavailable" = "音量無法使用";
 "battery unavailable" = "電池無法使用";
 "%@, %@, %@" = "%@、%@、%@";
+
+/* New Features & Settings */
+"Startup" = "啟動";
+"Interaction" = "互動";
+"Preview" = "預覽";
+"Simulated Menu Bar" = "模擬選單列";
+"Appearance" = "外觀";
+"Behavior" = "行為";
+"Battery & Power" = "電池與電源";
+"Color the battery ring green, yellow, or red based on charge level." = "根據電量等級將電池圓環顯示為綠色、黃色或紅色。";
+"About" = "關於";
+"Lightweight, native status & monitor for your macOS menu bar." = "適用於 macOS 選單列的原生輕量級狀態監視工具。";
+"Developer" = "開發者";
+"Automatically launch DuoBar when you log into your Mac." = "登入 Mac 時自動啟動 DuoBar。";
+"Check for Updates…" = "檢查更新項目…";
+"Wi-Fi Settings…" = "Wi-Fi 設定…";
+"Scanning…" = "正在掃描…";
+"No networks found" = "找不到網路";
+"Password" = "密碼";
+"Incorrect password" = "密碼不正確";
+"Cancel" = "取消";
+"Join" = "加入";
