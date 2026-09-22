@@ -371,8 +371,8 @@ struct SettingsView: View {
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 6) {
-                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2.1"
-                    let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "5"
+                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3.0"
+                    let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "6"
                     Text("Version \(version)")
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)

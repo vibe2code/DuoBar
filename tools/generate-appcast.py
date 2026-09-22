@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 def main():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    version = sys.argv[1] if len(sys.argv) > 1 else "1.2.1"
+    version = sys.argv[1] if len(sys.argv) > 1 else "1.3.0"
     tag = f"v{version.lstrip('v')}"
     version = version.lstrip('v')
     
