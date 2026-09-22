@@ -4,71 +4,61 @@
   <meta charset="utf-8">
   <title>ReDuoBar — The Reimagined macOS Menu Bar Status Indicator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="One compact macOS menu bar glyph combining Battery, Network, and Volume with interactive Wi-Fi with Keychain autofill, Bluetooth, audio switching, and Sparkle auto-updates.">
+  <meta name="description" content="Battery ring, network state, and volume dots unified into a single 24-pixel macOS menu bar glyph. Fast, native, and open source.">
   <link rel="icon" type="image/png" href="assets/reduobar-app-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --bg-surface: rgba(18, 22, 32, 0.7);
-      --bg-card: rgba(26, 32, 48, 0.5);
+      --bg: #0c0d10;
+      --bg-subtle: #13151b;
+      --bg-elevated: #1a1d26;
       --border: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(0, 122, 255, 0.4);
-      --text: #f0f4fc;
-      --text-muted: #8e9bb2;
-      --accent: #007aff;
-      --accent-glow: rgba(0, 122, 255, 0.35);
-      --accent-green: #30d158;
-      --accent-orange: #ff9f0a;
-      --accent-purple: #bf5af2;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 8px;
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --border-focus: rgba(255, 255, 255, 0.2);
+      --text: #f4f4f6;
+      --text-muted: #8e919d;
+      --text-dim: #5c5f6c;
+      --accent: #2997ff;
+      --accent-subtle: rgba(41, 151, 255, 0.12);
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      --radius: 10px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+      font-size: 15px;
       line-height: 1.6;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Ambient background glows */
-    .ambient-glow {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-      filter: blur(80px);
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    /* Navigation */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(7, 9, 14, 0.75);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-container {
-      max-width: 1140px;
+    .container {
+      max-width: 860px;
       margin: 0 auto;
-      padding: 14px 24px;
+      padding: 0 24px;
+    }
+
+    /* Minimal Header */
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -77,1158 +67,594 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 1.15rem;
-      letter-spacing: -0.02em;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
     }
-    .brand img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: block;
+    }
+    .version-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      font-family: var(--font-mono);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 4px;
     }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
       list-style: none;
+      font-size: 0.88rem;
     }
     .nav-links a {
       color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    .nav-links .btn-link {
+      background: var(--text);
+      color: var(--bg);
+      padding: 6px 14px;
+      border-radius: 6px;
       font-weight: 500;
-      transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--text); }
-    .btn-nav-download {
-      background: var(--accent);
-      color: #fff !important;
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-weight: 600 !important;
-      box-shadow: 0 4px 14px var(--accent-glow);
-      transition: transform 0.15s, background 0.2s !important;
-    }
-    .btn-nav-download:hover {
-      background: #0066d6;
-      transform: translateY(-1px);
+    .nav-links .btn-link:hover {
+      background: #ffffff;
+      color: #000;
     }
 
     /* Hero Section */
     .hero {
-      position: relative;
-      z-index: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 80px 24px 60px;
+      padding: 80px 0 60px;
       text-align: center;
     }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      backdrop-filter: blur(10px);
+    .hero-icon-wrap {
+      margin-bottom: 28px;
+      display: inline-block;
     }
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent-green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-green);
+    .hero-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.3);
+      display: block;
     }
     .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 4.2rem);
-      font-weight: 800;
+      font-size: 2.75rem;
+      font-weight: 700;
       letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      background: linear-gradient(180deg, #ffffff 0%, #b8c4d8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      color: #fff;
     }
     .hero p.lead {
-      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      font-size: 1.15rem;
       color: var(--text-muted);
-      max-width: 640px;
-      margin: 0 auto 36px;
-      font-weight: 400;
+      max-width: 580px;
+      margin: 0 auto 32px;
+      line-height: 1.55;
     }
     .hero-actions {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 16px;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
-      margin-bottom: 50px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
     }
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(180deg, #007aff 0%, #0062cc 100%);
-      color: #fff;
-      padding: 14px 28px;
-      border-radius: 30px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 8px 24px var(--accent-glow);
-      transition: all 0.2s;
+      background: #ffffff;
+      color: #0c0d10;
     }
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 122, 255, 0.5);
-    }
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      padding: 14px 24px;
-      border-radius: 30px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: #f0f0f2;
       transform: translateY(-1px);
     }
-    .meta-tags {
-      font-size: 0.85rem;
-      color: #64748b;
+    .btn-secondary {
+      background: var(--bg-subtle);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-elevated);
+      border-color: var(--border-focus);
+      transform: translateY(-1px);
+    }
+    .hero-sub {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
     }
 
-    /* Live Interactive Menu Bar Simulator */
-    .simulator-container {
-      position: relative;
-      max-width: 860px;
-      margin: 0 auto 90px;
-      border-radius: var(--radius-lg);
-      background: rgba(18, 20, 26, 0.72);
+    /* macOS Menu Bar Mockup */
+    .menubar-preview {
+      margin: 20px auto 70px;
+      background: rgba(22, 25, 33, 0.7);
       border: 1px solid var(--border);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
-      padding: 24px;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
-    .sim-bar {
+    .menubar-strip {
       height: 38px;
-      background: rgba(32, 34, 42, 0.75);
-      border-radius: 10px;
+      background: rgba(14, 16, 22, 0.95);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 20px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      user-select: none;
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #e4e4e7;
     }
-    .sim-left-menus {
+    .menubar-left {
       display: flex;
       align-items: center;
       gap: 16px;
-      font-size: 0.82rem;
+      color: #94949e;
     }
-    .sim-apple { font-size: 15px; opacity: 0.95; cursor: pointer; }
-    .sim-app-name { font-weight: 700; color: #fff; cursor: pointer; }
-    .sim-menu-item { color: rgba(255, 255, 255, 0.65); cursor: pointer; transition: color 0.15s; }
-    .sim-menu-item:hover { color: #fff; }
-    .sim-tray {
+    .menubar-left span:first-child {
+      color: #e4e4e7;
+      font-weight: 600;
+    }
+    .menubar-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
-    .sim-duobar-item {
+    .menubar-item {
       display: flex;
       align-items: center;
-      justify-content: center;
       height: 28px;
-      padding: 0 4px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
+      padding: 0 6px;
+      border-radius: 4px;
     }
-    .sim-duobar-item:hover, .sim-duobar-item.active {
-      background: rgba(255, 255, 255, 0.18);
+    .menubar-item.active-glyph {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
     }
-    .sim-glyph {
-      width: 26px;
-      height: 26px;
+    .menubar-glyph-svg {
+      width: 22px;
+      height: 22px;
       display: block;
     }
-    .sim-glyph circle, .sim-glyph path, .sim-glyph rect {
-      transition: stroke-dasharray 0.4s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s, fill 0.3s, opacity 0.3s;
-    }
-    .sim-sys-icon {
-      color: rgba(255, 255, 255, 0.7);
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    .sim-clock {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
-      font-variant-numeric: tabular-nums;
-      margin-left: 4px;
-    }
-
-    /* Popover Simulator */
-    .sim-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      position: relative;
-    }
-    .sim-popover {
-      width: 320px;
-      max-width: 100%;
-      background: rgba(26, 28, 35, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 14px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(35px) saturate(180%);
-      -webkit-backdrop-filter: blur(35px) saturate(180%);
-      padding: 12px;
-      margin-bottom: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none;
-    }
-    .sim-popover.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-8px) scale(0.97);
-    }
-    .sim-popover-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 2px 4px 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .sim-popover-header span {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #fff;
-    }
-    .sim-card-row {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 9px;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      transition: background 0.15s;
-    }
-    .sim-card-row:hover {
-      background: rgba(255, 255, 255, 0.07);
-    }
-    .sim-row-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .sim-row-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sim-icon-circle {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-    }
-    .sim-icon-blue { background: rgba(10, 132, 255, 0.2); color: #0a84ff; }
-    .sim-icon-green { background: rgba(48, 209, 88, 0.2); color: #30d158; }
-    .sim-icon-orange { background: rgba(255, 159, 10, 0.2); color: #ff9f0a; }
-    .sim-icon-purple { background: rgba(191, 90, 242, 0.2); color: #bf5af2; }
-    .sim-row-meta {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    .sim-row-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.2;
-    }
-    .sim-row-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-    .sim-badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.85);
-    }
-    .sim-toggle-switch {
-      width: 36px;
-      height: 20px;
-      border-radius: 11px;
-      background: #30d158;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .sim-toggle-switch.off {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .sim-toggle-thumb {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #fff;
-      position: absolute;
-      top: 2px;
-      left: 18px;
-      transition: left 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-    .sim-toggle-switch.off .sim-toggle-thumb {
-      left: 2px;
-    }
-    .sim-slider-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 2px;
-    }
-    .sim-slider {
-      flex: 1;
-      accent-color: #0a84ff;
-      cursor: pointer;
-      height: 4px;
-    }
-    .sim-slider-val {
-      font-size: 0.72rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      color: var(--text-muted);
-      min-width: 32px;
-      text-align: right;
-    }
-    .sim-popover-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 6px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-    .sim-footer-btn {
-      cursor: pointer;
-      transition: color 0.15s;
-    }
-    .sim-footer-btn:hover { color: #fff; }
-
-    /* Interactive state switcher buttons */
-    .state-switchers {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .state-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 20px;
+    .menubar-replaces {
+      padding: 12px 18px;
+      background: var(--bg-subtle);
       font-size: 0.82rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-    .state-btn.active, .state-btn:hover {
-      background: rgba(0, 122, 255, 0.18);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .sim-hint {
-      font-size: 0.76rem;
       color: var(--text-muted);
-      text-align: center;
-      margin-top: 14px;
-    }
-
-    /* Showcase Visuals Grid */
-    .showcase {
-      max-width: 1140px;
-      margin: 0 auto 100px;
-      padding: 0 24px;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-    .section-header h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-bottom: 12px;
-    }
-    .section-header p {
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 30px;
-      margin-bottom: 40px;
-    }
-    .showcase-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 30px;
-      backdrop-filter: blur(16px);
-      transition: transform 0.2s, border-color 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-    .showcase-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    .showcase-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 10px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 10px;
     }
-    .showcase-card p {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      margin-bottom: 24px;
+    .replaces-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
     }
-    .showcase-img-wrap {
-      margin-top: auto;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+    .strike {
+      text-decoration: line-through;
+      color: var(--text-dim);
     }
-    .showcase-img-wrap img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    .replaces-arrow {
+      color: var(--accent);
     }
-
-    /* Comparison Table */
-    .comparison-section {
-      max-width: 1140px;
-      margin: 0 auto 100px;
-      padding: 0 24px;
-    }
-    .table-container {
-      overflow-x: auto;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      backdrop-filter: blur(20px);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-    th, td {
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    th {
-      background: rgba(255, 255, 255, 0.03);
+    .replaces-target {
+      color: #fff;
       font-weight: 600;
-      color: var(--text);
     }
-    tr:last-child td { border-bottom: none; }
-    .col-feature { font-weight: 600; color: #fff; width: 28%; }
-    .col-orig { color: #94a3b8; width: 26%; }
-    .col-modern { color: var(--accent-green); font-weight: 500; width: 46%; }
 
-    /* Highlights Features Grid */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      max-width: 1140px;
-      margin: 0 auto 100px;
-      padding: 0 24px;
-    }
-    .feature-item {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      transition: all 0.2s;
-    }
-    .feature-item:hover {
-      border-color: var(--border-focus);
-      transform: translateY(-2px);
-    }
-    .feature-icon {
-      font-size: 24px;
-      margin-bottom: 14px;
-      display: inline-block;
-    }
-    .feature-item h4 {
-      font-size: 1.05rem;
+    /* Section Headers */
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
       margin-bottom: 8px;
       color: #fff;
     }
-    .feature-item p {
-      font-size: 0.85rem;
+    .section-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 600px;
+    }
+
+    /* Capabilities List */
+    .capabilities-section {
+      padding: 60px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .caps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .cap-item {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color 0.15s;
+    }
+    .cap-item:hover {
+      border-color: var(--border-focus);
+    }
+    .cap-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .cap-header h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .cap-tag {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .cap-item p {
+      font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    /* Terminal & Build Code block */
-    .build-section {
-      max-width: 800px;
-      margin: 0 auto 100px;
-      padding: 0 24px;
-      text-align: center;
+    /* Specifications Table */
+    .specs-section {
+      padding: 60px 0;
+      border-top: 1px solid var(--border-subtle);
     }
-    .terminal-box {
-      background: #030508;
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-subtle);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius);
+      overflow: hidden;
+      font-size: 0.88rem;
+    }
+    .specs-table tr {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .specs-table tr:last-child {
+      border-bottom: none;
+    }
+    .specs-table td {
+      padding: 14px 20px;
+    }
+    .specs-table td:first-child {
+      width: 32%;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+    .specs-table td:last-child {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Terminal Install */
+    .install-section {
+      padding: 60px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .terminal {
+      background: #08090c;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 20px;
-      text-align: left;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: var(--font-mono);
       font-size: 0.85rem;
-      color: #7dd3fc;
-      box-shadow: 0 16px 32px rgba(0,0,0,0.5);
-      position: relative;
+      line-height: 1.7;
     }
-    .terminal-header {
+    .terminal-line {
       display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
+      align-items: baseline;
+      gap: 12px;
+      color: #7dd3fc;
+      margin-bottom: 4px;
     }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-    .terminal-box code { display: block; line-height: 1.7; }
-    .terminal-comment { color: #64748b; }
+    .terminal-prompt {
+      color: var(--text-dim);
+      user-select: none;
+    }
+    .terminal-comment {
+      color: #52525b;
+      margin-bottom: 4px;
+    }
 
     /* Footer */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 24px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      padding: 40px 0 60px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      color: var(--text-dim);
     }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
     .footer-links {
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 16px;
+      gap: 18px;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover {
+      color: var(--text);
     }
 
-    @media (max-width: 768px) {
+    /* Responsive */
+    @media (max-width: 720px) {
+      .hero h1 { font-size: 2.1rem; }
+      .hero p.lead { font-size: 1rem; }
+      .caps-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
-      .hero { padding: 50px 16px 40px; }
-      .sim-bar { display: none; }
-      .comparison-section, .showcase { padding: 0 16px; }
+      .menubar-strip { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <div class="ambient-glow"></div>
-
-  <!-- Navigation Header -->
   <header>
-    <div class="nav-container">
+    <div class="container header-inner">
       <a href="#" class="brand">
-        <img src="assets/reduobar-app-icon.png" alt="ReDuoBar Logo">
+        <img src="assets/reduobar-app-icon.png" alt="ReDuoBar Icon" class="brand-icon">
         <span>ReDuoBar</span>
+        <span class="version-tag">v1.3.0</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#comparison">Comparison</a></li>
+        <li><a href="#capabilities">Features</a></li>
+        <li><a href="#specs">Specs</a></li>
         <li><a href="#build">Build</a></li>
-        <li><a href="appcast.xml">Appcast Feed</a></li>
         <li><a href="https://github.com/vibe2code/ReDuoBar" target="_blank">GitHub</a></li>
-        <li><a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn-nav-download">Download</a></li>
+        <li><a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn-link">Download</a></li>
       </ul>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="badge">
-      <span class="badge-dot"></span>
-      macOS 13+ · Apple Silicon & Intel · Free & Open Source
-    </div>
-    <h1>The All-in-One Menu Bar Status, Reimagined.</h1>
-    <p class="lead">
-      Three vital system states. One compact glyph. Zero menu bar clutter.<br>
-      Battery, Network, and Volume unified into an elegant, native macOS indicator.
-    </p>
-    <div class="hero-actions">
-      <a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
-        Download Latest Release
-      </a>
-      <a href="https://github.com/vibe2code/ReDuoBar" class="btn-secondary" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-        View on GitHub
-      </a>
-    </div>
-    <div class="meta-tags">
-      Latest Release: <b>v1.3.0</b> · Sparkle Auto-Updates · 17 Languages
-    </div>
-  </section>
-
-  <!-- Interactive Menu Bar Simulator -->
-  <div class="simulator-container">
-    <!-- Simulated macOS Menu Bar -->
-    <div class="sim-bar">
-      <div class="sim-left-menus">
-        <span class="sim-apple"></span>
-        <span class="sim-app-name">ReDuoBar</span>
-        <span class="sim-menu-item">File</span>
-        <span class="sim-menu-item">Edit</span>
-        <span class="sim-menu-item">View</span>
-        <span class="sim-menu-item">Window</span>
-        <span class="sim-menu-item">Help</span>
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-icon-wrap">
+          <img src="assets/reduobar-app-icon.png" alt="ReDuoBar macOS Application Icon" class="hero-icon">
+        </div>
+        <h1>Three status indicators.<br>One 24-pixel glyph.</h1>
+        <p class="lead">
+          Battery arc. Network state. Volume dots. ReDuoBar consolidates your Mac’s essential indicators into a single, distraction-free menu bar item with an interactive popover.
+        </p>
+        <div class="hero-actions">
+          <a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            Download for macOS
+          </a>
+          <a href="https://github.com/vibe2code/ReDuoBar" class="btn btn-secondary" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub (Open Source)
+          </a>
+        </div>
+        <div class="hero-sub">
+          macOS 13.0+ · Apple Silicon &amp; Intel · Universal Binary · Sparkle 2 Updates
+        </div>
       </div>
+    </section>
 
-      <div class="sim-tray">
-        <!-- Authentic DuoBar 3-in-1 Status Item -->
-        <div class="sim-duobar-item active" id="simDuoBarItem" onclick="togglePopover()" title="Click to open/close ReDuoBar Popover">
-          <svg id="simGlyphSvg" width="28" height="28" viewBox="0 0 32 32" class="sim-glyph">
-            <!-- Outer Ring Background Track (120.2° gap at the bottom) -->
-            <circle cx="16" cy="14.8" r="11.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="46.88 23.49" transform="rotate(150.1 16 14.8)" />
-            <!-- Active Battery Arc -->
-            <circle id="simArc" cx="16" cy="14.8" r="11.2" fill="none" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="41.25 70.37" transform="rotate(150.1 16 14.8)" />
-            <!-- Center Symbol -->
-            <g id="simCenterGroup">
-              <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-              <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-              <circle cx="16" cy="15.8" r="1.1" fill="currentColor" />
-            </g>
-            <!-- 4 Volume Dots -->
-            <g id="simDots">
-              <circle id="vdot0" cx="10.8" cy="22.7" r="1.15" fill="#ffffff" opacity="1.0" />
-              <circle id="vdot1" cx="14.2" cy="23.9" r="1.15" fill="#ffffff" opacity="1.0" />
-              <circle id="vdot2" cx="17.8" cy="23.9" r="1.15" fill="#ffffff" opacity="1.0" />
-              <circle id="vdot3" cx="21.2" cy="22.7" r="1.15" fill="#ffffff" opacity="0.28" />
-            </g>
-          </svg>
-        </div>
-
-        <!-- macOS Control Center Switcher -->
-        <div class="sim-sys-icon" title="Control Center">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="4" width="20" height="7" rx="3.5" />
-            <circle cx="8" cy="7.5" r="2" fill="currentColor" />
-            <rect x="2" y="13" width="20" height="7" rx="3.5" />
-            <circle cx="16" cy="16.5" r="2" fill="currentColor" />
-          </svg>
-        </div>
-
-        <!-- Clock -->
-        <span class="sim-clock">Tue Sep 22 &nbsp;9:41 AM</span>
-      </div>
-    </div>
-
-    <!-- Live macOS DuoBar Popover Card -->
-    <div class="sim-stage">
-      <div class="sim-popover" id="simPopover">
-        <div class="sim-popover-header">
-          <span>ReDuoBar</span>
-          <span class="sim-badge" id="simPopoverStatus">Active</span>
-        </div>
-
-        <!-- Network Card with Wi-Fi Power Toggle -->
-        <div class="sim-card-row">
-          <div class="sim-row-main">
-            <div class="sim-row-left">
-              <div class="sim-icon-circle sim-icon-blue" id="simNetIcon">􀙇</div>
-              <div class="sim-row-meta">
-                <span class="sim-row-title" id="simNetTitle">Network</span>
-                <span class="sim-row-sub" id="simNetSub">Wi-Fi: Studio-5GHz</span>
-              </div>
+    <!-- Menu Bar Strip Mockup -->
+    <div class="container">
+      <div class="menubar-preview">
+        <div class="menubar-strip">
+          <div class="menubar-left">
+            <span></span>
+            <span>Finder</span>
+            <span>File</span>
+            <span>Edit</span>
+            <span>View</span>
+            <span>Go</span>
+            <span>Window</span>
+            <span>Help</span>
+          </div>
+          <div class="menubar-right">
+            <!-- Unified ReDuoBar Item -->
+            <div class="menubar-item active-glyph" title="ReDuoBar (85% Battery, Wi-Fi 5GHz, Vol 75%)">
+              <svg class="menubar-glyph-svg" viewBox="0 0 512 512" fill="none">
+                <path d="M 130.4 308.5 A 145 145 0 1 1 381.6 308.5" stroke="#ffffff" stroke-opacity="0.25" stroke-width="32" stroke-linecap="round"/>
+                <path d="M 130.4 308.5 A 145 145 0 1 1 352.0 332.0" stroke="#ffffff" stroke-width="32" stroke-linecap="round"/>
+                <path d="M 184 196 A 82 82 0 0 1 328 196" stroke="#ffffff" stroke-width="22" stroke-linecap="round" fill="none"/>
+                <path d="M 212 224 A 50 50 0 0 1 300 224" stroke="#ffffff" stroke-width="22" stroke-linecap="round" fill="none"/>
+                <circle cx="256" cy="254" r="15" fill="#ffffff"/>
+                <circle cx="166.7" cy="350.3" r="16" fill="#ffffff"/>
+                <circle cx="223.4" cy="377.3" r="16" fill="#ffffff"/>
+                <circle cx="288.6" cy="377.3" r="16" fill="#ffffff"/>
+                <circle cx="345.3" cy="350.3" r="16" fill="#ffffff" opacity="0.25"/>
+              </svg>
             </div>
-            <div class="sim-toggle-switch" id="simWifiToggle" onclick="toggleWifiPower()" title="Toggle Wi-Fi Power">
-              <div class="sim-toggle-thumb"></div>
-            </div>
+            <!-- Control Center -->
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="5" rx="2.5"/><rect x="3" y="14" width="18" height="5" rx="2.5"/><circle cx="8" cy="7.5" r="1.5" fill="currentColor"/><circle cx="16" cy="16.5" r="1.5" fill="currentColor"/></svg>
+            <span>Tue Sep 22 9:41 AM</span>
           </div>
         </div>
+        <div class="menubar-replaces">
+          <span>Replaces 3 individual system status icons:</span>
+          <div class="replaces-list">
+            <span class="strike">Battery (100%)</span>
+            <span class="strike">Wi-Fi (RSSI)</span>
+            <span class="strike">Sound (Slider)</span>
+            <span class="replaces-arrow">➔</span>
+            <span class="replaces-target">1 Unified Glyph</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Audio Volume Card with Live Slider syncing dots -->
-        <div class="sim-card-row">
-          <div class="sim-row-main">
-            <div class="sim-row-left">
-              <div class="sim-icon-circle sim-icon-purple">􀊤</div>
-              <div class="sim-row-meta">
-                <span class="sim-row-title">Volume</span>
-                <span class="sim-row-sub" id="simAudioDevice">Built-in Speakers</span>
-              </div>
+    <!-- Capabilities -->
+    <section class="capabilities-section" id="capabilities">
+      <div class="container">
+        <h2 class="section-title">Popover &amp; Features</h2>
+        <p class="section-desc">Clicking the glyph reveals a compact 304px native macOS popover with full system controls.</p>
+
+        <div class="caps-grid">
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>Wi-Fi &amp; Keychain Autofill</h4>
+              <span class="cap-tag">CoreWLAN</span>
             </div>
-            <span class="sim-slider-val" id="simVolVal">75%</span>
+            <p>Live network scanner with RSSI signal bars and WPA security status. Automatically retrieves saved passwords directly from your macOS Keychain, complete with show/hide eye toggle and persistent credential saving.</p>
           </div>
-          <div class="sim-slider-container">
-            <input type="range" class="sim-slider" id="simVolSlider" min="0" max="100" value="75" oninput="onVolumeChange(this.value)">
-          </div>
-        </div>
 
-        <!-- Battery Card -->
-        <div class="sim-card-row">
-          <div class="sim-row-main">
-            <div class="sim-row-left">
-              <div class="sim-icon-circle sim-icon-green" id="simBatIcon">􀛨</div>
-              <div class="sim-row-meta">
-                <span class="sim-row-title">Battery</span>
-                <span class="sim-row-sub" id="simBatSub">88% • 4h 15m remaining</span>
-              </div>
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>Core Audio Output Switcher</h4>
+              <span class="cap-tag">Core Audio</span>
             </div>
-            <span class="sim-badge" id="simBatBadge">88%</span>
+            <p>Instant audio device selector for AirPods Pro, built-in MacBook speakers, HDMI displays, and external USB DACs. Smooth volume slider with one-click instant mute.</p>
           </div>
-        </div>
 
-        <!-- Audio Output Switcher -->
-        <div class="sim-card-row">
-          <div class="sim-row-main">
-            <div class="sim-row-left">
-              <div class="sim-icon-circle sim-icon-orange">􀟥</div>
-              <div class="sim-row-meta">
-                <span class="sim-row-title">Audio Output</span>
-                <span class="sim-row-sub">Switch output device</span>
-              </div>
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>Bluetooth &amp; Radio Power</h4>
+              <span class="cap-tag">IOBluetooth</span>
             </div>
-            <select class="sim-badge" id="simAudioSelect" onchange="onAudioSelectChange(this.value)" style="background: rgba(255,255,255,0.1); border: none; color: #fff; cursor: pointer; outline: none; padding: 3px 6px;">
-              <option value="speakers" style="background: #222;">Built-in Speakers</option>
-              <option value="airpods" style="background: #222;">AirPods Pro</option>
-            </select>
+            <p>Toggle Wi-Fi and Bluetooth radio power directly from the popover without digging into System Settings. Inspect battery levels for connected peripherals.</p>
+          </div>
+
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>Vibrant Liquid Glass Settings</h4>
+              <span class="cap-tag">AppKit / SwiftUI</span>
+            </div>
+            <p>Native macOS frosted glass window with real-time interactive preview of your menu bar glyph, icon scale adjustments, battery warning thresholds, and launch-at-login via <code>SMAppService</code>.</p>
+          </div>
+
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>Sparkle 2 Auto-Updates</h4>
+              <span class="cap-tag">Sparkle</span>
+            </div>
+            <p>Cryptographically signed updates with Ed25519 keys, delivered directly through GitHub Releases. Automatic background checks with quiet in-place app replacement.</p>
+          </div>
+
+          <div class="cap-item">
+            <div class="cap-header">
+              <h4>17 World Languages</h4>
+              <span class="cap-tag">Localization</span>
+            </div>
+            <p>Full native interface localization for English, Russian, German, French, Spanish, Japanese, Simplified Chinese, Traditional Chinese, Ukrainian, Italian, and 7 more languages.</p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Popover Footer -->
-        <div class="sim-popover-footer">
-          <span class="sim-footer-btn" onclick="alert('ReDuoBar Settings window with live simulated menu bar preview, scaling controls, and visual effects.')">⚙ Settings</span>
-          <span class="sim-footer-btn" onclick="togglePopover()">Close ✕</span>
+    <!-- Engineering Specs -->
+    <section class="specs-section" id="specs">
+      <div class="container">
+        <h2 class="section-title">Technical Specifications</h2>
+        <p class="section-desc">Engineered for absolute efficiency. Zero electron wrappers, zero memory bloat.</p>
+
+        <table class="specs-table">
+          <tbody>
+            <tr>
+              <td>Platform</td>
+              <td>macOS 13.0+ (Ventura, Sonoma, Sequoia)</td>
+            </tr>
+            <tr>
+              <td>Architecture</td>
+              <td>Universal 2 Binary (Apple Silicon M1/M2/M3/M4 &amp; Intel x86_64)</td>
+            </tr>
+            <tr>
+              <td>Memory Footprint</td>
+              <td>~12 MB resident RAM</td>
+            </tr>
+            <tr>
+              <td>Idle CPU Usage</td>
+              <td>0.0% (Pure event-driven IOKit &amp; CoreWLAN notifications)</td>
+            </tr>
+            <tr>
+              <td>Privacy &amp; Security</td>
+              <td>100% on-device processing. Zero network telemetry, zero analytics.</td>
+            </tr>
+            <tr>
+              <td>Dependencies</td>
+              <td>Native Swift 5.9, SwiftUI, AppKit, Sparkle 2 Framework</td>
+            </tr>
+            <tr>
+              <td>License</td>
+              <td>MIT License (Free &amp; Open Source)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Build from Source -->
+    <section class="install-section" id="build">
+      <div class="container">
+        <h2 class="section-title">Build from Source</h2>
+        <p class="section-desc">Compile the standalone <code>ReDuoBar.app</code> bundle directly from terminal without opening Xcode.</p>
+
+        <div class="terminal">
+          <div class="terminal-comment"># Clone the repository</div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span>git clone https://github.com/vibe2code/ReDuoBar.git</span></div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span>cd ReDuoBar</span></div>
+          <br>
+          <div class="terminal-comment"># Build, bundle, and ad-hoc sign ReDuoBar.app</div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span>chmod +x ./tools/build-app.sh &amp;&amp; ./tools/build-app.sh</span></div>
+          <br>
+          <div class="terminal-comment"># Launch the application</div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span>open build/ReDuoBar.app</span></div>
         </div>
       </div>
-    </div>
-
-    <!-- State Switchers -->
-    <div class="state-switchers">
-      <button class="state-btn active" onclick="setSimState('wifi')">Wi-Fi (88%)</button>
-      <button class="state-btn" onclick="setSimState('airpods')">AirPods Audio</button>
-      <button class="state-btn" onclick="setSimState('charging')">Fast Charging</button>
-      <button class="state-btn" onclick="setSimState('lowbattery')">Low Battery (18%)</button>
-      <button class="state-btn" onclick="setSimState('ethernet')">Wired Ethernet</button>
-      <button class="state-btn" onclick="setSimState('offline')">Offline</button>
-    </div>
-    <div class="sim-hint">💡 Click the ReDuoBar icon in the menu bar to open/close the popover • Drag volume slider to see 4 dots update live • Toggle Wi-Fi power directly</div>
-  </div>
-
-  <!-- Showcase Cards -->
-  <section class="showcase" id="features">
-    <div class="section-header">
-      <h2>Engineered for Modern macOS</h2>
-      <p>Seamlessly blending Apple Human Interface aesthetics with powerful system control.</p>
-    </div>
-
-    <div class="grid-2">
-      <!-- Card 1: Popover -->
-      <div class="showcase-card">
-        <h3>📶 Interactive Wi-Fi & Audio Switchers</h3>
-        <p>No more clicking through System Settings. Scan Wi-Fi networks in real-time with signal bars and password prompts, and switch audio output devices across Core Audio with one tap.</p>
-        <div class="showcase-img-wrap">
-          <img src="assets/duobar-popover.png" alt="ReDuoBar Popover in English" width="340">
-        </div>
-      </div>
-
-      <!-- Card 2: Settings -->
-      <div class="showcase-card">
-        <h3>🪟 Frosted Glass macOS Settings</h3>
-        <p>Crafted with native <code>NSVisualEffectView</code> vibrant translucency and <code>.ultraThinMaterial</code> cards. Features live menu bar glyph simulation and granular scaling controls.</p>
-        <div class="showcase-img-wrap">
-          <img src="assets/duobar-settings.png" alt="ReDuoBar Settings in English" width="460">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Comparison Table Section -->
-  <section class="comparison-section" id="comparison">
-    <div class="section-header">
-      <h2>Why ReDuoBar Stands Apart</h2>
-      <p>A feature-by-feature comparison against the original baseline.</p>
-    </div>
-
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th class="col-feature">Capability</th>
-            <th class="col-orig">Original DuoBar (v1.0.0)</th>
-            <th class="col-modern">ReDuoBar (vibe2code)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="col-feature">📶 Wi-Fi Network Picker</td>
-            <td class="col-orig">❌ Static name only</td>
-            <td class="col-modern">✅ Live CoreWLAN scan, signal bars, WPA locks, <b>macOS Keychain password autofill</b>, eye toggle & auto-save</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🎧 Audio Output Selector</td>
-            <td class="col-orig">❌ Static label only</td>
-            <td class="col-modern">✅ Interactive Core Audio device switcher (AirPods, Speakers, HDMI, USB DAC) + 1-click mute</td>
-          </tr>
-          <tr>
-            <td class="col-feature">⚡ Wi-Fi Power Control</td>
-            <td class="col-orig">❌ None</td>
-            <td class="col-modern">✅ 1-click Wi-Fi module power toggle (On / Off) directly from the popover</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🪟 Settings Window Design</td>
-            <td class="col-orig">⚠️ Basic opaque form</td>
-            <td class="col-modern">✅ Native macOS Frosted Glass (`NSVisualEffectView`) with `.ultraThinMaterial` cards</td>
-          </tr>
-          <tr>
-            <td class="col-feature">👁️ Live Glyph Preview</td>
-            <td class="col-orig">❌ None</td>
-            <td class="col-modern">✅ Real-time interactive preview of the menu bar glyph inside settings</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🌍 Localizations</td>
-            <td class="col-orig">⚠️ 3 languages (en, zh)</td>
-            <td class="col-modern">✅ 17 World Languages with automatic system language detection</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🔄 Auto-Updates</td>
-            <td class="col-orig">❌ None (manual download)</td>
-            <td class="col-modern">✅ Sparkle 2 framework + in-app auto-check toggle, Ed25519 signatures & GitHub Pages feed</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🎨 Application Icon</td>
-            <td class="col-orig">❌ Generic placeholder</td>
-            <td class="col-modern">✅ Custom high-resolution Retina squircle icon (`AppIcon.icns` & 1024×1024 master PNG)</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🤖 GitHub Actions CI/CD</td>
-            <td class="col-orig">❌ None</td>
-            <td class="col-modern">✅ Continuous automated builds (`build.yml`) & automated tag releases (`release.yml`)</td>
-          </tr>
-          <tr>
-            <td class="col-feature">🔋 Laptop Adaptive Ring</td>
-            <td class="col-orig">❌ None</td>
-            <td class="col-modern">✅ Smart handover to CPU / thermal load when plugged in and fully charged</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Features Grid -->
-  <section class="features-grid">
-    <div class="feature-item">
-      <span class="feature-icon">🛡️</span>
-      <h4>100% Private & Local</h4>
-      <p>All battery, network, and audio data is processed strictly on your Mac. No analytics, tracking, or telemetry.</p>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">⚡</span>
-      <h4>Universal 2 Binary</h4>
-      <p>Native execution on Apple Silicon (M1/M2/M3/M4) and Intel Macs on macOS 13 Ventura, Sonoma, and Sequoia.</p>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">🎧</span>
-      <h4>Dynamic AirPods Glance</h4>
-      <p>Connecting AirPods or Bluetooth headphones triggers a fluid center morph animation before returning to network status.</p>
-    </div>
-    <div class="feature-item">
-      <span class="feature-icon">🚀</span>
-      <h4>Launch at Login</h4>
-      <p>Modern macOS <code>SMAppService</code> integration with approval tracking in System Settings.</p>
-    </div>
-  </section>
-
-  <!-- Build from Source Section -->
-  <section class="build-section" id="build">
-    <div class="section-header">
-      <h2>Build from Source</h2>
-      <p>Package the entire standalone <code>ReDuoBar.app</code> without opening Xcode.</p>
-    </div>
-
-    <div class="terminal-box">
-      <div class="terminal-header">
-        <div class="dot dot-red"></div>
-        <div class="dot dot-yellow"></div>
-        <div class="dot dot-green"></div>
-      </div>
-      <code><span class="terminal-comment"># Clone the repository</span></code>
-      <code>git clone https://github.com/vibe2code/ReDuoBar.git</code>
-      <code>cd ReDuoBar</code>
-      <br>
-      <code><span class="terminal-comment"># Build, bundle, and ad-hoc sign ReDuoBar.app</span></code>
-      <code>chmod +x ./tools/build-app.sh</code>
-      <code>./tools/build-app.sh</code>
-      <br>
-      <code><span class="terminal-comment"># Output ready in build/ReDuoBar.app</span></code>
-      <code>open build/ReDuoBar.app</code>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- Footer -->
   <footer>
-    <div class="footer-links">
-      <a href="https://github.com/vibe2code/ReDuoBar">GitHub Repository</a>
-      <a href="https://github.com/vibe2code/ReDuoBar/releases">Releases</a>
-      <a href="appcast.xml">Sparkle Appcast Feed</a>
-      <a href="LICENSE">MIT License</a>
+    <div class="container footer-inner">
+      <div>
+        <span>ReDuoBar &copy; 2026. Maintained by <a href="https://github.com/vibe2code" target="_blank" style="color:var(--text); text-decoration:underline;">vibe2code</a>.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/vibe2code/ReDuoBar">GitHub</a>
+        <a href="https://github.com/vibe2code/ReDuoBar/releases">Releases</a>
+        <a href="appcast.xml">Appcast Feed</a>
+        <a href="LICENSE">License (MIT)</a>
+      </div>
     </div>
-    <p>ReDuoBar is maintained and expanded by <a href="https://github.com/vibe2code">vibe2code</a>. Original concept inspired by Mikeli7666.</p>
   </footer>
 
-  <script>
-    const glyphDefs = {
-      wifi: `
-        <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-        <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-        <circle cx="16" cy="15.8" r="1.1" fill="currentColor" />
-      `,
-      airpods: `
-        <path d="M13 10 C13 8.6 14.1 7.6 15.2 8.3 L15.2 16.5 C15.2 17 14.5 17 14.5 16.5 L14.5 12.8 C13.3 12.8 13 11.5 13 10 Z" fill="currentColor"/>
-        <path d="M19 10 C19 8.6 17.9 7.6 16.8 8.3 L16.8 16.5 C16.8 17 17.5 17 17.5 16.5 L17.5 12.8 C18.7 12.8 19 11.5 19 10 Z" fill="currentColor"/>
-      `,
-      charging: `
-        <path d="M17.5 7.5 L13 13.5 H16.5 L15 20.5 L20 12.5 H16.5 Z" fill="#30d158" />
-      `,
-      ethernet: `
-        <rect x="11.5" y="10" width="9" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M13.5 17 V19 M18.5 17 V19 M12.5 19 H19.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        <circle cx="14" cy="12.5" r="0.6" fill="currentColor"/>
-        <circle cx="16" cy="12.5" r="0.6" fill="currentColor"/>
-        <circle cx="18" cy="12.5" r="0.6" fill="currentColor"/>
-      `,
-      offline: `
-        <path d="M10.8 11.2 C12.2 9.8 19.8 9.8 21.2 11.2" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" opacity="0.3" />
-        <path d="M12.8 13.4 C13.7 12.5 18.3 12.5 19.2 13.4" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" opacity="0.3" />
-        <circle cx="16" cy="15.8" r="1.1" fill="#94a3b8" opacity="0.3" />
-        <path d="M11 9 L21 19" stroke="#ff453a" stroke-width="1.8" stroke-linecap="round"/>
-      `
-    };
-
-    let wifiPoweredOn = true;
-    let currentSimState = 'wifi';
-
-    function setSimState(state) {
-      currentSimState = state;
-      document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('.state-btn')).find(b => b.getAttribute('onclick')?.includes(state));
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const arc = document.getElementById('simArc');
-      const center = document.getElementById('simCenterGroup');
-      const popoverStatus = document.getElementById('simPopoverStatus');
-      const netIcon = document.getElementById('simNetIcon');
-      const netTitle = document.getElementById('simNetTitle');
-      const netSub = document.getElementById('simNetSub');
-      const wifiToggle = document.getElementById('simWifiToggle');
-      const batIcon = document.getElementById('simBatIcon');
-      const batSub = document.getElementById('simBatSub');
-      const batBadge = document.getElementById('simBatBadge');
-      const audioSelect = document.getElementById('simAudioSelect');
-      const audioDevice = document.getElementById('simAudioDevice');
-
-      // Base ring circumference is ~70.37, max arc length is ~46.88
-      const maxArc = 46.88;
-
-      switch(state) {
-        case 'wifi':
-          arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', `${(0.88 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.wifi;
-          netTitle.textContent = 'Network';
-          netSub.textContent = 'Wi-Fi: Studio-5GHz';
-          wifiToggle.classList.remove('off');
-          wifiPoweredOn = true;
-          batSub.textContent = '88% • 4h 15m remaining';
-          batBadge.textContent = '88%';
-          batBadge.style.color = '#fff';
-          audioDevice.textContent = 'Built-in Speakers';
-          audioSelect.value = 'speakers';
-          popoverStatus.textContent = 'Active';
-          setVolume(75);
-          break;
-
-        case 'airpods':
-          arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', `${(0.82 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.airpods;
-          netTitle.textContent = 'Network';
-          netSub.textContent = 'Wi-Fi: Studio-5GHz';
-          batSub.textContent = '82% • 3h 45m remaining';
-          batBadge.textContent = '82%';
-          batBadge.style.color = '#fff';
-          audioDevice.textContent = 'AirPods Pro (Spatial Audio)';
-          audioSelect.value = 'airpods';
-          popoverStatus.textContent = 'AirPods';
-          setVolume(85);
-          break;
-
-        case 'charging':
-          arc.setAttribute('stroke', '#30d158');
-          arc.setAttribute('stroke-dasharray', `${(0.94 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.charging;
-          netTitle.textContent = 'Network';
-          netSub.textContent = 'Wi-Fi: Studio-5GHz';
-          batSub.textContent = 'Fast Charging • 20m until full';
-          batBadge.textContent = '94%';
-          batBadge.style.color = '#30d158';
-          popoverStatus.textContent = 'Charging';
-          break;
-
-        case 'lowbattery':
-          arc.setAttribute('stroke', '#ff453a');
-          arc.setAttribute('stroke-dasharray', `${(0.18 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.wifi;
-          batSub.textContent = '18% • Low Power Mode active';
-          batBadge.textContent = '18%';
-          batBadge.style.color = '#ff453a';
-          popoverStatus.textContent = 'Low Power';
-          setVolume(40);
-          break;
-
-        case 'ethernet':
-          arc.setAttribute('stroke', '#ffffff');
-          arc.setAttribute('stroke-dasharray', `${(0.90 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.ethernet;
-          netTitle.textContent = 'Ethernet';
-          netSub.textContent = 'Wired: 1.0 Gbps Full-Duplex';
-          wifiToggle.classList.add('off');
-          wifiPoweredOn = false;
-          batSub.textContent = '90% • 5h 00m remaining';
-          batBadge.textContent = '90%';
-          batBadge.style.color = '#fff';
-          popoverStatus.textContent = 'Gigabit';
-          break;
-
-        case 'offline':
-          arc.setAttribute('stroke', '#64748b');
-          arc.setAttribute('stroke-dasharray', `${(0.70 * maxArc).toFixed(2)} 70.37`);
-          center.innerHTML = glyphDefs.offline;
-          netTitle.textContent = 'Network';
-          netSub.textContent = 'Offline • Disconnected';
-          wifiToggle.classList.add('off');
-          wifiPoweredOn = false;
-          popoverStatus.textContent = 'Offline';
-          break;
-      }
-    }
-
-    function onVolumeChange(val) {
-      document.getElementById('simVolVal').textContent = val + '%';
-      updateVolumeDots(val);
-    }
-
-    function setVolume(val) {
-      document.getElementById('simVolSlider').value = val;
-      document.getElementById('simVolVal').textContent = val + '%';
-      updateVolumeDots(val);
-    }
-
-    function updateVolumeDots(val) {
-      const v0 = document.getElementById('vdot0');
-      const v1 = document.getElementById('vdot1');
-      const v2 = document.getElementById('vdot2');
-      const v3 = document.getElementById('vdot3');
-      if (!v0 || !v1 || !v2 || !v3) return;
-
-      const num = parseInt(val, 10);
-      const activeCount = num === 0 ? 0 : (num <= 25 ? 1 : (num <= 50 ? 2 : (num <= 75 ? 3 : 4)));
-
-      v0.setAttribute('opacity', activeCount >= 1 ? '1.0' : '0.28');
-      v1.setAttribute('opacity', activeCount >= 2 ? '1.0' : '0.28');
-      v2.setAttribute('opacity', activeCount >= 3 ? '1.0' : '0.28');
-      v3.setAttribute('opacity', activeCount >= 4 ? '1.0' : '0.28');
-    }
-
-    function toggleWifiPower() {
-      const toggle = document.getElementById('simWifiToggle');
-      const netSub = document.getElementById('simNetSub');
-      wifiPoweredOn = !wifiPoweredOn;
-      if (wifiPoweredOn) {
-        toggle.classList.remove('off');
-        netSub.textContent = 'Wi-Fi: Studio-5GHz';
-        setSimState('wifi');
-      } else {
-        toggle.classList.add('off');
-        netSub.textContent = 'Wi-Fi: Turned Off';
-        setSimState('offline');
-      }
-    }
-
-    function togglePopover() {
-      const popover = document.getElementById('simPopover');
-      const item = document.getElementById('simDuoBarItem');
-      popover.classList.toggle('hidden');
-      item.classList.toggle('active');
-    }
-
-    function onAudioSelectChange(val) {
-      if (val === 'airpods') {
-        setSimState('airpods');
-      } else {
-        setSimState('wifi');
-      }
-    }
-
-    // Initialize default state on load
-    document.addEventListener('DOMContentLoaded', () => {
-      setSimState('wifi');
-    });
-  </script>
 </body>
 </html>
