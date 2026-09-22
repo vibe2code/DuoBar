@@ -8,28 +8,6 @@ struct BluetoothDevicePickerView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header with title & power toggle
-            HStack {
-                Text(localized("Bluetooth"))
-                    .font(.system(size: 11.5, weight: .semibold))
-                    .foregroundStyle(.primary)
-                Spacer()
-                Toggle("", isOn: Binding(
-                    get: { statusStore.status.bluetooth.isPoweredOn },
-                    set: { statusStore.setBluetoothPower($0) }
-                ))
-                .labelsHidden()
-                .toggleStyle(.switch)
-                .controlSize(.mini)
-            }
-            .padding(.horizontal, 12)
-            .padding(.top, 4)
-            .padding(.bottom, 6)
-
-            Divider()
-                .padding(.horizontal, 8)
-                .padding(.bottom, 4)
-
             if !statusStore.status.bluetooth.isPoweredOn {
                 Text(localized("Bluetooth disabled"))
                     .font(.system(size: 11.5))

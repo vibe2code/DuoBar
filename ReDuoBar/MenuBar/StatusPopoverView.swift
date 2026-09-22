@@ -247,13 +247,13 @@ struct StatusPopoverView: View {
     private func notifyPopoverHeight() {
         let targetHeight: CGFloat
         if showWiFiPicker {
-            targetHeight = 505
+            targetHeight = 470
         } else if showBTPicker {
-            targetHeight = 490
+            targetHeight = 450
         } else if showAudioPicker {
-            targetHeight = 480
+            targetHeight = 450
         } else if showBatteryPicker {
-            targetHeight = 480
+            targetHeight = 450
         } else {
             targetHeight = 372
         }
