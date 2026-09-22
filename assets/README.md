@@ -1,9 +1,8 @@
-# Screenshot assets
+# DuoBar Assets
 
-The public README is ready for a real DuoBar product screenshot at:
+Visual media assets for DuoBar documentation, release notes, and GitHub showcases:
 
-`assets/duobar-menubar.png`
-
-Capture the macOS menu bar with the DuoBar glyph and its status popover open. Crop tightly enough that DuoBar remains the focus, use a Retina-resolution PNG, and remove or obscure unrelated personal information before committing it.
-
-No generated or placeholder screenshot is committed in this directory.
+- **`app-icon.png`**: 256×256 Retina application icon.
+- **`duobar-popover.png`**: Interactive menu bar popover showcasing live Wi-Fi network picker, audio output device switcher, volume slider, and battery status.
+- **`duobar-settings.png`**: Native macOS translucent Settings window with frosted glass (`NSVisualEffectView`) and `.ultraThinMaterial` cards.
+- **`duobar-about.png`**: About dialog featuring app version details, license information, and Sparkle auto-update integration.

@@ -6,13 +6,13 @@
     <description>DuoBar releases</description>
     <language>en</language>
     <item>
-      <title>DuoBar 1.1.0</title>
-      <pubDate>Mon, 21 Sep 2026 20:02:26 +0000</pubDate>
-      <sparkle:version>1.1.0</sparkle:version>
-      <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+      <title>DuoBar 1.2.0</title>
+      <pubDate>Tue, 22 Sep 2026 06:50:48 +0000</pubDate>
+      <sparkle:version>1.2.0</sparkle:version>
+      <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
-        <h2>DuoBar 1.1.0</h2>
+        <h2>DuoBar 1.2.0</h2>
         <ul>
           <li>Interactive Wi-Fi network picker directly in the popover</li>
           <li>Interactive Core Audio output selector</li>
@@ -23,9 +23,9 @@
         </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/vibe2code/DuoBar/releases/download/v1.1.0/DuoBar.zip"
-        sparkle:edSignature="zAGF+hx1kjI+wOgq1zsVS8uDn2S0zIBCP+YG4spo0mNhCuW7rAhhy3eOvmOa6rKVkS395k+JNOfrbEXdacyECQ=="
-        length="2941307"
+        url="https://github.com/vibe2code/DuoBar/releases/download/v1.2.0/DuoBar.zip"
+        sparkle:edSignature="hmzsLwU0C7x+H92wECLWVDLJs3xe2WoGwrclQqQXUPN9shLb/Hb9DyoqlIV+z9v9h8FU2oZobDt0zYoXirtWAw=="
+        length="3021937"
         type="application/octet-stream"
       />
     </item>
