@@ -26,4 +26,8 @@ enum MarketingCaptureMode {
     static var expandsAudioPicker: Bool {
         ProcessInfo.processInfo.arguments.contains("--marketing-audio-picker")
     }
+
+    static var opensSettings: Bool {
+        ProcessInfo.processInfo.arguments.contains("--marketing-settings")
+    }
 }

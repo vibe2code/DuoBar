@@ -1,5 +1,6 @@
 import AppKit
 import Combine
+import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -69,6 +70,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if MarketingCaptureMode.isEnabled, MarketingCaptureMode.opensPopover {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak menuBarController] in
                 menuBarController?.setPopoverVisibleForMarketingCapture(true)
+            }
+        }
+        if MarketingCaptureMode.opensSettings {
+            NSApp.setActivationPolicy(.regular)
+            NSApp.activate(ignoringOtherApps: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                if let appMenu = NSApp.mainMenu?.items.first?.submenu,
+                   let settingsItem = appMenu.items.first(where: { $0.keyEquivalent == "," }),
+                   let action = settingsItem.action {
+                    NSApp.sendAction(action, to: settingsItem.target, from: settingsItem)
+                } else {
+                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                }
+            }
+
+            if ProcessInfo.processInfo.arguments.contains("--save-settings-screenshot") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+                    if let window = NSApp.windows.first(where: { $0.isVisible && ($0.toolbar != nil || $0.title.contains("Menu Bar") || $0.title.contains("Settings") || $0.title.contains("Строка")) }) {
+                        let windowId = window.windowNumber
+                        let task = Process()
+                        task.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+                        task.arguments = ["-l", "\(windowId)", "/Users/pingvi/DATA/GitHub/DuoBar/assets/duobar-settings.png"]
+                        try? task.run()
+                        task.waitUntilExit()
+                        NSLog("[DuoBar] Saved native settings window screenshot with windowNumber \(windowId)!")
+                    }
+                    NSApp.terminate(nil)
+                }
             }
         }
         if MarketingCaptureMode.isEnabled {

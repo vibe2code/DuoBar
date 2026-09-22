@@ -2,7 +2,7 @@ import ServiceManagement
 import SwiftUI
 
 struct SettingsView: View {
-    private enum SettingsTab: String, Hashable {
+    enum SettingsTab: String, Hashable {
         case general
         case menuBar
         case battery
@@ -23,7 +23,11 @@ struct SettingsView: View {
     @ObservedObject private var adaptiveRingMonitor = AdaptiveRingMonitor.shared
     private let deviceContextService = DeviceContextService()
 
-    @State private var selectedTab: SettingsTab = .general
+    @State private var selectedTab: SettingsTab
+
+    init(initialTab: SettingsTab = (ProcessInfo.processInfo.arguments.contains("--marketing-settings") ? .menuBar : .general)) {
+        _selectedTab = State(initialValue: initialTab)
+    }
 
     #if DEBUG
     @AppStorage(PreferenceKeys.simulateDesktopMac) private var simulateDesktopMac = false
@@ -522,6 +526,30 @@ private struct SettingsCardRow<Content: View>: View {
 private struct MenuBarLivePreview: View {
     let scale: Double
 
+    private static let previewStatus = SystemStatus(
+        battery: BatteryStatus(
+            percentage: 82,
+            isCharging: false,
+            isPluggedIn: true,
+            isFullyCharged: false,
+            isAvailable: true
+        ),
+        network: NetworkStatus(
+            isAvailable: true,
+            isConnected: true,
+            transport: .wifi,
+            interfaceName: "en0",
+            isWiFiPoweredOn: true,
+            ssid: "Wi-Fi",
+            rssi: -45
+        ),
+        audio: AudioStatus(
+            isAvailable: true,
+            volume: OutputVolumeStatus(level: 0.75, isMuted: false, isSettable: true, isMuteSettable: true)
+        ),
+        bluetooth: BluetoothStatus(isAvailable: true, isPoweredOn: true)
+    )
+
     var body: some View {
         VStack(spacing: 8) {
             HStack(spacing: 16) {
@@ -531,31 +559,20 @@ private struct MenuBarLivePreview: View {
 
                 Spacer()
 
-                // Live Preview of DuoBar glyph inside simulated menu bar
-                HStack(spacing: 6) {
-                    ZStack {
-                        Circle()
-                            .stroke(Color.primary.opacity(0.2), lineWidth: 2 * scale)
-                        Circle()
-                            .trim(from: 0, to: 0.82)
-                            .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 2 * scale, lineCap: .round))
-                            .rotationEffect(.degrees(-90))
-                    }
-                    .frame(width: 16 * scale, height: 16 * scale)
-
-                    HStack(spacing: 2.2 * scale) {
-                        Circle().fill(Color.primary).frame(width: 2.5 * scale, height: 2.5 * scale)
-                        Circle().fill(Color.primary).frame(width: 2.5 * scale, height: 2.5 * scale)
-                        Circle().fill(Color.primary.opacity(0.35)).frame(width: 2.5 * scale, height: 2.5 * scale)
-                    }
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+                // Authentic DuoBar glyph rendering matching real macOS menu bar
+                DuoGlyphView(
+                    status: Self.previewStatus,
+                    metrics: DuoGlyphMetrics.standard.scaled(by: scale),
+                    animationsEnabled: false
+                )
+                .frame(
+                    width: DuoGlyphMetrics.standard.scaled(by: scale).statusItemWidth,
+                    height: 22
+                )
 
                 // Standard macOS menu bar indicators
                 Image(systemName: "switch.2")
-                    .font(.system(size: 11))
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
 
                 Text("9:41")
