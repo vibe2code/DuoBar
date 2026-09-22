@@ -1,6 +1,10 @@
 import Foundation
 import IOBluetooth
 
+// Private IOBluetooth preference API — not available in App Store, fine for standalone tools.
+@_silgen_name("IOBluetoothPreferenceSetControllerPowerState")
+private func IOBluetoothPreferenceSetControllerPowerState(_ state: Int32)
+
 @MainActor
 final class BluetoothService {
     var onStatusChange: ((BluetoothStatus) -> Void)?
@@ -45,7 +49,18 @@ final class BluetoothService {
         }
     }
 
+    /// Toggle Bluetooth power state using the private IOBluetooth preference API.
+    /// This is the same mechanism used by `blueutil` and similar macOS utilities.
+    func setBluetoothPower(_ enabled: Bool) {
+        IOBluetoothPreferenceSetControllerPowerState(enabled ? 1 : 0)
+        // Slight delay then refresh — the power state change is async in bluetoothd
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.refresh()
+        }
+    }
+
     deinit {
         observers.forEach(NotificationCenter.default.removeObserver)
     }
 }
+

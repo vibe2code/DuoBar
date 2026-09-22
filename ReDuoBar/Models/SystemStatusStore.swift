@@ -112,6 +112,13 @@ final class SystemStatusStore: ObservableObject {
         }
     }
 
+    func setBluetoothPower(_ enabled: Bool) {
+        #if DEBUG
+        guard debugBluetoothOverride == nil else { return }
+        #endif
+        bluetoothService.setBluetoothPower(enabled)
+    }
+
     var usesAdaptiveRing: Bool {
         deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }

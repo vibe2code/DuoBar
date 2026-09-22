@@ -107,3 +107,6 @@
 "Wi-Fi" = "Wi-Fi";
 "Wi-Fi control unavailable" = "Wi-Fi 제어를 사용할 수 없습니다";
 "Wi-Fi power" = "Wi-Fi 전원";
+
+"Bluetooth power" = "블루투스 전원";
+"On" = "켜짐";

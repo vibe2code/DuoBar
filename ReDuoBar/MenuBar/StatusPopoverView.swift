@@ -64,6 +64,17 @@ struct StatusPopoverView: View {
                     }
                 }
 
+                // MARK: Bluetooth Row
+                StatusRow(
+                    symbol: bluetoothSymbol,
+                    title: localized("Bluetooth"),
+                    detail: "",
+                    stateText: bluetoothState,
+                    tint: .primary,
+                    trailing: statusStore.status.bluetooth.isAvailable ? bluetoothPowerToggle : nil
+                )
+
+
                 VolumeStatusRow(
                     volume: statusStore.status.audio.volume,
                     hasOutputDevice: statusStore.status.audio.defaultOutput != nil,
@@ -221,6 +232,18 @@ struct StatusPopoverView: View {
         )
     }
 
+    private var bluetoothPowerToggle: AnyView {
+        AnyView(
+            Toggle(localized("Bluetooth power"), isOn: Binding(
+                get: { statusStore.status.bluetooth.isPoweredOn },
+                set: { statusStore.setBluetoothPower($0) }
+            ))
+            .labelsHidden()
+            .toggleStyle(.switch)
+            .accessibilityLabel(localized("Bluetooth power"))
+        )
+    }
+
     private var networkSymbol: String {
         let network = statusStore.status.network
         if network.isWiFiPoweredOn == false, !network.isConnected { return "wifi.slash" }
@@ -313,6 +336,18 @@ struct StatusPopoverView: View {
         case .bluetooth, .bluetoothLE: return localized("Bluetooth")
         case .other: return localized("Connected")
         }
+    }
+
+    private var bluetoothSymbol: String {
+        let bt = statusStore.status.bluetooth
+        if !bt.isAvailable { return "bluetooth.slash" }
+        return bt.isPoweredOn ? "bluetooth" : "bluetooth.slash"
+    }
+
+    private var bluetoothState: String {
+        let bt = statusStore.status.bluetooth
+        if !bt.isAvailable { return localized("Unavailable") }
+        return bt.isPoweredOn ? localized("On") : localized("Off")
     }
 }
 

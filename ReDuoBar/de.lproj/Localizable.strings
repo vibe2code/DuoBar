@@ -107,3 +107,6 @@
 "Wi-Fi" = "WLAN";
 "Wi-Fi control unavailable" = "WLAN-Steuerung nicht verfügbar";
 "Wi-Fi power" = "WLAN ein/aus";
+
+"Bluetooth power" = "Bluetooth-Strom";
+"On" = "Ein";
