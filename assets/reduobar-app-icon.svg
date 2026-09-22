@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" fill="none" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="bgGrad" x1="512" y1="100" x2="512" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#232733"/>
+      <stop offset="0.5" stop-color="#15171f"/>
+      <stop offset="1" stop-color="#0a0c10"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="512" y1="100" x2="512" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.4"/>
+    </linearGradient>
+    <radialGradient id="topFlare" cx="512" cy="180" r="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#007aff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#007aff" stop-opacity="0"/>
+    </radialGradient>
+    <bx:guide x="423.023" y="-57.019" angle="90"/>
+  </defs>
+  <g>
+    <g filter="none" style="" alignment-baseline="initial">
+      <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#bgGrad)" style=""/>
+      <rect x="100" y="100" width="824" height="824" fill="url(#topFlare)" style="" rx="185" ry="185"/>
+      <rect x="101" y="101" width="822" height="822" rx="184" ry="184" stroke="url(#rimGrad)" stroke-width="2" fill="none" style=""/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 512, 480)" style="">
+      <g stroke="#ffffff" fill="#ffffff" stroke-linecap="round" style="" transform="matrix(1.516363, 0, 0, 1.516363, -0.000004, 33.03093)">
+        <path d="M -136 -76 A 155 155 0 0 1 136 -76" stroke-width="34" fill="none" style=""/>
+        <path d="M -83 -23 A 95 95 0 0 1 83 -23" stroke-width="34" fill="none" style=""/>
+        <circle cx="0" cy="34" r="25" style=""/>
+      </g>
+      <g fill="#ffffff" transform="matrix(1, 0, 0, 1, 0, -20.349991)" style="">
+        <circle cx="-169.3" cy="216.7" r="26" opacity="1.0"/>
+        <circle cx="-61.9" cy="268.0" r="26" opacity="1.0"/>
+        <circle cx="61.9" cy="268.0" r="26" opacity="1.0"/>
+        <circle cx="169.3" cy="216.7" r="26" opacity="0.25"/>
+      </g>
+    </g>
+  </g>
+</svg>

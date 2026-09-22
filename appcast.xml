@@ -6,13 +6,13 @@
     <description>ReDuoBar releases</description>
     <language>en</language>
     <item>
-      <title>ReDuoBar 1.2.1</title>
-      <pubDate>Tue, 22 Sep 2026 08:56:06 +0000</pubDate>
-      <sparkle:version>1.2.1</sparkle:version>
-      <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
+      <title>ReDuoBar 1.3.0</title>
+      <pubDate>Tue, 22 Sep 2026 18:01:05 +0000</pubDate>
+      <sparkle:version>1.3.0</sparkle:version>
+      <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <description><![CDATA[
-        <h2>ReDuoBar 1.2.1</h2>
+        <h2>ReDuoBar 1.3.0</h2>
         <ul>
           <li>Interactive Wi-Fi network picker directly in the popover</li>
           <li>Interactive Core Audio output selector</li>
@@ -23,9 +23,9 @@
         </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/vibe2code/ReDuoBar/releases/download/v1.2.1/ReDuoBar.zip"
-        sparkle:edSignature="2X91X84vXC8fbqzUnS23DCY4FNUO29KRwPMBhrFELmzKIcP+EFkC0x4IJssSashaqNiMHMLhIZ3VTJEO1nv0Bg=="
-        length="3035632"
+        url="https://github.com/vibe2code/ReDuoBar/releases/download/v1.3.0/ReDuoBar.zip"
+        sparkle:edSignature="RWeiK4c0haXz4hD+K8sMcHKZYIx8Bw5Do8z5aKgvX8tUskxCPwfl88JKaxwRxD/UKgQY/GWtthmE7bbJcWZRDA=="
+        length="3900753"
         type="application/octet-stream"
       />
     </item>

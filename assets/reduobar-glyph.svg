@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- ReDuoBar Native Status Bar Glyph (Clean Vector) -->
+  <!-- Center: (256, 236), Radius: 145, 240° Arc from 150° to 30°, 120° bottom gap -->
+
+  <!-- Outer Ring Background Track (120° gap at the bottom) -->
+  <path d="M 130.4 308.5 A 145 145 0 1 1 381.6 308.5"
+        stroke="#ffffff"
+        stroke-opacity="0.25"
+        stroke-width="26"
+        stroke-linecap="round" />
+
+  <!-- Active Battery Arc (85% Charge) -->
+  <path d="M 130.4 308.5 A 145 145 0 1 1 352.0 332.0"
+        stroke="#ffffff"
+        stroke-width="26"
+        stroke-linecap="round" />
+
+  <!-- Center Wi-Fi Symbol (concentric arcs + anchor dot) -->
+  <g id="center-wifi" stroke="#ffffff" fill="#ffffff" stroke-linecap="round">
+    <!-- Outer wave -->
+    <path d="M 184 196 A 82 82 0 0 1 328 196"
+          stroke-width="18"
+          fill="none" />
+    <!-- Middle wave -->
+    <path d="M 212 224 A 50 50 0 0 1 300 224"
+          stroke-width="18"
+          fill="none" />
+    <!-- Center Dot -->
+    <circle cx="256" cy="254" r="13" />
+  </g>
+
+  <!-- 4 Volume Dots curved along the bottom arc trajectory -->
+  <g id="volume-dots" fill="#ffffff">
+    <circle cx="166.7" cy="350.3" r="14" opacity="1.0" />
+    <circle cx="223.4" cy="377.3" r="14" opacity="1.0" />
+    <circle cx="288.6" cy="377.3" r="14" opacity="1.0" />
+    <circle cx="345.3" cy="350.3" r="14" opacity="0.28" />
+  </g>
+</svg>
