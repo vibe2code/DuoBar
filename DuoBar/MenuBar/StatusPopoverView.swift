@@ -7,12 +7,14 @@ struct StatusPopoverView: View {
     @AppStorage(PreferenceKeys.batteryColorCoding) private var batteryColorCoding = false
     private let onClose: () -> Void
 
-    @State private var showWiFiPicker = false
-    @State private var showAudioPicker = false
+    @State private var showWiFiPicker: Bool
+    @State private var showAudioPicker: Bool
 
     init(statusStore: SystemStatusStore, onClose: @escaping () -> Void) {
         self.statusStore = statusStore
         self.onClose = onClose
+        _showWiFiPicker = State(initialValue: MarketingCaptureMode.expandsWiFiPicker)
+        _showAudioPicker = State(initialValue: MarketingCaptureMode.expandsAudioPicker)
     }
 
     var body: some View {
@@ -47,6 +49,7 @@ struct StatusPopoverView: View {
                                     withAnimation(.spring(response: 0.35)) {
                                         showWiFiPicker.toggle()
                                         if showWiFiPicker { showAudioPicker = false }
+                                        notifyPopoverHeight(wifiExpanded: showWiFiPicker, audioExpanded: false)
                                     }
                                 }
                                 : nil),
@@ -91,6 +94,7 @@ struct StatusPopoverView: View {
                                 withAnimation(.spring(response: 0.35)) {
                                     showAudioPicker.toggle()
                                     if showAudioPicker { showWiFiPicker = false }
+                                    notifyPopoverHeight(wifiExpanded: false, audioExpanded: showAudioPicker)
                                 }
                             }
                             : nil
@@ -102,7 +106,10 @@ struct StatusPopoverView: View {
                             currentUID: statusStore.status.audio.defaultOutput?.uid,
                             onSelect: { uid in
                                 statusStore.setDefaultOutputDevice(uid: uid)
-                                withAnimation(.spring(response: 0.35)) { showAudioPicker = false }
+                                withAnimation(.spring(response: 0.35)) {
+                                    showAudioPicker = false
+                                    notifyPopoverHeight(wifiExpanded: false, audioExpanded: false)
+                                }
                             }
                         )
                     }
@@ -181,6 +188,22 @@ struct StatusPopoverView: View {
             }
         }
         return nil
+    }
+
+    private func notifyPopoverHeight(wifiExpanded: Bool, audioExpanded: Bool) {
+        let targetHeight: CGFloat
+        if wifiExpanded {
+            targetHeight = 540
+        } else if audioExpanded {
+            targetHeight = 485
+        } else {
+            targetHeight = 316
+        }
+        NotificationCenter.default.post(
+            name: Notification.Name("com.mikeli.duobar.popoverResize"),
+            object: nil,
+            userInfo: ["height": targetHeight]
+        )
     }
 
     // MARK: - Computed strings

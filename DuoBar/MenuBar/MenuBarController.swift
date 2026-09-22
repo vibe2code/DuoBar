@@ -93,8 +93,28 @@ final class MenuBarController: NSObject {
             hostingController.view.topAnchor.constraint(equalTo: trackingView.topAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: trackingView.bottomAnchor)
         ])
+        let initialHeight: CGFloat
+        if MarketingCaptureMode.expandsWiFiPicker {
+            initialHeight = 540
+        } else if MarketingCaptureMode.expandsAudioPicker {
+            initialHeight = 485
+        } else {
+            initialHeight = 316
+        }
+        contentViewController.preferredContentSize = NSSize(width: 304, height: initialHeight)
+        popover.contentSize = NSSize(width: 304, height: initialHeight)
         popover.contentViewController = contentViewController
         popoverTrackingView = trackingView
+
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("com.mikeli.duobar.popoverResize"),
+            object: nil,
+            queue: .main
+        ) { [weak self] note in
+            guard let self = self, let height = note.userInfo?["height"] as? CGFloat else { return }
+            self.popover.contentSize = NSSize(width: 304, height: height)
+            self.popover.contentViewController?.preferredContentSize = NSSize(width: 304, height: height)
+        }
     }
 
     @objc private func togglePopover() {
@@ -194,16 +214,13 @@ final class MenuBarController: NSObject {
     }
 
     private func updatePopoverBehavior() {
-        #if DEBUG
         if MarketingCaptureMode.isEnabled {
             popover.behavior = .applicationDefined
             return
         }
-        #endif
         popover.behavior = hoverInteraction.isEnabled ? .applicationDefined : .transient
     }
 
-    #if DEBUG
     func setPopoverVisibleForMarketingCapture(_ visible: Bool) {
         guard popover.isShown != visible else { return }
         if visible {
@@ -212,7 +229,6 @@ final class MenuBarController: NSObject {
             closePopoverFromContent()
         }
     }
-    #endif
 
     private func setStatusItemLength(_ targetLength: CGFloat) {
         guard !isInvalidated else { return }
@@ -351,4 +367,15 @@ final class HoverTrackingContainerView: NSView {
         onHoverChanged?(false)
     }
 
+    override var intrinsicContentSize: NSSize {
+        let initialHeight: CGFloat
+        if MarketingCaptureMode.expandsWiFiPicker {
+            initialHeight = 540
+        } else if MarketingCaptureMode.expandsAudioPicker {
+            initialHeight = 485
+        } else {
+            initialHeight = 316
+        }
+        return subviews.first?.intrinsicContentSize ?? NSSize(width: 304, height: initialHeight)
+    }
 }

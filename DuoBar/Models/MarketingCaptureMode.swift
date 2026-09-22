@@ -1,4 +1,3 @@
-#if DEBUG
 import Foundation
 
 enum MarketingCaptureMode {
@@ -19,5 +18,12 @@ enum MarketingCaptureMode {
     static var opensPopover: Bool {
         ProcessInfo.processInfo.arguments.contains("--marketing-popover")
     }
+
+    static var expandsWiFiPicker: Bool {
+        ProcessInfo.processInfo.arguments.contains("--marketing-wifi-picker")
+    }
+
+    static var expandsAudioPicker: Bool {
+        ProcessInfo.processInfo.arguments.contains("--marketing-audio-picker")
+    }
 }
-#endif

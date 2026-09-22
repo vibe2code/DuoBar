@@ -24,15 +24,37 @@
 
 <table align="center">
   <tr>
-    <td align="center" width="50%">
-      <b>Interactive Status Popover</b><br>
-      <i>Wi-Fi picker, Audio output switcher, volume & battery</i><br><br>
-      <img src="assets/duobar-popover.png" alt="DuoBar Popover" width="360">
+    <td align="center" width="33%">
+      <b>Status Popover</b><br>
+      <i>3-in-1 live system control</i><br><br>
+      <img src="assets/duobar-popover.png" alt="DuoBar Popover" width="280">
     </td>
-    <td align="center" width="50%">
-      <b>Native macOS Frosted Glass Settings</b><br>
-      <i>Vibrant translucency, live glyph preview & tabs</i><br><br>
-      <img src="assets/duobar-settings.png" alt="DuoBar Settings Window" width="500">
+    <td align="center" width="33%">
+      <b>Wi-Fi Picker & Power</b><br>
+      <i>CoreWLAN scan & 1-click switch</i><br><br>
+      <img src="assets/duobar-wifi-picker.png" alt="Wi-Fi Picker" width="280">
+    </td>
+    <td align="center" width="33%">
+      <b>Audio Output Switcher</b><br>
+      <i>Core Audio peripheral switcher</i><br><br>
+      <img src="assets/duobar-audio-picker.png" alt="Audio Output Picker" width="280">
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <b>General & Hover</b><br>
+      <i>Launch at login & Open on Hover</i><br><br>
+      <img src="assets/duobar-general.png" alt="DuoBar General Settings" width="280">
+    </td>
+    <td align="center" width="33%">
+      <b>Menu Bar & Preview</b><br>
+      <i>Scaling slider & simulated bar</i><br><br>
+      <img src="assets/duobar-settings.png" alt="DuoBar Menu Bar Settings" width="280">
+    </td>
+    <td align="center" width="33%">
+      <b>About & Updates</b><br>
+      <i>Version 1.2.0 & Sparkle update</i><br><br>
+      <img src="assets/duobar-about.png" alt="DuoBar About Dialog" width="280">
     </td>
   </tr>
 </table>
@@ -76,31 +98,41 @@ Modern DuoBar elevates this visual concept into a **fully interactive, system-gr
 
 ## 🌟 Key Innovations & Enhancements
 
-### 📶 Interactive Wi-Fi Network Picker
-No more opening System Settings or Control Center just to switch Wi-Fi networks. Clicking the Network item in the DuoBar popover reveals:
-* Live scan of nearby Wi-Fi networks using macOS `CoreWLAN`.
-* Visual signal strength indicators (Strong, Good, Weak).
-* Security status indicators (WPA2/WPA3 lock glyphs).
-* Active network checkmark and direct connection prompt for password-protected networks.
+### 📶 Interactive Wi-Fi Network Picker & ⚡ 1-Click Power Toggle
+No more navigating through macOS System Settings or Control Center just to connect to a hotspot or toggle Wi-Fi:
+* **Live Network Discovery:** Scans surrounding Wi-Fi networks in real-time using `CoreWLAN`.
+* **Visual Status Indicators:** Multi-tier signal strength icons (Strong, Good, Weak) and security lock badges (WPA2/WPA3).
+* **Instant Power Switch:** Turn your Mac's Wi-Fi interface ON or OFF with a single click directly from the popover or network header.
+* **Seamless Connection:** Connect to networks with a native password prompt and immediate status confirmation.
 
 ### 🎧 Seamless Audio Output Switcher
-Quickly redirect your audio output on the fly:
-* Dynamic enumeration of all available Core Audio output devices.
-* Immediate output switching without latency.
-* Smart recognition of connected AirPods and Bluetooth audio gear with temporary status animations.
+Instantly redirect system audio without opening Control Center or Sound preferences:
+* **Core Audio Integration:** Enumerates all active output devices (MacBook Speakers, AirPods, Bluetooth headphones, Studio Display, HDMI, and USB DACs).
+* **Direct 1-Click Switching:** Select your output destination with instant feedback and active checkmark.
+* **Per-Device Glyphs:** Tailored SF Symbols for AirPods Pro, over-ear headphones, displays, and built-in speakers.
+
+### 👆 Open on Hover (Instant Hover Reveal)
+Access your system status faster than ever:
+* **Frictionless Interaction:** Open the DuoBar popover automatically simply by moving your mouse cursor over the menu bar icon.
+* **Intelligent Tracking:** Built-in debounce and hover-tracking container prevents accidental triggers and unwanted flicker.
+* **Customizable:** Toggle on or off anytime in **Settings → General**.
+
+### 🔋 Laptop Adaptive Ring (100% Full Charge Handover)
+Maximizing the utility of your menu bar space:
+* **Smart Charge Transition:** When your MacBook is plugged in and reaches 100% battery, DuoBar automatically transitions the outer ring from battery status to an adaptive system performance monitor (display brightness, CPU load, or thermals).
+* **Desktop Mac Support:** On iMac, Mac mini, and Mac Studio, DuoBar defaults to the adaptive system ring out of the box.
 
 ### 🪟 Native Translucent macOS Settings
-Designed to feel like an official Apple System Settings pane:
-* **Frosted Glass:** Powered by `NSVisualEffectView` with `.behindWindow` blending and `.ultraThinMaterial` grouped cards.
-* **Tabbed Interface:** Clean tabs for `General` (Launch at Login, Updates), `Menu Bar` (Icon scaling, ring styling), `Battery & Power` (Colors, low battery alerts), and `About`.
-* **Live Glyph Preview:** See your customizations instantly as you tweak settings.
-
-<p align="center">
-  <img src="assets/duobar-about.png" alt="DuoBar About Dialog" width="520">
-</p>
+Designed from the ground up to match modern macOS Sequoia and Sonoma styling:
+* **Frosted Glass Vibrancy:** Powered by `NSVisualEffectView` with `.behindWindow` blending and `.ultraThinMaterial` grouped cards.
+* **Structured Tabs:**
+  * **General:** Launch at login (`SMAppService`) and Open on Hover interaction.
+  * **Menu Bar:** Granular icon scaling slider (Small to Large) with a **Live Simulated Menu Bar** preview, animation controls, and popover battery percentage toggle.
+  * **Battery & Power:** Custom battery color-coding and low-power alert thresholds.
+  * **About:** Version info (Version 1.2.0 • Build 4), MIT License details, GitHub repository link, and centralized Sparkle update checker.
 
 ### 🌐 17 World Languages Supported
-DuoBar automatically adapts to your system's language on launch:
+DuoBar automatically detects and adapts to your macOS system language on launch:
 
 | Flag | Language | Flag | Language |
 | :---: | :--- | :---: | :--- |
@@ -114,11 +146,11 @@ DuoBar automatically adapts to your system's language on launch:
 | 🇮🇹 | **Italiano** (`it`) | 🇵🇱 | **Polski** (`pl`) |
 | 🇧🇷 | **Português (Brasil)** (`pt-BR`) | | |
 
-### 🔄 Automatic Updates via Sparkle
-* Built on the industry-standard **Sparkle 2** framework.
-* Every release is cryptographically signed with **Ed25519 (EdDSA)**.
-* Continuous appcast manifest hosted reliably via **GitHub Pages** (`https://vibe2code.github.io/DuoBar/appcast.xml`).
-* Check for updates manually from Settings or let DuoBar notify you automatically when a new version is released.
+### 🔄 Automatic Updates via Sparkle 2 & GitHub Pages
+* Built on the robust **Sparkle 2** auto-update framework.
+* Every binary release is cryptographically signed using **Ed25519 (EdDSA)**.
+* Appcast manifest (`appcast.xml`) is continuously updated and hosted via **GitHub Pages** (`https://vibe2code.github.io/DuoBar/appcast.xml`).
+* Centralized "Check for Updates..." button in the About tab, plus silent background update checks.
 
 ---
 

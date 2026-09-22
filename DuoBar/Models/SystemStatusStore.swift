@@ -45,33 +45,35 @@ final class SystemStatusStore: ObservableObject {
         }
 
         batteryService.onStatusChange = { [weak self] value in
+            guard !MarketingCaptureMode.isEnabled else { return }
             #if DEBUG
-            let percentage = value.percentage.map { "\($0)%" } ?? "unavailable"
-            NSLog("%@", "[SystemStatusStore] received battery = \(percentage), charging = \(value.isCharging), pluggedIn = \(value.isPluggedIn)")
             guard self?.debugBatteryOverride == nil else { return }
             #endif
             self?.acceptBatteryStatus(value)
         }
         networkService.onStatusChange = { [weak self] value in
+            guard !MarketingCaptureMode.isEnabled else { return }
             #if DEBUG
             guard self?.debugNetworkOverride == nil else { return }
             #endif
             self?.mutate { $0.network = value }
         }
         audioOutputService.onStatusChange = { [weak self] value in
+            guard !MarketingCaptureMode.isEnabled else { return }
             #if DEBUG
             guard self?.debugAudioOverride == nil else { return }
             #endif
             self?.mutate { $0.audio = value }
         }
         bluetoothService.onStatusChange = { [weak self] value in
+            guard !MarketingCaptureMode.isEnabled else { return }
             #if DEBUG
             guard self?.debugBluetoothOverride == nil else { return }
             #endif
             self?.mutate { $0.bluetooth = value }
         }
 
-        if startServices {
+        if startServices && !MarketingCaptureMode.isEnabled {
             batteryService.start()
             networkService.start()
             audioOutputService.start()
@@ -80,6 +82,7 @@ final class SystemStatusStore: ObservableObject {
     }
 
     func refresh() {
+        guard !MarketingCaptureMode.isEnabled else { return }
         batteryService.refresh()
         networkService.refresh()
         audioOutputService.refresh()
@@ -134,7 +137,15 @@ final class SystemStatusStore: ObservableObject {
     }
 
     func scanForWiFiNetworks() async -> [WiFiNetworkInfo] {
-        await networkService.scanForNetworks()
+        if MarketingCaptureMode.isEnabled {
+            return [
+                WiFiNetworkInfo(ssid: "Wi-Fi Network", rssi: -42, isSecured: true),
+                WiFiNetworkInfo(ssid: "Apple Park 5G", rssi: -55, isSecured: true),
+                WiFiNetworkInfo(ssid: "Studio_Guest", rssi: -70, isSecured: false),
+                WiFiNetworkInfo(ssid: "Cupertino_Fiber", rssi: -82, isSecured: true)
+            ]
+        }
+        return await networkService.scanForNetworks()
     }
 
     func connectToWiFi(ssid: String, password: String?) async -> Bool {
@@ -279,6 +290,7 @@ final class SystemStatusStore: ObservableObject {
         priorityController.returnToNormal()
         refresh()
     }
+    #endif
 
     func applyMarketingCaptureState(_ identifier: String) {
         var battery = BatteryStatus(
@@ -303,11 +315,24 @@ final class SystemStatusStore: ObservableObject {
             transport: .builtIn,
             isAlive: true
         )
+        let airPods = AudioDeviceStatus(
+            uid: "marketing-airpods",
+            name: "AirPods Pro",
+            transport: .bluetooth,
+            isAlive: true
+        )
+        let studioDisplay = AudioDeviceStatus(
+            uid: "marketing-display",
+            name: "Studio Display Audio",
+            transport: .displayPort,
+            isAlive: true
+        )
         var audio = AudioStatus(
             isAvailable: true,
             defaultOutput: outputDevice,
             volume: OutputVolumeStatus(level: 0.75, isMuted: false, isSettable: true, isMuteSettable: true),
-            connectedBluetoothOutputs: []
+            connectedBluetoothOutputs: [],
+            allOutputDevices: [outputDevice, airPods, studioDisplay]
         )
         var bluetooth = BluetoothStatus(isAvailable: true, isPoweredOn: true)
 
@@ -336,10 +361,12 @@ final class SystemStatusStore: ObservableObject {
             return
         }
 
+        #if DEBUG
         debugBatteryOverride = battery
         debugNetworkOverride = network
         debugAudioOverride = audio
         debugBluetoothOverride = bluetooth
+        #endif
         priorityController.returnToNormal()
         laptopRingModeController.update(with: battery)
         mutate {
@@ -349,5 +376,4 @@ final class SystemStatusStore: ObservableObject {
             $0.bluetooth = bluetooth
         }
     }
-    #endif
 }

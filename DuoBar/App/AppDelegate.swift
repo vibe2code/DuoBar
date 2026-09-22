@@ -9,11 +9,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBarController: MenuBarController?
     private var wakeObserver: NSObjectProtocol?
     private var updaterService: UpdaterService?
-
-    #if DEBUG
     private var marketingCaptureObserver: NSObjectProtocol?
     private var marketingPopoverObserver: NSObjectProtocol?
-    #endif
 
     override init() {
         isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
@@ -52,7 +49,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.updaterService = updaterService
         PreferenceKeys.updaterService = updaterService
 
-        #if DEBUG
         if MarketingCaptureMode.isEnabled {
             statusStore.applyMarketingCaptureState(MarketingCaptureMode.initialState)
             marketingCaptureObserver = DistributedNotificationCenter.default().addObserver(
@@ -66,12 +62,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
-        #endif
 
         let menuBarController = MenuBarController(statusStore: statusStore)
         self.menuBarController = menuBarController
 
-        #if DEBUG
         if MarketingCaptureMode.isEnabled, MarketingCaptureMode.opensPopover {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak menuBarController] in
                 menuBarController?.setPopoverVisibleForMarketingCapture(true)
@@ -89,7 +83,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
-        #endif
 
         wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.didWakeNotification,
