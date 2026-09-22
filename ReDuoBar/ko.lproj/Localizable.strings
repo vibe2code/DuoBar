@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "블루투스 전원";
 "On" = "켜짐";
+
+"Bluetooth Settings…" = "Bluetooth 설정…";
+"Bluetooth disabled" = "Bluetooth 끔";
+"No devices found" = "발견된 기기 없음";
+"Power Source" = "전원";
+"Battery Power" = "배터리 전원";
+"Power Adapter" = "전원 어댑터";
+"Remaining" = "남은 시간";
+"Until Full" = "완충까지";
+"Battery Settings…" = "배터리 설정…";
+"%dh %dm" = "%d시간 %d분";
+"%dm" = "%d분";
+"%d devices" = "%d개 기기";

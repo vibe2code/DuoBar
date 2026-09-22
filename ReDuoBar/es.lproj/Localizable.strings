@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Alimentación Bluetooth";
 "On" = "Activado";
+
+"Bluetooth Settings…" = "Ajustes de Bluetooth…";
+"Bluetooth disabled" = "Bluetooth desactivado";
+"No devices found" = "No se encontraron dispositivos";
+"Power Source" = "Fuente de alimentación";
+"Battery Power" = "Batería";
+"Power Adapter" = "Adaptador de corriente";
+"Remaining" = "Restante";
+"Until Full" = "Hasta cargarse";
+"Battery Settings…" = "Ajustes de batería…";
+"%dh %dm" = "%d h %d min";
+"%dm" = "%d min";
+"%d devices" = "%d dispositivos";

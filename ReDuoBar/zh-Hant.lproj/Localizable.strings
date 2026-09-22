@@ -109,3 +109,16 @@
 
 "Bluetooth power" = "藍牙電源";
 "On" = "開啟";
+
+"Bluetooth Settings…" = "藍牙設定…";
+"Bluetooth disabled" = "藍牙已關閉";
+"No devices found" = "找不到裝置";
+"Power Source" = "電源";
+"Battery Power" = "電池電量";
+"Power Adapter" = "電源轉接器";
+"Remaining" = "剩餘時間";
+"Until Full" = "充飽所需時間";
+"Battery Settings…" = "電池設定…";
+"%dh %dm" = "%d小時%d分鐘";
+"%dm" = "%d分鐘";
+"%d devices" = "%d個裝置";

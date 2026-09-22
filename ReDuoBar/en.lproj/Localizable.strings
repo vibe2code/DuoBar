@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Bluetooth power";
 "On" = "On";
+
+"Bluetooth Settings…" = "Bluetooth Settings…";
+"Bluetooth disabled" = "Bluetooth disabled";
+"No devices found" = "No devices found";
+"Power Source" = "Power Source";
+"Battery Power" = "Battery Power";
+"Power Adapter" = "Power Adapter";
+"Remaining" = "Remaining";
+"Until Full" = "Until Full";
+"Battery Settings…" = "Battery Settings…";
+"%dh %dm" = "%dh %dm";
+"%dm" = "%dm";
+"%d devices" = "%d devices";

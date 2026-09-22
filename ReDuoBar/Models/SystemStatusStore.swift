@@ -119,6 +119,22 @@ final class SystemStatusStore: ObservableObject {
         bluetoothService.setBluetoothPower(enabled)
     }
 
+    func connectBluetoothDevice(address: String) async -> Bool {
+        await bluetoothService.connect(address: address)
+    }
+
+    func disconnectBluetoothDevice(address: String) async -> Bool {
+        await bluetoothService.disconnect(address: address)
+    }
+
+    func refreshBluetooth() {
+        bluetoothService.refresh()
+    }
+
+    func setLowPowerMode(_ enabled: Bool) {
+        batteryService.setLowPowerMode(enabled)
+    }
+
     var usesAdaptiveRing: Bool {
         deviceContext.ringBehavior == .adaptiveRing || laptopRingModeState.mode == .adaptive
     }

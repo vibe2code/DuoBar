@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Bluetoothの電源";
 "On" = "オン";
+
+"Bluetooth Settings…" = "Bluetooth設定…";
+"Bluetooth disabled" = "Bluetoothはオフです";
+"No devices found" = "デバイスが見つかりません";
+"Power Source" = "電源";
+"Battery Power" = "バッテリー駆動";
+"Power Adapter" = "電源アダプタ";
+"Remaining" = "残り時間";
+"Until Full" = "充電完了まで";
+"Battery Settings…" = "バッテリー設定…";
+"%dh %dm" = "%d時間%d分";
+"%dm" = "%d分";
+"%d devices" = "%d台のデバイス";

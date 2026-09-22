@@ -8,22 +8,38 @@ struct VolumeStatusRow: View {
     let onSetMuted: (Bool) -> Bool
 
     @State private var feedbackInteraction = VolumeFeedbackInteraction()
+    @State private var lastNonZeroLevel: Double = 0.5
 
     var body: some View {
         HStack(spacing: 11) {
             muteControl
-                .frame(width: 28, height: 28)
-                .background(.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Text(localized("Volume"))
                         .font(.system(size: 12.5, weight: .semibold))
                     Spacer()
-                    Text(stateText)
-                        .font(.system(size: 10.5, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
+                    Button(action: handleUserMuteChange) {
+                        HStack(spacing: 4) {
+                            Image(systemName: volume.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                                .font(.system(size: 9, weight: .semibold))
+                            Text(stateText)
+                                .font(.system(size: 10.5, weight: .medium, design: .rounded))
+                                .monospacedDigit()
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(
+                            volume.isMuted
+                                ? Color.red.opacity(0.18)
+                                : Color.primary.opacity(0.06),
+                            in: Capsule()
+                        )
+                        .foregroundStyle(volume.isMuted ? Color.red : Color.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!volume.isSettable && !volume.isMuteSettable)
+                    .help(volume.isMuted ? localized("Unmute") : localized("Mute"))
                 }
 
                 if volume.isSettable, let level = volume.level {
@@ -48,26 +64,37 @@ struct VolumeStatusRow: View {
         .padding(.horizontal, 10)
         .frame(height: 54)
         .background(.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .onAppear {
+            if let lvl = volume.level, lvl > 0 {
+                lastNonZeroLevel = lvl
+            }
+        }
+        .onChange(of: volume.level) { newLevel in
+            if let newLevel, newLevel > 0 {
+                lastNonZeroLevel = newLevel
+            }
+        }
     }
 
     @ViewBuilder
     private var muteControl: some View {
-        if volume.isMuteSettable {
-            Button {
-                handleUserMuteChange()
-            } label: {
-                Image(systemName: volumeSymbol)
-                    .font(.system(size: 13, weight: .semibold))
-                    .frame(width: 28, height: 28)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .help(volume.isMuted ? localized("Unmute") : localized("Mute"))
-            .accessibilityLabel(volume.isMuted ? localized("Unmute output") : localized("Mute output"))
-        } else {
+        Button {
+            handleUserMuteChange()
+        } label: {
             Image(systemName: volumeSymbol)
                 .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(volume.isMuted ? Color.red : Color.primary)
+                .frame(width: 28, height: 28)
+                .background(
+                    volume.isMuted ? Color.red.opacity(0.16) : Color.primary.opacity(0.08),
+                    in: RoundedRectangle(cornerRadius: 8, style: .continuous)
+                )
+                .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
+        .disabled(!volume.isSettable && !volume.isMuteSettable)
+        .help(volume.isMuted ? localized("Unmute") : localized("Mute"))
+        .accessibilityLabel(volume.isMuted ? localized("Unmute output") : localized("Mute output"))
     }
 
     private var volumeSymbol: String {
@@ -96,6 +123,10 @@ struct VolumeStatusRow: View {
             return
         }
 
+        if level > 0 {
+            lastNonZeroLevel = level
+        }
+
         let writeSucceeded = onSetVolume(level)
         feedbackInteraction.recordVolumeUpdate(
             previousStatus: volume,
@@ -120,12 +151,22 @@ struct VolumeStatusRow: View {
     }
 
     private func handleUserMuteChange() {
-        let writeSucceeded = onSetMuted(!volume.isMuted)
-        guard feedbackInteraction.shouldPlayForUnmute(
-            previousStatus: volume,
-            writeSucceeded: writeSucceeded
-        ) else { return }
-
-        VolumeFeedbackSound.play(on: playbackDeviceIdentifier)
+        if volume.isMuted {
+            // Unmute
+            let success = onSetMuted(false)
+            if !success || (volume.level ?? 0) == 0 {
+                _ = onSetVolume(lastNonZeroLevel > 0 ? lastNonZeroLevel : 0.5)
+            }
+            VolumeFeedbackSound.play(on: playbackDeviceIdentifier)
+        } else {
+            // Mute
+            if let lvl = volume.level, lvl > 0 {
+                lastNonZeroLevel = lvl
+            }
+            let success = onSetMuted(true)
+            if !success {
+                _ = onSetVolume(0.0)
+            }
+        }
     }
 }

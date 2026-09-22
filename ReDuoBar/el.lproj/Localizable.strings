@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Ισχύς Bluetooth";
 "On" = "Ενεργό";
+
+"Bluetooth Settings…" = "Ρυθμίσεις Bluetooth…";
+"Bluetooth disabled" = "Το Bluetooth είναι ανενεργό";
+"No devices found" = "Δεν βρέθηκαν συσκευές";
+"Power Source" = "Πηγή ρεύματος";
+"Battery Power" = "Ισχύς μπαταρίας";
+"Power Adapter" = "Τροφοδοτικό";
+"Remaining" = "Απομένουν";
+"Until Full" = "Έως την πλήρη φόρτιση";
+"Battery Settings…" = "Ρυθμίσεις μπαταρίας…";
+"%dh %dm" = "%d ώ %d λ";
+"%dm" = "%d λ";
+"%d devices" = "%d συσκευές";

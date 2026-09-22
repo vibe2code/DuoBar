@@ -7,13 +7,16 @@ struct BatteryStatus: Equatable, Sendable {
     var isFullyCharged: Bool
     var isAvailable: Bool
     var isLowPowerModeEnabled = false
+    var timeRemaining: Int? = nil
 
     static let unavailable = BatteryStatus(
         percentage: nil,
         isCharging: false,
         isPluggedIn: false,
         isFullyCharged: false,
-        isAvailable: false
+        isAvailable: false,
+        isLowPowerModeEnabled: false,
+        timeRemaining: nil
     )
 }
 
@@ -265,11 +268,47 @@ struct AudioStatus: Equatable, Sendable {
     }
 }
 
+struct BluetoothDeviceInfo: Equatable, Sendable, Identifiable {
+    var id: String { address }
+    var name: String
+    var address: String
+    var isConnected: Bool
+    var isPaired: Bool
+    var majorClass: UInt32
+    var minorClass: UInt32
+
+    var iconName: String {
+        let lower = name.lowercased()
+        if lower.contains("airpods max") { return "airpodsmax" }
+        if lower.contains("airpods pro") { return "airpodspro" }
+        if lower.contains("airpods") { return "airpods" }
+        if lower.contains("beats") { return "headphones" }
+        if lower.contains("mouse") { return "magicmouse" }
+        if lower.contains("trackpad") { return "trackpad" }
+        if lower.contains("keyboard") { return "keyboard" }
+        if lower.contains("watch") { return "applewatch" }
+        if lower.contains("phone") || lower.contains("iphone") { return "iphone" }
+        if lower.contains("ipad") { return "ipad" }
+        if majorClass == 4 { return "headphones" }
+        if majorClass == 5 { return "computermouse" }
+        return "wave.3.backward.circle"
+    }
+}
+
 struct BluetoothStatus: Equatable, Sendable {
     var isAvailable: Bool
     var isPoweredOn: Bool
+    var devices: [BluetoothDeviceInfo] = []
 
-    static let unavailable = BluetoothStatus(isAvailable: false, isPoweredOn: false)
+    var connectedDevices: [BluetoothDeviceInfo] {
+        devices.filter { $0.isConnected }
+    }
+
+    static let unavailable = BluetoothStatus(
+        isAvailable: false,
+        isPoweredOn: false,
+        devices: []
+    )
 }
 
 struct SystemStatus: Equatable, Sendable {

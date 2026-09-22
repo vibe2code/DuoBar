@@ -109,3 +109,16 @@
 
 "Bluetooth power" = "蓝牙电源";
 "On" = "开启";
+
+"Bluetooth Settings…" = "蓝牙设置…";
+"Bluetooth disabled" = "蓝牙已关闭";
+"No devices found" = "未找到设备";
+"Power Source" = "电源";
+"Battery Power" = "电池电量";
+"Power Adapter" = "电源适配器";
+"Remaining" = "剩余";
+"Until Full" = "充满所需时间";
+"Battery Settings…" = "电池设置…";
+"%dh %dm" = "%d小时%d分钟";
+"%dm" = "%d分钟";
+"%d devices" = "%d个设备";

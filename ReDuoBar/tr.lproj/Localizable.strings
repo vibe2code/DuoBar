@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Bluetooth gücü";
 "On" = "Açık";
+
+"Bluetooth Settings…" = "Bluetooth Ayarları…";
+"Bluetooth disabled" = "Bluetooth kapalı";
+"No devices found" = "Aygıt bulunamadı";
+"Power Source" = "Güç Kaynağı";
+"Battery Power" = "Pil Gücü";
+"Power Adapter" = "Güç Adaptörü";
+"Remaining" = "Kalan";
+"Until Full" = "Dolana Kadar";
+"Battery Settings…" = "Pil Ayarları…";
+"%dh %dm" = "%d sa %d dk";
+"%dm" = "%d dk";
+"%d devices" = "%d aygıt";

@@ -118,3 +118,16 @@
 
 "Bluetooth power" = "Питание Bluetooth";
 "On" = "Вкл";
+
+"Bluetooth Settings…" = "Настройки Bluetooth…";
+"Bluetooth disabled" = "Bluetooth выключен";
+"No devices found" = "Устройства не найдены";
+"Power Source" = "Источник питания";
+"Battery Power" = "Аккумулятор";
+"Power Adapter" = "Сетевой адаптер";
+"Remaining" = "Осталось";
+"Until Full" = "До полной зарядки";
+"Battery Settings…" = "Настройки аккумулятора…";
+"%dh %dm" = "%d ч %d мин";
+"%dm" = "%d мин";
+"%d devices" = "%d устройств";

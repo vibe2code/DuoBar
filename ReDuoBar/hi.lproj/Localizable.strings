@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "ब्लूटूथ शक्ति";
 "On" = "चालू";
+
+"Bluetooth Settings…" = "ब्लूटूथ सेटिंग्स…";
+"Bluetooth disabled" = "ब्लूटूथ बंद है";
+"No devices found" = "कोई डिवाइस नहीं मिला";
+"Power Source" = "पावर स्रोत";
+"Battery Power" = "बैटरी पावर";
+"Power Adapter" = "पावर एडाप्टर";
+"Remaining" = "शेष समय";
+"Until Full" = "पूरा चार्ज होने तक";
+"Battery Settings…" = "बैटरी सेटिंग्स…";
+"%dh %dm" = "%d घंटे %d मिनट";
+"%dm" = "%d मिनट";
+"%d devices" = "%d उपकरण";

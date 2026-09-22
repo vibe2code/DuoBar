@@ -8,7 +8,9 @@ struct StatusPopoverView: View {
     private let onClose: () -> Void
 
     @State private var showWiFiPicker: Bool
+    @State private var showBTPicker: Bool = false
     @State private var showAudioPicker: Bool
+    @State private var showBatteryPicker: Bool = false
 
     init(statusStore: SystemStatusStore, onClose: @escaping () -> Void) {
         self.statusStore = statusStore
@@ -42,18 +44,18 @@ struct StatusPopoverView: View {
                         stateText: networkState,
                         tint: .primary,
                         isExpanded: showWiFiPicker,
-                        action: (statusStore.status.network.isWiFiPoweredOn == false)
-                            ? nil
-                            : (statusStore.status.network.transport == .wifi
-                                ? {
-                                    withAnimation(.spring(response: 0.35)) {
-                                        showWiFiPicker.toggle()
-                                        if showWiFiPicker { showAudioPicker = false }
-                                        notifyPopoverHeight(wifiExpanded: showWiFiPicker, audioExpanded: false)
-                                    }
+                        action: {
+                            withAnimation(.spring(response: 0.35)) {
+                                showWiFiPicker.toggle()
+                                if showWiFiPicker {
+                                    showBTPicker = false
+                                    showAudioPicker = false
+                                    showBatteryPicker = false
                                 }
-                                : nil),
-                        trailing: (statusStore.status.network.isWiFiPoweredOn == false) ? wifiPowerToggle : nil
+                                notifyPopoverHeight()
+                            }
+                        },
+                        trailing: wifiPowerToggle
                     )
 
                     if showWiFiPicker {
@@ -64,17 +66,35 @@ struct StatusPopoverView: View {
                     }
                 }
 
-                // MARK: Bluetooth Row
-                StatusRow(
-                    symbol: bluetoothSymbol,
-                    title: localized("Bluetooth"),
-                    detail: "",
-                    stateText: bluetoothState,
-                    tint: .primary,
-                    trailing: statusStore.status.bluetooth.isAvailable ? bluetoothPowerToggle : nil
-                )
+                // MARK: Bluetooth Row + Device Picker
+                VStack(spacing: 6) {
+                    StatusRow(
+                        symbol: bluetoothSymbol,
+                        title: localized("Bluetooth"),
+                        detail: bluetoothDetail,
+                        stateText: bluetoothState,
+                        tint: .primary,
+                        isExpanded: showBTPicker,
+                        action: statusStore.status.bluetooth.isAvailable ? {
+                            withAnimation(.spring(response: 0.35)) {
+                                showBTPicker.toggle()
+                                if showBTPicker {
+                                    showWiFiPicker = false
+                                    showAudioPicker = false
+                                    showBatteryPicker = false
+                                }
+                                notifyPopoverHeight()
+                            }
+                        } : nil,
+                        trailing: statusStore.status.bluetooth.isAvailable ? bluetoothPowerToggle : nil
+                    )
 
+                    if showBTPicker {
+                        BluetoothDevicePickerView(statusStore: statusStore)
+                    }
+                }
 
+                // MARK: Volume Row
                 VolumeStatusRow(
                     volume: statusStore.status.audio.volume,
                     hasOutputDevice: statusStore.status.audio.defaultOutput != nil,
@@ -83,13 +103,32 @@ struct StatusPopoverView: View {
                     onSetMuted: statusStore.setMuted
                 )
 
-                StatusRow(
-                    symbol: batterySymbol,
-                    title: localized("Battery"),
-                    detail: batteryDetail,
-                    stateText: batteryPercentage,
-                    tint: .primary
-                )
+                // MARK: Battery Row + Low Power Mode / Details
+                VStack(spacing: 6) {
+                    StatusRow(
+                        symbol: batterySymbol,
+                        title: localized("Battery"),
+                        detail: batteryDetail,
+                        stateText: batteryPercentage,
+                        tint: statusStore.status.battery.isLowPowerModeEnabled ? .yellow : .primary,
+                        isExpanded: showBatteryPicker,
+                        action: statusStore.status.battery.isAvailable ? {
+                            withAnimation(.spring(response: 0.35)) {
+                                showBatteryPicker.toggle()
+                                if showBatteryPicker {
+                                    showWiFiPicker = false
+                                    showBTPicker = false
+                                    showAudioPicker = false
+                                }
+                                notifyPopoverHeight()
+                            }
+                        } : nil
+                    )
+
+                    if showBatteryPicker {
+                        BatteryPickerView(statusStore: statusStore)
+                    }
+                }
 
                 // MARK: Audio Output Row + Device Picker
                 VStack(spacing: 6) {
@@ -104,8 +143,12 @@ struct StatusPopoverView: View {
                             ? {
                                 withAnimation(.spring(response: 0.35)) {
                                     showAudioPicker.toggle()
-                                    if showAudioPicker { showWiFiPicker = false }
-                                    notifyPopoverHeight(wifiExpanded: false, audioExpanded: showAudioPicker)
+                                    if showAudioPicker {
+                                        showWiFiPicker = false
+                                        showBTPicker = false
+                                        showBatteryPicker = false
+                                    }
+                                    notifyPopoverHeight()
                                 }
                             }
                             : nil
@@ -119,7 +162,7 @@ struct StatusPopoverView: View {
                                 statusStore.setDefaultOutputDevice(uid: uid)
                                 withAnimation(.spring(response: 0.35)) {
                                     showAudioPicker = false
-                                    notifyPopoverHeight(wifiExpanded: false, audioExpanded: false)
+                                    notifyPopoverHeight()
                                 }
                             }
                         )
@@ -201,14 +244,18 @@ struct StatusPopoverView: View {
         return nil
     }
 
-    private func notifyPopoverHeight(wifiExpanded: Bool, audioExpanded: Bool) {
+    private func notifyPopoverHeight() {
         let targetHeight: CGFloat
-        if wifiExpanded {
-            targetHeight = 540
-        } else if audioExpanded {
-            targetHeight = 485
+        if showWiFiPicker {
+            targetHeight = 560
+        } else if showBTPicker {
+            targetHeight = 520
+        } else if showAudioPicker {
+            targetHeight = 490
+        } else if showBatteryPicker {
+            targetHeight = 500
         } else {
-            targetHeight = 316
+            targetHeight = 372
         }
         NotificationCenter.default.post(
             name: Notification.Name("com.vibe2code.reduobar.popoverResize"),
@@ -228,6 +275,7 @@ struct StatusPopoverView: View {
             ))
             .labelsHidden()
             .toggleStyle(.switch)
+            .controlSize(.mini)
             .accessibilityLabel(localized("Wi-Fi power"))
         )
     }
@@ -240,6 +288,7 @@ struct StatusPopoverView: View {
             ))
             .labelsHidden()
             .toggleStyle(.switch)
+            .controlSize(.mini)
             .accessibilityLabel(localized("Bluetooth power"))
         )
     }
@@ -342,6 +391,20 @@ struct StatusPopoverView: View {
         let bt = statusStore.status.bluetooth
         if !bt.isAvailable { return "bluetooth.slash" }
         return bt.isPoweredOn ? "bluetooth" : "bluetooth.slash"
+    }
+
+    private var bluetoothDetail: String {
+        let bt = statusStore.status.bluetooth
+        guard bt.isAvailable else { return localized("Unavailable") }
+        guard bt.isPoweredOn else { return localized("Bluetooth disabled") }
+        let connected = bt.connectedDevices
+        if connected.isEmpty {
+            return localized("Not connected")
+        } else if connected.count == 1 {
+            return connected[0].name
+        } else {
+            return localized("%d devices", connected.count)
+        }
     }
 
     private var bluetoothState: String {

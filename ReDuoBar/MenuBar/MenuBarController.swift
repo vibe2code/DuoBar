@@ -67,8 +67,16 @@ final class MenuBarController: NSObject {
     private func configurePopover() {
         updatePopoverBehavior()
         popover.delegate = self
+        let initialHeight: CGFloat
+        if MarketingCaptureMode.expandsWiFiPicker {
+            initialHeight = 560
+        } else if MarketingCaptureMode.expandsAudioPicker {
+            initialHeight = 490
+        } else {
+            initialHeight = 372
+        }
         popover.animates = true
-        popover.contentSize = NSSize(width: 304, height: 316)
+        popover.contentSize = NSSize(width: 304, height: initialHeight)
         let hostingController = NSHostingController(
             rootView: StatusPopoverView(statusStore: statusStore) { [weak self] in
                 self?.closePopoverFromContent()
@@ -93,14 +101,6 @@ final class MenuBarController: NSObject {
             hostingController.view.topAnchor.constraint(equalTo: trackingView.topAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: trackingView.bottomAnchor)
         ])
-        let initialHeight: CGFloat
-        if MarketingCaptureMode.expandsWiFiPicker {
-            initialHeight = 540
-        } else if MarketingCaptureMode.expandsAudioPicker {
-            initialHeight = 485
-        } else {
-            initialHeight = 316
-        }
         contentViewController.preferredContentSize = NSSize(width: 304, height: initialHeight)
         popover.contentSize = NSSize(width: 304, height: initialHeight)
         popover.contentViewController = contentViewController

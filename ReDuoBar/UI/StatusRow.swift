@@ -31,43 +31,38 @@ struct StatusRow: View {
     }
 
     var body: some View {
-        Group {
-            if let action, trailing == nil {
-                Button(action: action) { rowContent }
+        HStack(spacing: 8) {
+            // Main clickable part:
+            Group {
+                if let action {
+                    Button(action: action) {
+                        mainContent
+                    }
                     .buttonStyle(.plain)
-            } else {
-                rowContent
+                } else {
+                    mainContent
+                }
             }
-        }
-    }
 
-    private var rowContent: some View {
-        HStack(spacing: 11) {
-            Image(systemName: symbol)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(tint)
-                .frame(width: 28, height: 28)
-                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            Spacer(minLength: 4)
 
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title)
-                    .font(.system(size: 12.5, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.82)
-                Text(detail)
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .minimumScaleFactor(0.72)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .layoutPriority(1)
-
-            Spacer(minLength: 8)
-
+            // Right side:
             if let trailing {
-                trailing
+                HStack(spacing: 6) {
+                    if action != nil {
+                        Button(action: { action?() }) {
+                            Image(systemName: "chevron.down")
+                                .font(.system(size: 9, weight: .semibold))
+                                .foregroundStyle(.tertiary)
+                                .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                                .animation(.spring(response: 0.3), value: isExpanded)
+                                .frame(width: 14, height: 28)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    trailing
+                }
             } else if action != nil {
                 HStack(spacing: 4) {
                     Text(stateText)
@@ -93,9 +88,39 @@ struct StatusRow: View {
         }
         .padding(.horizontal, 10)
         .frame(height: 48)
-        .background(.primary.opacity(action != nil && isExpanded ? 0.07 : 0.045),
-                    in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .background(
+            .primary.opacity(action != nil && isExpanded ? 0.07 : 0.045),
+            in: RoundedRectangle(cornerRadius: 11, style: .continuous)
+        )
         .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
         .animation(.easeInOut(duration: 0.15), value: isExpanded)
+    }
+
+    private var mainContent: some View {
+        HStack(spacing: 11) {
+            Image(systemName: symbol)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(tint)
+                .frame(width: 28, height: 28)
+                .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.system(size: 12.5, weight: .semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                if !detail.isEmpty {
+                    Text(detail)
+                        .font(.system(size: 10.5))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .minimumScaleFactor(0.72)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
+        }
+        .contentShape(Rectangle())
     }
 }

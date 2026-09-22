@@ -85,6 +85,11 @@ final class BatteryService {
         let isPluggedIn = powerSourceState == kIOPSACPowerValue
         let isFullyCharged = dictionary[kIOPSIsChargedKey] as? Bool ?? (percentage == 100 && isPluggedIn && !isCharging)
 
+        let timeToEmpty = dictionary[kIOPSTimeToEmptyKey] as? Int
+        let timeToFullCharge = dictionary[kIOPSTimeToFullChargeKey] as? Int
+        let rawTime = isCharging ? timeToFullCharge : timeToEmpty
+        let timeRemaining = rawTime.flatMap { $0 > 0 && $0 < 65535 ? $0 : nil }
+
         publish(
             BatteryStatus(
                 percentage: percentage,
@@ -92,10 +97,23 @@ final class BatteryService {
                 isPluggedIn: isPluggedIn,
                 isFullyCharged: isFullyCharged,
                 isAvailable: true,
-                isLowPowerModeEnabled: ProcessInfo.processInfo.isLowPowerModeEnabled
+                isLowPowerModeEnabled: ProcessInfo.processInfo.isLowPowerModeEnabled,
+                timeRemaining: timeRemaining
             ),
             trigger: trigger
         )
+    }
+
+    /// Set macOS Low Power Mode using pmset via AppleScript with administrator privileges.
+    func setLowPowerMode(_ enabled: Bool) {
+        let script = "do shell script \"pmset -a lowpowermode \(enabled ? 1 : 0)\" with administrator privileges"
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            var error: NSDictionary?
+            NSAppleScript(source: script)?.executeAndReturnError(&error)
+            DispatchQueue.main.async {
+                self?.refresh()
+            }
+        }
     }
 
     private func publish(_ status: BatteryStatus, trigger: RefreshTrigger) {

@@ -110,3 +110,16 @@
 
 "Bluetooth power" = "Живлення Bluetooth";
 "On" = "Увімк";
+
+"Bluetooth Settings…" = "Параметри Bluetooth…";
+"Bluetooth disabled" = "Bluetooth вимкнено";
+"No devices found" = "Пристроїв не знайдено";
+"Power Source" = "Джерело живлення";
+"Battery Power" = "Акумулятор";
+"Power Adapter" = "Адаптер живлення";
+"Remaining" = "Залишилося";
+"Until Full" = "До повного заряду";
+"Battery Settings…" = "Параметри акумулятора…";
+"%dh %dm" = "%d год %d хв";
+"%dm" = "%d хв";
+"%d devices" = "%d пристроїв";
