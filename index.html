@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>DuoBar — The Reimagined macOS Menu Bar Status Indicator</title>
+  <title>ReDuoBar — The Reimagined macOS Menu Bar Status Indicator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="One compact macOS menu bar glyph combining Battery, Network, and Volume with interactive Wi-Fi and audio switching, frosted-glass settings, and Sparkle auto-updates.">
   <link rel="icon" type="image/png" href="assets/app-icon.png">
@@ -685,16 +685,16 @@
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
-        <img src="assets/app-icon.png" alt="DuoBar Logo">
-        <span>DuoBar</span>
+        <img src="assets/app-icon.png" alt="ReDuoBar Logo">
+        <span>ReDuoBar</span>
       </a>
       <ul class="nav-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#comparison">Comparison</a></li>
         <li><a href="#build">Build</a></li>
         <li><a href="appcast.xml">Appcast Feed</a></li>
-        <li><a href="https://github.com/vibe2code/DuoBar" target="_blank">GitHub</a></li>
-        <li><a href="https://github.com/vibe2code/DuoBar/releases/latest" class="btn-nav-download">Download</a></li>
+        <li><a href="https://github.com/vibe2code/ReDuoBar" target="_blank">GitHub</a></li>
+        <li><a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn-nav-download">Download</a></li>
       </ul>
     </div>
   </header>
@@ -711,11 +711,11 @@
       Battery, Network, and Volume unified into an elegant, native macOS indicator.
     </p>
     <div class="hero-actions">
-      <a href="https://github.com/vibe2code/DuoBar/releases/latest" class="btn-primary">
+      <a href="https://github.com/vibe2code/ReDuoBar/releases/latest" class="btn-primary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
         Download Latest Release
       </a>
-      <a href="https://github.com/vibe2code/DuoBar" class="btn-secondary" target="_blank">
+      <a href="https://github.com/vibe2code/ReDuoBar" class="btn-secondary" target="_blank">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         View on GitHub
       </a>
@@ -731,7 +731,7 @@
     <div class="sim-bar">
       <div class="sim-left-menus">
         <span class="sim-apple"></span>
-        <span class="sim-app-name">DuoBar</span>
+        <span class="sim-app-name">ReDuoBar</span>
         <span class="sim-menu-item">File</span>
         <span class="sim-menu-item">Edit</span>
         <span class="sim-menu-item">View</span>
@@ -741,7 +741,7 @@
 
       <div class="sim-tray">
         <!-- Authentic DuoBar 3-in-1 Status Item -->
-        <div class="sim-duobar-item active" id="simDuoBarItem" onclick="togglePopover()" title="Click to open/close DuoBar Popover">
+        <div class="sim-duobar-item active" id="simDuoBarItem" onclick="togglePopover()" title="Click to open/close ReDuoBar Popover">
           <svg id="simGlyphSvg" width="28" height="28" viewBox="0 0 32 32" class="sim-glyph">
             <!-- Outer Ring Background Track (120.2° gap at the bottom) -->
             <circle cx="16" cy="14.8" r="11.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="46.88 23.49" transform="rotate(150.1 16 14.8)" />
@@ -782,7 +782,7 @@
     <div class="sim-stage">
       <div class="sim-popover" id="simPopover">
         <div class="sim-popover-header">
-          <span>DuoBar</span>
+          <span>ReDuoBar</span>
           <span class="sim-badge" id="simPopoverStatus">Active</span>
         </div>
 
@@ -852,7 +852,7 @@
 
         <!-- Popover Footer -->
         <div class="sim-popover-footer">
-          <span class="sim-footer-btn" onclick="alert('DuoBar Settings window with live simulated menu bar preview, scaling controls, and visual effects.')">⚙ Settings</span>
+          <span class="sim-footer-btn" onclick="alert('ReDuoBar Settings window with live simulated menu bar preview, scaling controls, and visual effects.')">⚙ Settings</span>
           <span class="sim-footer-btn" onclick="togglePopover()">Close ✕</span>
         </div>
       </div>
@@ -867,7 +867,7 @@
       <button class="state-btn" onclick="setSimState('ethernet')">Wired Ethernet</button>
       <button class="state-btn" onclick="setSimState('offline')">Offline</button>
     </div>
-    <div class="sim-hint">💡 Click the DuoBar icon in the menu bar to open/close the popover • Drag volume slider to see 4 dots update live • Toggle Wi-Fi power directly</div>
+    <div class="sim-hint">💡 Click the ReDuoBar icon in the menu bar to open/close the popover • Drag volume slider to see 4 dots update live • Toggle Wi-Fi power directly</div>
   </div>
 
   <!-- Showcase Cards -->
@@ -883,7 +883,7 @@
         <h3>📶 Interactive Wi-Fi & Audio Switchers</h3>
         <p>No more clicking through System Settings. Scan Wi-Fi networks in real-time with signal bars and password prompts, and switch audio output devices across Core Audio with one tap.</p>
         <div class="showcase-img-wrap">
-          <img src="assets/duobar-popover.png" alt="DuoBar Popover in English" width="340">
+          <img src="assets/duobar-popover.png" alt="ReDuoBar Popover in English" width="340">
         </div>
       </div>
 
@@ -892,7 +892,7 @@
         <h3>🪟 Frosted Glass macOS Settings</h3>
         <p>Crafted with native <code>NSVisualEffectView</code> vibrant translucency and <code>.ultraThinMaterial</code> cards. Features live menu bar glyph simulation and granular scaling controls.</p>
         <div class="showcase-img-wrap">
-          <img src="assets/duobar-settings.png" alt="DuoBar Settings in English" width="460">
+          <img src="assets/duobar-settings.png" alt="ReDuoBar Settings in English" width="460">
         </div>
       </div>
     </div>
@@ -901,7 +901,7 @@
   <!-- Comparison Table Section -->
   <section class="comparison-section" id="comparison">
     <div class="section-header">
-      <h2>Why Modern DuoBar Stands Apart</h2>
+      <h2>Why ReDuoBar Stands Apart</h2>
       <p>A feature-by-feature comparison against the original baseline.</p>
     </div>
 
@@ -911,7 +911,7 @@
           <tr>
             <th class="col-feature">Capability</th>
             <th class="col-orig">Original DuoBar (v1.0.0)</th>
-            <th class="col-modern">Modern DuoBar (vibe2code)</th>
+            <th class="col-modern">ReDuoBar (vibe2code)</th>
           </tr>
         </thead>
         <tbody>
@@ -998,7 +998,7 @@
   <section class="build-section" id="build">
     <div class="section-header">
       <h2>Build from Source</h2>
-      <p>Package the entire standalone <code>DuoBar.app</code> without opening Xcode.</p>
+      <p>Package the entire standalone <code>ReDuoBar.app</code> without opening Xcode.</p>
     </div>
 
     <div class="terminal-box">
@@ -1008,27 +1008,27 @@
         <div class="dot dot-green"></div>
       </div>
       <code><span class="terminal-comment"># Clone the repository</span></code>
-      <code>git clone https://github.com/vibe2code/DuoBar.git</code>
-      <code>cd DuoBar</code>
+      <code>git clone https://github.com/vibe2code/ReDuoBar.git</code>
+      <code>cd ReDuoBar</code>
       <br>
-      <code><span class="terminal-comment"># Build, bundle, and ad-hoc sign DuoBar.app</span></code>
+      <code><span class="terminal-comment"># Build, bundle, and ad-hoc sign ReDuoBar.app</span></code>
       <code>chmod +x ./tools/build-app.sh</code>
       <code>./tools/build-app.sh</code>
       <br>
-      <code><span class="terminal-comment"># Output ready in build/DuoBar.app</span></code>
-      <code>open build/DuoBar.app</code>
+      <code><span class="terminal-comment"># Output ready in build/ReDuoBar.app</span></code>
+      <code>open build/ReDuoBar.app</code>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
     <div class="footer-links">
-      <a href="https://github.com/vibe2code/DuoBar">GitHub Repository</a>
-      <a href="https://github.com/vibe2code/DuoBar/releases">Releases</a>
+      <a href="https://github.com/vibe2code/ReDuoBar">GitHub Repository</a>
+      <a href="https://github.com/vibe2code/ReDuoBar/releases">Releases</a>
       <a href="appcast.xml">Sparkle Appcast Feed</a>
       <a href="LICENSE">MIT License</a>
     </div>
-    <p>DuoBar is maintained and expanded by <a href="https://github.com/vibe2code">vibe2code</a>. Original concept inspired by Mikeli7666.</p>
+    <p>ReDuoBar is maintained and expanded by <a href="https://github.com/vibe2code">vibe2code</a>. Original concept inspired by Mikeli7666.</p>
   </footer>
 
   <script>
